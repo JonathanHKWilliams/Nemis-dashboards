@@ -2,14 +2,16 @@ import { useState } from 'react'
 import {
   LayoutDashboard, School, BookOpen, Calendar, Star,
   ClipboardCheck, ClipboardList, FolderOpen, MessageSquare,
-  Bell, Settings, ChevronUp, ShieldCheck, Users, GraduationCap,
+  Bell, Settings, ChevronUp, ShieldCheck, Users, GraduationCap, Building2, Crown,
 } from 'lucide-react'
 
 const DASHBOARD_OPTIONS = [
-  { mode: 'ceo',     label: 'Admin / CEO', icon: ShieldCheck,   color: '#48D08C' },
-  { mode: 'teacher', label: 'Teacher',      icon: Users,         color: '#60A5FA' },
-  { mode: 'student', label: 'Student',      icon: GraduationCap, color: '#F59E0B' },
-  { mode: 'parent',  label: 'Parent',       icon: Users,         color: '#C084FC' },
+  { mode: 'minister',label: 'Minister',     icon: Crown,         color: '#4F46E5' },
+  { mode: 'ceo',     label: 'Admin / CEO',  icon: ShieldCheck,   color: '#48D08C' },
+  { mode: 'deo',     label: 'DEO Portal',   icon: Building2,     color: '#0D9488' },
+  { mode: 'teacher', label: 'Teacher',       icon: Users,         color: '#60A5FA' },
+  { mode: 'student', label: 'Student',       icon: GraduationCap, color: '#F59E0B' },
+  { mode: 'parent',  label: 'Parent',        icon: Users,         color: '#C084FC' },
 ]
 
 function DashboardSwitcher({ onSwitch }) {

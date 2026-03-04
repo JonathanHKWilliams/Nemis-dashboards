@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   LayoutDashboard, Users, GraduationCap, CalendarCheck, ClipboardList,
   DollarSign, CreditCard, FolderOpen, MessageSquare, Bell, Settings,
-  ChevronUp, ShieldCheck,
+  ChevronUp, ShieldCheck, Building2, Crown,
 } from 'lucide-react'
 import { parentProfile, parentMessages, parentNotifications, children } from '../../data/parentData'
 
@@ -79,10 +79,12 @@ const PAGE_TITLES = {
 }
 
 const DASHBOARD_OPTIONS = [
-  { mode: 'ceo',     label: 'Admin / CEO', icon: ShieldCheck,    color: '#48D08C' },
-  { mode: 'teacher', label: 'Teacher',      icon: Users,          color: '#60A5FA' },
-  { mode: 'student', label: 'Student',      icon: GraduationCap,  color: '#F59E0B' },
-  { mode: 'parent',  label: 'Parent',       icon: Users,          color: ACCENT    },
+  { mode: 'minister',label: 'Minister',     icon: Crown,          color: '#4F46E5' },
+  { mode: 'ceo',     label: 'Admin / CEO',  icon: ShieldCheck,    color: '#48D08C' },
+  { mode: 'deo',     label: 'DEO Portal',   icon: Building2,      color: '#0D9488' },
+  { mode: 'teacher', label: 'Teacher',       icon: Users,          color: '#60A5FA' },
+  { mode: 'student', label: 'Student',       icon: GraduationCap,  color: '#F59E0B' },
+  { mode: 'parent',  label: 'Parent',        icon: Users,          color: ACCENT    },
 ]
 
 function DashboardSwitcher({ onSwitch }) {

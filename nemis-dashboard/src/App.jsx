@@ -3,6 +3,8 @@ import Login from './pages/Login'
 import StudentApp from './pages/student/StudentApp'
 import TeacherApp from './pages/teacher/TeacherApp'
 import ParentApp from './pages/parent/ParentApp'
+import DEOApp from './pages/deo/DEOApp'
+import MinisterApp from './pages/minister/MinisterApp'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import Dashboard from './pages/Dashboard'
@@ -73,6 +75,14 @@ export default function App() {
 
   if (dashboardMode === 'parent') {
     return <ParentApp onSwitch={(mode) => setDashboardMode(mode)} />
+  }
+
+  if (dashboardMode === 'deo') {
+    return <DEOApp onSwitch={(mode) => setDashboardMode(mode)} />
+  }
+
+  if (dashboardMode === 'minister') {
+    return <MinisterApp onSwitch={(mode) => setDashboardMode(mode)} />
   }
 
   return (
