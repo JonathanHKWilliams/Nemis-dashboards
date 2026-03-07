@@ -1,7 +1,7 @@
 import { useState, useMemo, Fragment } from 'react'
 import {
   Search, Users, UserCheck, Clock, AlertCircle, Eye,
-  SlidersHorizontal, X, Plus, ChevronRight, ChevronLeft, Check,
+  SlidersHorizontal, X, Plus, ChevronRight, ChevronLeft, Check, LayoutGrid, List,
 } from 'lucide-react'
 import { teachersData, districts as districtsList } from '../data/mockData'
 
@@ -67,7 +67,7 @@ function ReportsBar({ submitted, total }) {
       <div className="flex-1 h-1.5 rounded-full" style={{ background: '#EEF0F3' }}>
         <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
       </div>
-      <span className="text-xs font-medium text-[#6B7280] whitespace-nowrap" style={{ fontFamily: 'Lato, sans-serif' }}>
+      <span className="text-xs font-semibold text-[#6B7280] whitespace-nowrap" style={{ fontFamily: 'Lato, sans-serif' }}>
         {submitted}/{total}
       </span>
     </div>
@@ -149,6 +149,7 @@ export default function Teachers() {
   }), [teachersList])
 
   const hasActiveFilter = search || category !== 'All' || subjectF !== 'All Subjects' || statusF !== 'All'
+  const [viewMode, setViewMode] = useState('grid')
   const clearFilters = () => { setSearch(''); setCategory('All'); setSubjectF('All Subjects'); setStatusF('All') }
 
   const openAddForm = () => { setForm(FORM_DEFAULTS); setStep(1); setShowAddForm(true) }
@@ -188,14 +189,8 @@ export default function Teachers() {
   return (
     <div className="space-y-5 max-w-[1200px]">
 
-      {/* Page Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Teachers Registry</h2>
-          <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-            Manage profiles for {stats.total} teachers — qualifications, assignments, status and categories
-          </p>
-        </div>
+      {/* Add Teacher Button */}
+      <div className="flex justify-end">
         <button
           onClick={openAddForm}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all"
@@ -302,16 +297,87 @@ export default function Teachers() {
             <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>
               {filtered.length} teacher{filtered.length !== 1 ? 's' : ''} found
             </p>
-            {hasActiveFilter && (
-              <button onClick={clearFilters}
-                className="flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#002333] transition-colors"
-                style={{ fontFamily: 'Lato, sans-serif' }}>
-                <X size={12} strokeWidth={2.5} /> Clear filters
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {hasActiveFilter && (
+                <button onClick={clearFilters}
+                  className="flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#002333] transition-colors"
+                  style={{ fontFamily: 'Lato, sans-serif' }}>
+                  <X size={12} strokeWidth={2.5} /> Clear filters
+                </button>
+              )}
+              <div className="flex items-center gap-1 bg-[#F4F6F8] rounded-lg p-1">
+                {[{ mode: 'grid', Icon: LayoutGrid, label: 'Grid' }, { mode: 'table', Icon: List, label: 'Table' }].map(({ mode, Icon, label }) => (
+                  <button key={mode} onClick={() => setViewMode(mode)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all"
+                    style={{ background: viewMode === mode ? '#002333' : 'transparent', color: viewMode === mode ? '#fff' : '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                    <Icon size={13} strokeWidth={2.5} />{label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {viewMode === 'grid' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+              {filtered.map((teacher) => {
+                const sc  = subjectColor(teacher.subject)
+                const stc = statusConfig[teacher.status] || statusConfig['Active']
+                return (
+                  <div key={teacher.id}
+                    className="bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-200"
+                    style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
+                    onClick={() => setSelected(teacher)}
+                    onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,35,51,0.10)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,35,51,0.05)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                  >
+                    <div className="px-5 pt-4 pb-3" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <div className="flex items-center gap-3">
+                        <PhotoAvatar name={teacher.name} gender={teacher.gender} photoId={teacher.photoId}
+                          size={44} id={teacher.id} imgErrors={imgErrors} onError={onImgError} />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-bold text-[#002333] truncate" style={{ fontFamily: 'Sora, sans-serif' }}>{teacher.name}</p>
+                          <p className="text-[10px] font-mono text-[#9CA3AF]">{teacher.empId}</p>
+                        </div>
+                        <span className="text-xs px-2.5 py-[3px] rounded-full font-semibold flex-shrink-0"
+                          style={{ background: stc.bg, color: stc.color, fontFamily: 'Lato, sans-serif' }}>
+                          {teacher.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="px-5 py-3 grid grid-cols-2 gap-x-4 gap-y-2" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Subject</p>
+                        <span className="text-xs px-2 py-[2px] rounded-full font-semibold"
+                          style={{ background: sc.bg, color: sc.color, fontFamily: 'Lato, sans-serif' }}>{teacher.subject}</span>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Category</p>
+                        <p className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{teacher.category}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>District</p>
+                        <p className="text-sm font-bold text-[#002333] truncate" style={{ fontFamily: 'Sora, sans-serif' }}>{teacher.district}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Experience</p>
+                        <p className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{teacher.experience}y</p>
+                      </div>
+                    </div>
+                    <div className="px-5 py-3">
+                      <ReportsBar submitted={teacher.reports} total={teacher.total} />
+                    </div>
+                  </div>
+                )
+              })}
+              {filtered.length === 0 && (
+                <div className="col-span-3 py-16 text-center">
+                  <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No teachers match your filters</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {viewMode === 'table' && <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr style={{ background: '#FAFBFC' }}>
@@ -336,15 +402,15 @@ export default function Teachers() {
                             size={38} id={teacher.id} imgErrors={imgErrors} onError={onImgError} />
                           <div>
                             <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{teacher.name}</p>
-                            <p className="text-[10px] text-[#6B7280] font-mono">{teacher.empId}</p>
+                            <p className="text-[10px] font-semibold text-[#6B7280] font-mono">{teacher.empId}</p>
                           </div>
                         </div>
                       </td>
 
-                      <td className="px-4 py-3.5 text-sm font-medium text-[#4B5563] max-w-[160px]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                      <td className="px-4 py-3.5 text-sm font-semibold text-[#4B5563] max-w-[160px]" style={{ fontFamily: 'Lato, sans-serif' }}>
                         <p className="truncate">{teacher.school}</p>
                       </td>
-                      <td className="px-4 py-3.5 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{teacher.district}</td>
+                      <td className="px-4 py-3.5 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{teacher.district}</td>
 
                       <td className="px-4 py-3.5">
                         <span className="text-xs px-2.5 py-[3px] rounded-full font-semibold"
@@ -360,9 +426,9 @@ export default function Teachers() {
                         </span>
                       </td>
 
-                      <td className="px-4 py-3.5 text-xs font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{teacher.category}</td>
+                      <td className="px-4 py-3.5 text-xs font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{teacher.category}</td>
 
-                      <td className="px-4 py-3.5 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                      <td className="px-4 py-3.5 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
                         {teacher.experience}y
                       </td>
 
@@ -396,7 +462,7 @@ export default function Teachers() {
                 <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No teachers match your filters</p>
               </div>
             )}
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -478,7 +544,7 @@ export default function Teachers() {
                       <div
                         className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold"
                         style={{
-                          background: isDone ? '#48D08C' : isCurrent ? '#002333' : '#F4F6F8',
+                          background: isDone ? '#0367A0' : isCurrent ? '#002333' : '#F4F6F8',
                           color: (isDone || isCurrent) ? '#fff' : '#9CA3AF',
                         }}>
                         {isDone ? <Check size={12} strokeWidth={3} /> : num}
@@ -489,7 +555,7 @@ export default function Teachers() {
                       </span>
                     </div>
                     {i < STEPS.length - 1 && (
-                      <div className="flex-1 h-px" style={{ background: step > num ? '#48D08C' : '#EEF0F3' }} />
+                      <div className="flex-1 h-px" style={{ background: step > num ? '#0367A0' : '#EEF0F3' }} />
                     )}
                   </Fragment>
                 )
@@ -683,7 +749,7 @@ export default function Teachers() {
               ) : (
                 <button onClick={submitTeacher}
                   className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: '#48D08C', fontFamily: 'Lato, sans-serif' }}>
+                  style={{ background: '#0367A0', fontFamily: 'Lato, sans-serif' }}>
                   <Check size={16} strokeWidth={2.5} /> Add Teacher
                 </button>
               )}

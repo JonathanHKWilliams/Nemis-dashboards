@@ -176,14 +176,6 @@ export default function Students() {
 
       {/* ── Main Content ── */}
       <div className="flex-1 min-w-0 space-y-5">
-        {/* Header */}
-        <div>
-          <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Students Database</h2>
-          <p className="text-sm text-[#6B7280] mt-0.5 font-medium" style={{ fontFamily: 'Lato, sans-serif' }}>
-            Student enrollment records with profiles, categorised by school and district
-          </p>
-        </div>
-
         {/* Stats */}
         <div className="grid grid-cols-4 gap-3">
           {[
@@ -248,7 +240,7 @@ export default function Students() {
                       size={72} id={student.id} imgErrors={imgErrors} onError={onImgError} />
                   </div>
                   <p className="text-sm font-bold text-[#002333] leading-tight" style={{ fontFamily: 'Sora, sans-serif' }}>{student.name}</p>
-                  <p className="text-[10px] text-[#6B7280] mt-0.5 font-medium font-mono">{student.stuId}</p>
+                  <p className="text-[10px] font-semibold text-[#6B7280] mt-0.5 font-mono">{student.stuId}</p>
                   <span className="inline-block mt-2 text-[10px] px-2.5 py-[3px] rounded-full font-bold"
                     style={{ background: 'rgba(0,35,51,0.07)', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
                     {student.grade}
@@ -261,7 +253,7 @@ export default function Students() {
                   </div>
                   <div className="mt-3 pt-3" style={{ borderTop: '1px solid #F4F6F8' }}>
                     <p className="text-[11px] text-[#4B5563] font-semibold leading-tight" style={{ fontFamily: 'Lato, sans-serif' }}>{student.school}</p>
-                    <p className="text-[10px] text-[#6B7280] mt-0.5 font-medium" style={{ fontFamily: 'Lato, sans-serif' }}>{student.district}</p>
+                    <p className="text-[10px] font-semibold text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{student.district}</p>
                   </div>
                 </div>
               )
@@ -299,7 +291,7 @@ export default function Students() {
                         </td>
                         <td className="px-5 py-3.5 text-xs text-[#6B7280] font-semibold font-mono">{student.stuId}</td>
                         <td className="px-5 py-3.5 text-sm text-[#4B5563] font-semibold" style={{ fontFamily: 'Lato, sans-serif' }}>{student.school}</td>
-                        <td className="px-5 py-3.5 text-sm text-[#6B7280] font-medium" style={{ fontFamily: 'Lato, sans-serif' }}>{student.district}</td>
+                        <td className="px-5 py-3.5 text-sm font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{student.district}</td>
                         <td className="px-5 py-3.5">
                           <span className="text-xs px-2.5 py-[3px] rounded-full font-bold"
                             style={{ background: 'rgba(0,35,51,0.07)', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
@@ -310,7 +302,7 @@ export default function Students() {
                           <span className="text-xs px-2.5 py-[3px] rounded-full font-bold"
                             style={{ background: pc.bg, color: pc.color, fontFamily: 'Lato, sans-serif' }}>{student.performance}</span>
                         </td>
-                        <td className="px-5 py-3.5 text-sm text-[#6B7280] font-medium" style={{ fontFamily: 'Lato, sans-serif' }}>{student.enrolled}</td>
+                        <td className="px-5 py-3.5 text-sm font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{student.enrolled}</td>
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full"

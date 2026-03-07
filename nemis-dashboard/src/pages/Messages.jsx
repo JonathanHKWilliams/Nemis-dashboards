@@ -9,7 +9,7 @@ const CEO_INIT   = 'JV'
 function Avatar({ name, gender, photoId, initials, size = 36, meStyle = false, imgErrors, onError, id }) {
   const url = gender ? `https://randomuser.me/api/portraits/${gender}/${photoId}.jpg` : null
   const init = initials || name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-  const bg   = meStyle ? '#48D08C' : '#002333'
+  const bg   = meStyle ? '#0367A0' : '#002333'
   const fg   = meStyle ? '#002333' : '#fff'
 
   if (!url || imgErrors?.[id]) {
@@ -55,13 +55,13 @@ export default function Messages() {
 
   const CeoAvatar = ({ size = 32 }) => ceoPhotoErr ? (
     <div className="rounded-full flex items-center justify-center flex-shrink-0"
-      style={{ width: size, height: size, background: '#48D08C' }}>
-      <span style={{ color: '#002333', fontSize: size * 0.28, fontFamily: 'Sora, sans-serif', fontWeight: 800 }}>{CEO_INIT}</span>
+      style={{ width: size, height: size, background: '#0367A0' }}>
+      <span style={{ color: '#fff', fontSize: size * 0.28, fontFamily: 'Sora, sans-serif', fontWeight: 800 }}>{CEO_INIT}</span>
     </div>
   ) : (
     <img src={CEO_PHOTO} alt={CEO_NAME}
       className="rounded-full object-cover flex-shrink-0"
-      style={{ width: size, height: size, border: '2px solid rgba(72,208,140,0.4)' }}
+      style={{ width: size, height: size, border: '2px solid rgba(3,103,160,0.4)' }}
       onError={() => setCeoPhotoErr(true)} />
   )
 
@@ -112,7 +112,7 @@ export default function Messages() {
                   </div>
                   {conv.unread > 0 && (
                     <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 mt-0.5"
-                      style={{ background: '#48D08C', fontSize: 10, fontFamily: 'Lato, sans-serif' }}>
+                      style={{ background: '#0367A0', fontSize: 10, fontFamily: 'Lato, sans-serif' }}>
                       {conv.unread}
                     </span>
                   )}
@@ -190,7 +190,7 @@ export default function Messages() {
                 </button>
                 <button onClick={handleSend}
                   className="w-8 h-8 rounded-xl flex items-center justify-center text-white transition-all hover:opacity-90 active:scale-95 flex-shrink-0"
-                  style={{ background: newMessage.trim() ? '#48D08C' : '#CBD5E1' }}>
+                  style={{ background: newMessage.trim() ? '#0367A0' : '#CBD5E1' }}>
                   <Send size={14} strokeWidth={2.5} />
                 </button>
               </div>

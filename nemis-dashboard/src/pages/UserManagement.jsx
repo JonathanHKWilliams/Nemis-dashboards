@@ -11,6 +11,8 @@ import {
   UserCog,
   Users,
   UserX,
+  LayoutGrid,
+  List,
 } from 'lucide-react'
 import { users as initialUsers, roles, districts } from '../data/mockData'
 
@@ -114,23 +116,16 @@ export default function UserManagement() {
 
   const activeCount   = userList.filter(u => u.status === 'Active').length
   const inactiveCount = userList.filter(u => u.status === 'Inactive').length
+  const [viewMode, setViewMode] = useState('grid')
 
   return (
     <div className="space-y-5 max-w-[1180px]">
-      {/* Page Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-            User Management
-          </h2>
-          <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-            Manage Grand Bassa system users, assign roles, districts &amp; permissions
-          </p>
-        </div>
+      {/* Add User Button */}
+      <div className="flex justify-end">
         <button
           onClick={() => { setEditUser(null); setForm(defaultForm); setShowModal(true) }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95"
-          style={{ background: '#48D08C', fontFamily: 'Lato, sans-serif' }}
+          style={{ background: '#0367A0', fontFamily: 'Lato, sans-serif' }}
         >
           <Plus size={15} strokeWidth={2.5} />
           Add New User
@@ -140,20 +135,20 @@ export default function UserManagement() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Total Users', value: userList.length, icon: Users,   color: '#002333', bg: 'rgba(0,35,51,0.07)' },
-          { label: 'Active',      value: activeCount,     icon: UserCog, color: '#48D08C', bg: 'rgba(72,208,140,0.10)' },
-          { label: 'Inactive',    value: inactiveCount,   icon: UserX,   color: '#A60003', bg: 'rgba(166,0,3,0.08)' },
-          { label: 'Roles',       value: roles.length,    icon: Shield,  color: '#D97706', bg: 'rgba(245,158,11,0.09)' },
+          { label: 'Total Users', value: userList.length, icon: Users,   color: '#0F172A', bg: '#F4F6F8' },
+          { label: 'Active',      value: activeCount,     icon: UserCog, color: '#0F172A', bg: '#F4F6F8' },
+          { label: 'Inactive',    value: inactiveCount,   icon: UserX,   color: '#0F172A', bg: '#F4F6F8' },
+          { label: 'Roles',       value: roles.length,    icon: Shield,  color: '#0F172A', bg: '#F4F6F8' },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-xl p-5"
             style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
-                <p className="text-3xl font-bold mt-1.5" style={{ fontFamily: 'Sora, sans-serif', color: s.color }}>{s.value}</p>
+                <p className="text-3xl font-bold mt-1.5 text-[#0F172A]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
               </div>
               <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: s.bg }}>
-                <s.icon size={20} strokeWidth={2.5} style={{ color: s.color }} />
+                <s.icon size={20} strokeWidth={3} style={{ color: s.color }} />
               </div>
             </div>
           </div>
@@ -187,13 +182,94 @@ export default function UserManagement() {
               {roles.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>
-          <p className="text-xs font-medium text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-            {filtered.length} user{filtered.length !== 1 ? 's' : ''}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
+              {filtered.length} user{filtered.length !== 1 ? 's' : ''}
+            </p>
+            <div className="flex items-center gap-1 bg-[#F4F6F8] rounded-lg p-1">
+              {[{ mode: 'grid', Icon: LayoutGrid, label: 'Grid' }, { mode: 'table', Icon: List, label: 'Table' }].map(({ mode, Icon, label }) => (
+                <button key={mode} onClick={() => setViewMode(mode)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all"
+                  style={{ background: viewMode === mode ? '#002333' : 'transparent', color: viewMode === mode ? '#fff' : '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                  <Icon size={13} strokeWidth={2.5} />{label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
+        {viewMode === 'grid' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+            {filtered.map((user) => {
+              const rc = roleColors[user.role] || { bg: '#F4F6F8', color: '#666' }
+              return (
+                <div key={user.id}
+                  className="bg-white rounded-xl overflow-hidden transition-all duration-200"
+                  style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,35,51,0.10)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,35,51,0.05)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                >
+                  <div className="px-5 pt-4 pb-3" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <div className="flex items-center gap-3">
+                      <UserAvatar name={user.name} gender={user.gender} photoId={user.photoId} size={44} id={user.id} imgErrors={imgErrors} onError={onImgError} />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-[#002333] truncate" style={{ fontFamily: 'Sora, sans-serif' }}>{user.name}</p>
+                        <p className="text-xs font-semibold text-[#6B7280] truncate" style={{ fontFamily: 'Lato, sans-serif' }}>{user.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-5 py-3 grid grid-cols-2 gap-x-4 gap-y-2" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Role</p>
+                      <span className="text-xs px-2 py-[2px] rounded-full font-semibold"
+                        style={{ background: rc.bg, color: rc.color, fontFamily: 'Lato, sans-serif' }}>{user.role}</span>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>District</p>
+                      <p className="text-xs font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{user.district}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Last Login</p>
+                      <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{user.lastLogin}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Status</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        {user.status === 'Active'
+                          ? <ToggleRight size={18} strokeWidth={2.5} style={{ color: '#0367A0' }} />
+                          : <ToggleLeft size={18} strokeWidth={2.5} style={{ color: '#9CA3AF' }} />}
+                        <span className="text-xs font-semibold" style={{ color: user.status === 'Active' ? '#0367A0' : '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{user.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-5 py-3 flex items-center justify-end gap-2">
+                    <button onClick={() => handleEdit(user)}
+                      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+                      style={{ background: 'rgba(0,35,51,0.06)', color: '#002333' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0,35,51,0.12)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,35,51,0.06)' }}>
+                      <Edit2 size={13} strokeWidth={2.5} />
+                    </button>
+                    <button onClick={() => handleDelete(user.id)}
+                      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+                      style={{ background: 'rgba(166,0,3,0.06)', color: '#A60003' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(166,0,3,0.14)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(166,0,3,0.06)' }}>
+                      <Trash2 size={13} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+            {filtered.length === 0 && (
+              <div className="col-span-3 py-16 text-center">
+                <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No users match your search.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {viewMode === 'table' && <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr style={{ background: '#FAFBFC' }}>
@@ -227,7 +303,7 @@ export default function UserManagement() {
                         />
                         <div>
                           <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{user.name}</p>
-                          <p className="text-xs font-medium text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{user.email}</p>
+                          <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -241,12 +317,12 @@ export default function UserManagement() {
                     </td>
 
                     {/* District */}
-                    <td className="px-5 py-3.5 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
                       {user.district}
                     </td>
 
                     {/* Last Login */}
-                    <td className="px-5 py-3.5 text-sm font-medium text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
                       {user.lastLogin}
                     </td>
 
@@ -296,7 +372,7 @@ export default function UserManagement() {
               <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No users match your search.</p>
             </div>
           )}
-        </div>
+        </div>}
       </div>
 
       {/* ── Modal ── */}
@@ -331,7 +407,7 @@ export default function UserManagement() {
                     placeholder="Enter full name"
                     className="mt-1.5 w-full px-3 py-2.5 bg-[#F4F6F8] rounded-lg text-sm outline-none transition-colors text-[#002333]"
                     style={{ fontFamily: 'Lato, sans-serif', fontWeight: 500, border: '1.5px solid transparent' }}
-                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #48D08C' }}
+                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #0367A0' }}
                     onBlur={(e) => { e.currentTarget.style.border = '1.5px solid transparent' }}
                   />
                 </div>
@@ -348,7 +424,7 @@ export default function UserManagement() {
                     type="email"
                     className="mt-1.5 w-full px-3 py-2.5 bg-[#F4F6F8] rounded-lg text-sm outline-none text-[#002333]"
                     style={{ fontFamily: 'Lato, sans-serif', fontWeight: 500, border: '1.5px solid transparent' }}
-                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #48D08C' }}
+                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #0367A0' }}
                     onBlur={(e) => { e.currentTarget.style.border = '1.5px solid transparent' }}
                   />
                 </div>
@@ -363,7 +439,7 @@ export default function UserManagement() {
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
                     className="mt-1.5 w-full px-3 py-2.5 bg-[#F4F6F8] rounded-lg text-sm outline-none cursor-pointer text-[#4B5563]"
                     style={{ fontFamily: 'Lato, sans-serif', fontWeight: 500, border: '1.5px solid transparent' }}
-                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #48D08C' }}
+                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #0367A0' }}
                     onBlur={(e) => { e.currentTarget.style.border = '1.5px solid transparent' }}
                   >
                     <option value="">Select role</option>
@@ -381,7 +457,7 @@ export default function UserManagement() {
                     onChange={(e) => setForm({ ...form, district: e.target.value })}
                     className="mt-1.5 w-full px-3 py-2.5 bg-[#F4F6F8] rounded-lg text-sm outline-none cursor-pointer text-[#4B5563]"
                     style={{ fontFamily: 'Lato, sans-serif', fontWeight: 500, border: '1.5px solid transparent' }}
-                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #48D08C' }}
+                    onFocus={(e) => { e.currentTarget.style.border = '1.5px solid #0367A0' }}
                     onBlur={(e) => { e.currentTarget.style.border = '1.5px solid transparent' }}
                   >
                     <option value="">Select district</option>
@@ -401,7 +477,7 @@ export default function UserManagement() {
                       className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all"
                       style={{
                         fontFamily: 'Lato, sans-serif',
-                        background: form.status === s ? (s === 'Active' ? '#48D08C' : '#A60003') : '#F4F6F8',
+                        background: form.status === s ? (s === 'Active' ? '#0367A0' : '#A60003') : '#F4F6F8',
                         color: form.status === s ? '#fff' : '#6B7280',
                       }}>
                       {s}
@@ -448,7 +524,7 @@ export default function UserManagement() {
               <button
                 onClick={handleSave}
                 className="flex-1 py-2.5 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90"
-                style={{ background: '#48D08C', fontFamily: 'Lato, sans-serif' }}>
+                style={{ background: '#0367A0', fontFamily: 'Lato, sans-serif' }}>
                 {editUser ? 'Save Changes' : 'Create User'}
               </button>
             </div>

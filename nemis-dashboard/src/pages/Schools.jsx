@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Search, Eye, GraduationCap, Users, TrendingUp, School, SlidersHorizontal, X } from 'lucide-react'
+import { Search, Eye, GraduationCap, Users, TrendingUp, School, SlidersHorizontal, X, LayoutGrid, List } from 'lucide-react'
 import { schoolsData } from '../data/mockData'
 
 const TYPE_OPTIONS  = ['All', 'Primary', 'Secondary', 'Technical', 'Vocational']
@@ -18,11 +18,9 @@ const typeColors = {
   Vocational: { bg: 'rgba(245,158,11,0.09)',  color: '#D97706' },
 }
 
-function SchoolLogo({ name, color, size = 40 }) {
-  const initials = name.split(' ').filter(w => w.length > 2).map(w => w[0]).join('').slice(0, 3).toUpperCase() ||
-    name.split(' ').map(w => w[0]).join('').slice(0, 3).toUpperCase()
-  const hex = (color || '#002333').replace('#', '')
-  const src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=${hex}&color=ffffff&size=128&bold=true&font-size=0.45`
+function SchoolLogo({ name, size = 40 }) {
+  const slug = name.toLowerCase().replace(/\s+/g, '-')
+  const src = `https://picsum.photos/seed/${slug}/${size * 2}/${size * 2}`
   return (
     <img
       src={src}
@@ -96,6 +94,7 @@ export default function Schools() {
   const activeCount     = schoolsData.filter((s) => s.status === 'Active').length
 
   const hasActiveFilter = search || typeFilter !== 'All' || statusFilter !== 'All' || complianceFilter !== 'All'
+  const [viewMode, setViewMode] = useState('grid')
 
   const clearFilters = () => {
     setSearch('')
@@ -108,13 +107,6 @@ export default function Schools() {
 
   return (
     <div className="space-y-5 max-w-[1200px]">
-      <div>
-        <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Schools Registry</h2>
-        <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-          Full directory of 30 registered schools with enrollment data, locations, and compliance status
-        </p>
-      </div>
-
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
         {[
@@ -233,18 +225,86 @@ export default function Schools() {
             <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>
               {filtered.length} school{filtered.length !== 1 ? 's' : ''} found
             </p>
-            {hasActiveFilter && (
-              <button
-                onClick={clearFilters}
-                className="flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#002333] transition-colors"
-                style={{ fontFamily: 'Lato, sans-serif' }}
-              >
-                <X size={12} strokeWidth={2.5} /> Clear filters
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {hasActiveFilter && (
+                <button
+                  onClick={clearFilters}
+                  className="flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#002333] transition-colors"
+                  style={{ fontFamily: 'Lato, sans-serif' }}
+                >
+                  <X size={12} strokeWidth={2.5} /> Clear filters
+                </button>
+              )}
+              <div className="flex items-center gap-1 bg-[#F4F6F8] rounded-lg p-1">
+                {[{ mode: 'grid', Icon: LayoutGrid, label: 'Grid' }, { mode: 'table', Icon: List, label: 'Table' }].map(({ mode, Icon, label }) => (
+                  <button key={mode} onClick={() => setViewMode(mode)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all"
+                    style={{ background: viewMode === mode ? '#002333' : 'transparent', color: viewMode === mode ? '#fff' : '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                    <Icon size={13} strokeWidth={2.5} />{label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {viewMode === 'grid' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+              {filtered.map((school) => {
+                const tc = typeColors[school.type] || { bg: '#F4F6F8', color: '#666' }
+                return (
+                  <div key={school.id}
+                    className="bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-200"
+                    style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
+                    onClick={() => setSelected(school)}
+                    onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,35,51,0.10)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,35,51,0.05)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                  >
+                    <div className="px-5 pt-4 pb-3" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <SchoolLogo name={school.name} size={40} />
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-[#002333] truncate" style={{ fontFamily: 'Sora, sans-serif' }}>{school.name}</p>
+                            <p className="text-[10px] font-mono text-[#9CA3AF]">{school.code}</p>
+                          </div>
+                        </div>
+                        <span className="text-xs px-2.5 py-[3px] rounded-full font-semibold flex-shrink-0"
+                          style={{ background: tc.bg, color: tc.color, fontFamily: 'Lato, sans-serif' }}>
+                          {school.type}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="px-5 py-3 grid grid-cols-3 gap-2" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                      {[
+                        { label: 'District', value: school.district.replace(' District', '') },
+                        { label: 'Enrolled', value: school.enrollment.toLocaleString() },
+                        { label: 'Est.', value: school.established },
+                      ].map((s) => (
+                        <div key={s.label}>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
+                          <p className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="px-5 py-3 flex items-center justify-between">
+                      <ComplianceDot value={school.compliance} />
+                      <span className="text-xs px-2.5 py-[3px] rounded-full font-semibold"
+                        style={{ background: school.status === 'Active' ? 'rgba(72,208,140,0.10)' : 'rgba(166,0,3,0.09)', color: school.status === 'Active' ? '#16A34A' : '#A60003', fontFamily: 'Lato, sans-serif' }}>
+                        {school.status}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+              {filtered.length === 0 && (
+                <div className="col-span-3 py-16 text-center">
+                  <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No schools match your filter</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {viewMode === 'table' && <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr style={{ background: '#FAFBFC' }}>
@@ -271,7 +331,7 @@ export default function Schools() {
                       {/* School */}
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
-                          <SchoolLogo name={school.name} color={school.logoColor} size={36} />
+                          <SchoolLogo name={school.name} size={36} />
                           <div>
                             <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif', maxWidth: 190 }}>{school.name}</p>
                             <span className="text-[10px] text-[#6B7280] font-mono">{school.code}</span>
@@ -361,7 +421,7 @@ export default function Schools() {
                 <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No schools match your filter</p>
               </div>
             )}
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -372,7 +432,7 @@ export default function Schools() {
           <div className="bg-white rounded-2xl w-full max-w-lg p-6" style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.20)' }}
             onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-4 mb-5">
-              <SchoolLogo name={selected.name} color={selected.logoColor} size={48} />
+              <SchoolLogo name={selected.name} size={48} />
               <div>
                 <h3 className="font-bold text-[#002333] text-lg" style={{ fontFamily: 'Sora, sans-serif' }}>{selected.name}</h3>
                 <p className="text-xs text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{selected.code} · Est. {selected.established}</p>

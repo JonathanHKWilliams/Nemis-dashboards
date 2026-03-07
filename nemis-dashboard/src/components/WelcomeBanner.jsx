@@ -10,7 +10,7 @@ export default function WelcomeBanner() {
     <div
       className="rounded-2xl p-6 text-white overflow-hidden relative"
       style={{
-        background: 'linear-gradient(135deg, #002333 0%, #003d5c 55%, #004a70 100%)',
+        background: 'linear-gradient(135deg, #000E21 0%, #002040 55%, #002d5c 100%)',
         boxShadow: '0 4px 24px rgba(0,35,51,0.18)',
       }}
     >
@@ -27,36 +27,12 @@ export default function WelcomeBanner() {
       <div className="relative flex flex-col lg:flex-row gap-6 lg:items-center">
         {/* ── Left: Welcome Text ── */}
         <div className="flex-1">
-          <p
-            className="text-[11px] font-medium uppercase tracking-widest text-white/50 mb-1"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
-          >
-            CEO Dashboard · February 2026
-          </p>
           <h2
             className="text-2xl font-bold leading-snug"
             style={{ fontFamily: 'Sora, sans-serif' }}
           >
-            Welcome Back, Dr. Johnson
+            Welcome Back, Mr. Jefferson Vobah
           </h2>
-          <p
-            className="text-white/65 mt-1.5 text-sm max-w-md leading-relaxed"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
-          >
-            Here's a snapshot of district &amp; school operations for February 2026.
-          </p>
-
-          <div className="flex items-center gap-2 mt-4">
-            <span
-              className="w-2 h-2 rounded-full bg-[#48D08C] animate-pulse"
-            />
-            <span
-              className="text-[11px] text-white/45"
-              style={{ fontFamily: 'Roboto, sans-serif' }}
-            >
-              System operational · Last updated: Feb 24, 2026 at 08:45 AM
-            </span>
-          </div>
         </div>
 
         {/* ── Right: Quick Stats ── */}

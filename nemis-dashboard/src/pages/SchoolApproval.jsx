@@ -1,13 +1,10 @@
 import { useState } from 'react'
-import { CheckCircle, XCircle, Eye, Search } from 'lucide-react'
+import { CheckCircle, XCircle, Eye, Search, LayoutGrid, List } from 'lucide-react'
 import { schoolApprovals as initialApprovals } from '../data/mockData'
 
 function SchoolLogo({ name, size = 32 }) {
-  const colors = ['#002333','#A60003','#2563EB','#7C3AED','#D97706','#0891B2','#16A34A']
-  const hex = colors[name.charCodeAt(0) % colors.length].replace('#', '')
-  const initials = name.split(' ').filter(w => w.length > 2).map(w => w[0]).join('').slice(0, 3).toUpperCase() ||
-    name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-  const src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=${hex}&color=ffffff&size=128&bold=true&font-size=0.45`
+  const slug = name.toLowerCase().replace(/\s+/g, '-')
+  const src = `https://picsum.photos/seed/${slug}/${size * 2}/${size * 2}`
   return <img src={src} alt={name} className="rounded-lg object-cover flex-shrink-0" style={{ width: size, height: size }} />
 }
 
@@ -34,6 +31,7 @@ export default function SchoolApproval() {
   const [filter, setFilter] = useState('All')
   const [search, setSearch] = useState('')
   const [selectedSchool, setSelectedSchool] = useState(null)
+  const [viewMode, setViewMode] = useState('grid')
 
   const handleApprove = (id) =>
     setApprovals((prev) => prev.map((a) => (a.id === id ? { ...a, status: 'Approved' } : a)))
@@ -57,16 +55,6 @@ export default function SchoolApproval() {
 
   return (
     <div className="space-y-5 max-w-[1180px]">
-      {/* Page Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-          School Approval
-        </h2>
-        <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-          Review and approve Grand Bassa school registration applications
-        </p>
-      </div>
-
       {/* Stat Tabs */}
       <div className="flex gap-3">
         {Object.entries(counts).map(([label, count]) => {
@@ -130,13 +118,90 @@ export default function SchoolApproval() {
               style={{ fontFamily: 'Lato, sans-serif', fontWeight: 500 }}
             />
           </div>
-          <p className="text-xs font-medium text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-            {filtered.length} applications
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
+              {filtered.length} applications
+            </p>
+            <div className="flex items-center gap-1 bg-[#F4F6F8] rounded-lg p-1">
+              {[{ mode: 'grid', Icon: LayoutGrid, label: 'Grid' }, { mode: 'table', Icon: List, label: 'Table' }].map(({ mode, Icon, label }) => (
+                <button key={mode} onClick={() => setViewMode(mode)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all"
+                  style={{ background: viewMode === mode ? '#002333' : 'transparent', color: viewMode === mode ? '#fff' : '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                  <Icon size={13} strokeWidth={2.5} />{label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
+        {viewMode === 'grid' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+            {filtered.map((school) => (
+              <div key={school.id}
+                className="bg-white rounded-xl overflow-hidden transition-all duration-200"
+                style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
+              >
+                <div className="px-5 pt-4 pb-3" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                  <div className="flex items-center gap-3">
+                    <SchoolLogo name={school.name} size={40} />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-[#002333] truncate" style={{ fontFamily: 'Sora, sans-serif' }}>{school.name}</p>
+                      <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{school.district}</p>
+                    </div>
+                    <StatusBadge status={school.status} />
+                  </div>
+                </div>
+                <div className="px-5 py-3 grid grid-cols-3 gap-2" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                  {[
+                    { label: 'Type', value: school.type },
+                    { label: 'Students', value: school.students?.toLocaleString() ?? '—' },
+                    { label: 'Submitted', value: school.dateSubmitted },
+                  ].map((s) => (
+                    <div key={s.label}>
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
+                      <p className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-5 py-3 flex items-center justify-end gap-2">
+                  {school.status === 'Pending' ? (
+                    <>
+                      <button onClick={() => handleApprove(school.id)}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+                        style={{ background: 'rgba(72,208,140,0.1)', color: '#16A34A', fontFamily: 'Lato, sans-serif' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(72,208,140,0.2)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(72,208,140,0.1)' }}>
+                        <CheckCircle size={12} strokeWidth={2.5} /> Approve
+                      </button>
+                      <button onClick={() => handleReject(school.id)}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+                        style={{ background: 'rgba(166,0,3,0.08)', color: '#A60003', fontFamily: 'Lato, sans-serif' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(166,0,3,0.16)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(166,0,3,0.08)' }}>
+                        <XCircle size={12} strokeWidth={2.5} /> Reject
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => setSelectedSchool(school)}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#374151] transition-colors"
+                      style={{ background: '#F4F6F8', fontFamily: 'Lato, sans-serif' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#EEF0F3' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = '#F4F6F8' }}>
+                      <Eye size={12} strokeWidth={2.5} /> View
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+            {filtered.length === 0 && (
+              <div className="col-span-3 py-16 text-center">
+                <p className="text-[#6B7280] text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>No applications match your filter.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {viewMode === 'table' && <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr style={{ background: '#FAFBFC' }}>
@@ -171,7 +236,7 @@ export default function SchoolApproval() {
                       </span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                  <td className="px-5 py-4 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
                     {school.district}
                   </td>
                   <td className="px-5 py-4">
@@ -186,10 +251,10 @@ export default function SchoolApproval() {
                       {school.type}
                     </span>
                   </td>
-                  <td className="px-5 py-4 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                  <td className="px-5 py-4 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>
                     {school.students?.toLocaleString() ?? '—'}
                   </td>
-                  <td className="px-5 py-4 text-sm font-medium text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                  <td className="px-5 py-4 text-sm font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
                     {school.dateSubmitted}
                   </td>
                   <td className="px-5 py-4">
@@ -251,7 +316,7 @@ export default function SchoolApproval() {
               </p>
             </div>
           )}
-        </div>
+        </div>}
       </div>
 
       {/* Detail Modal */}
@@ -272,7 +337,7 @@ export default function SchoolApproval() {
                 <h3 className="font-bold text-[#002333] text-lg" style={{ fontFamily: 'Sora, sans-serif' }}>
                   {selectedSchool.name}
                 </h3>
-                <p className="text-xs font-medium text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
                   Application Details
                 </p>
               </div>

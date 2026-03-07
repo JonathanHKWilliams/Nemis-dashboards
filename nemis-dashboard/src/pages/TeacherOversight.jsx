@@ -1,12 +1,7 @@
 import { useState, useMemo } from 'react'
-import { Search, Send, FileText, Users, CheckCircle, AlertCircle, Clock } from 'lucide-react'
+import { Search, Send, FileText, Users, CheckCircle, AlertCircle } from 'lucide-react'
 import { teachersData } from '../data/mockData'
 
-const statusConfig = {
-  Active:    { label: 'Submitted',  bg: 'rgba(72,208,140,0.10)',  color: '#16A34A' },
-  'On Leave':{ label: 'On Leave',   bg: 'rgba(245,158,11,0.10)', color: '#D97706' },
-  Suspended: { label: 'Suspended',  bg: 'rgba(166,0,3,0.10)',    color: '#A60003' },
-}
 
 function getReportStatus(teacher) {
   if (teacher.status === 'Suspended') return 'Overdue'
@@ -65,7 +60,6 @@ export default function TeacherOversight() {
     }), [enriched, search, category, statusF])
 
   const submitted = enriched.filter(t => t.reportStatus === 'Submitted').length
-  const pending   = enriched.filter(t => t.reportStatus === 'Pending').length
   const overdue   = enriched.filter(t => t.reportStatus === 'Overdue').length
   const compliance = Math.round((submitted / enriched.length) * 100)
 
@@ -77,13 +71,6 @@ export default function TeacherOversight() {
 
   return (
     <div className="space-y-5 max-w-[1180px]">
-      <div>
-        <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Teacher Oversight</h2>
-        <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-          Monitor teacher activity reports, compliance rates, and submit oversight evaluations
-        </p>
-      </div>
-
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4">
         {[

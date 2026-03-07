@@ -21,7 +21,7 @@ function SectionBlock({ title, desc, children }) {
       {(title || desc) && (
         <div className="mb-5 pb-4" style={{ borderBottom: '1px solid #F4F6F8' }}>
           {title && <h3 className="text-[15px] font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{title}</h3>}
-          {desc  && <p  className="text-xs text-[#6B7280] mt-0.5"             style={{ fontFamily: 'Lato, sans-serif' }}>{desc}</p>}
+          {desc  && <p  className="text-xs font-semibold text-[#4B5563] mt-0.5"             style={{ fontFamily: 'Lato, sans-serif' }}>{desc}</p>}
         </div>
       )}
       {children}
@@ -33,8 +33,8 @@ function FieldRow({ label, hint, children }) {
   return (
     <div className="flex items-start justify-between gap-6 py-3.5" style={{ borderBottom: '1px solid #F4F6F8' }}>
       <div className="min-w-[180px]">
-        <p className="text-sm font-medium text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</p>
-        {hint && <p className="text-xs text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{hint}</p>}
+        <p className="text-sm font-semibold text-[#0F172A]" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</p>
+        {hint && <p className="text-xs font-semibold text-[#4B5563] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{hint}</p>}
       </div>
       <div className="flex-1 max-w-sm">{children}</div>
     </div>
@@ -50,7 +50,7 @@ function Input({ value, onChange, placeholder, type = 'text' }) {
       placeholder={placeholder}
       className="w-full px-3 py-2 text-sm rounded-lg outline-none text-[#002333]"
       style={{ border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', background: '#FAFBFC' }}
-      onFocus={e => e.target.style.borderColor = '#48D08C'}
+      onFocus={e => e.target.style.borderColor = '#0367A0'}
       onBlur={e => e.target.style.borderColor = '#EEF0F3'}
     />
   )
@@ -64,7 +64,7 @@ function Toggle({ on, onToggle }) {
       style={{ fontFamily: 'Lato, sans-serif', color: on ? '#16A34A' : '#9CA3AF' }}
     >
       {on
-        ? <ToggleRight size={26} strokeWidth={2.5} style={{ color: '#48D08C' }} />
+        ? <ToggleRight size={26} strokeWidth={2.5} style={{ color: '#0367A0' }} />
         : <ToggleLeft  size={26} strokeWidth={2.5} style={{ color: '#CBD5E1' }} />}
       <span>{on ? 'Enabled' : 'Disabled'}</span>
     </button>
@@ -211,7 +211,7 @@ function Account() {
           </div>
           <div>
             <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Profile Photo</p>
-            <p className="text-xs text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>JPG, PNG or GIF — max 2MB</p>
+            <p className="text-xs font-semibold text-[#4B5563] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>JPG, PNG or GIF — max 2MB</p>
             <button className="mt-2.5 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
               style={{ background: 'rgba(0,35,51,0.07)', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
               <Upload size={12} strokeWidth={2.5} /> Upload Photo
@@ -225,20 +225,20 @@ function Account() {
             { label: 'Role / Title', k: 'role' },    { label: 'Department', k: 'department' },
           ].map(({ label, k }) => (
             <div key={k}>
-              <label className="block text-xs text-[#6B7280] mb-1.5 uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</label>
+              <label className="block text-xs font-semibold text-[#4B5563] mb-1.5 uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</label>
               <Input value={form[k]} onChange={e => set(k, e.target.value)} />
             </div>
           ))}
         </div>
         <div className="mt-4">
-          <label className="block text-xs text-[#6B7280] mb-1.5 uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>Bio</label>
+          <label className="block text-xs font-semibold text-[#4B5563] mb-1.5 uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>Bio</label>
           <textarea
             value={form.bio}
             onChange={e => set('bio', e.target.value)}
             rows={3}
             className="w-full px-3 py-2 text-sm rounded-lg outline-none text-[#002333] resize-none"
             style={{ border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', background: '#FAFBFC' }}
-            onFocus={e => e.target.style.borderColor = '#48D08C'}
+            onFocus={e => e.target.style.borderColor = '#0367A0'}
             onBlur={e => e.target.style.borderColor = '#EEF0F3'}
           />
         </div>
@@ -273,7 +273,7 @@ function Security() {
             { label: 'Confirm New Password', key: 'confirm', show: showNew, toggle: () => setShowNew(p => !p) },
           ].map(({ label, key, show, toggle }) => (
             <div key={key}>
-              <label className="block text-xs text-[#6B7280] mb-1.5 uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</label>
+              <label className="block text-xs font-semibold text-[#4B5563] mb-1.5 uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</label>
               <div className="relative">
                 <input
                   type={show ? 'text' : 'password'}
@@ -281,7 +281,7 @@ function Security() {
                   onChange={e => setPwForm(p => ({ ...p, [key]: e.target.value }))}
                   className="w-full px-3 py-2 pr-10 text-sm rounded-lg outline-none text-[#002333]"
                   style={{ border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', background: '#FAFBFC' }}
-                  onFocus={e => e.target.style.borderColor = '#48D08C'}
+                  onFocus={e => e.target.style.borderColor = '#0367A0'}
                   onBlur={e => e.target.style.borderColor = '#EEF0F3'}
                 />
                 <button onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280]">
@@ -313,13 +313,13 @@ function Security() {
         <div className="space-y-2">
           {sessions.map((s) => (
             <div key={s.ip} className="flex items-center justify-between p-3.5 rounded-lg"
-              style={{ background: s.current ? 'rgba(72,208,140,0.06)' : '#FAFBFC', border: `1px solid ${s.current ? 'rgba(72,208,140,0.18)' : '#EEF0F3'}` }}>
+              style={{ background: s.current ? 'rgba(3,103,160,0.06)' : '#FAFBFC', border: `1px solid ${s.current ? 'rgba(3,103,160,0.18)' : '#EEF0F3'}` }}>
               <div>
-                <p className="text-sm font-medium text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.device}</p>
-                <p className="text-xs text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{s.ip} · {s.location} · {s.time}</p>
+                <p className="text-sm font-semibold text-[#0F172A]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.device}</p>
+                <p className="text-xs font-semibold text-[#4B5563] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{s.ip} · {s.location} · {s.time}</p>
               </div>
               {s.current
-                ? <span className="text-xs px-2.5 py-[3px] rounded-full font-medium" style={{ background: 'rgba(72,208,140,0.10)', color: '#16A34A', fontFamily: 'Lato, sans-serif' }}>Current</span>
+                ? <span className="text-xs px-2.5 py-[3px] rounded-full font-medium" style={{ background: 'rgba(3,103,160,0.10)', color: '#16A34A', fontFamily: 'Lato, sans-serif' }}>Current</span>
                 : <button className="text-xs px-2.5 py-[3px] rounded-full font-medium" style={{ background: 'rgba(166,0,3,0.08)', color: '#A60003', fontFamily: 'Lato, sans-serif' }}>Revoke</button>}
             </div>
           ))}
@@ -351,16 +351,16 @@ function NotificationPrefs() {
         <div>
           <div className="grid grid-cols-[1fr_80px_80px_80px] gap-2 pb-2 mb-1"
             style={{ borderBottom: '1px solid #EEF0F3' }}>
-            <span className="text-[11px] font-medium uppercase tracking-wider text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>Category</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>Category</span>
             {['Email','Push','SMS'].map(c => (
-              <span key={c} className="text-[11px] font-medium uppercase tracking-wider text-[#6B7280] text-center" style={{ fontFamily: 'Lato, sans-serif' }}>{c}</span>
+              <span key={c} className="text-[11px] font-bold uppercase tracking-wider text-[#374151] text-center" style={{ fontFamily: 'Lato, sans-serif' }}>{c}</span>
             ))}
           </div>
           {prefs.map((r, i) => (
             <div key={r.label} className="grid grid-cols-[1fr_80px_80px_80px] gap-2 py-3.5 items-center" style={{ borderBottom: '1px solid #F4F6F8' }}>
               <div>
-                <p className="text-sm font-medium text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.label}</p>
-                <p className="text-xs text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.hint}</p>
+                <p className="text-sm font-semibold text-[#0F172A]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.label}</p>
+                <p className="text-xs font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.hint}</p>
               </div>
               {(['email','push','sms']).map(ch => (
                 <div key={ch} className="flex justify-center">
@@ -407,7 +407,7 @@ function Integrations() {
                     <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{intg.name}</p>
                     <span className="text-[10px] px-2 py-[2px] rounded-full" style={{ background: intg.tagBg, color: intg.tagColor, fontFamily: 'Lato, sans-serif' }}>{intg.tag}</span>
                   </div>
-                  <p className="text-xs text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{intg.desc}</p>
+                  <p className="text-xs font-semibold text-[#4B5563] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{intg.desc}</p>
                 </div>
               </div>
               <Toggle on={intg.status} onToggle={() => toggle(intg.id)} />
@@ -444,19 +444,19 @@ function SystemConfig() {
         <FieldRow label="Max Upload Size" hint="Maximum file upload size in megabytes">
           <div className="flex items-center gap-2">
             <Input value={cfg.maxUploadMB} onChange={e => set('maxUploadMB', e.target.value)} />
-            <span className="text-sm text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>MB</span>
+            <span className="text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>MB</span>
           </div>
         </FieldRow>
         <FieldRow label="Audit Log Retention" hint="Days to retain system audit logs">
           <div className="flex items-center gap-2">
             <Input value={cfg.auditRetentionDays} onChange={e => set('auditRetentionDays', e.target.value)} />
-            <span className="text-sm text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>days</span>
+            <span className="text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>days</span>
           </div>
         </FieldRow>
         <FieldRow label="Report Retention" hint="Days to keep generated reports">
           <div className="flex items-center gap-2">
             <Input value={cfg.reportRetentionDays} onChange={e => set('reportRetentionDays', e.target.value)} />
-            <span className="text-sm text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>days</span>
+            <span className="text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>days</span>
           </div>
         </FieldRow>
       </SectionBlock>
@@ -500,7 +500,7 @@ function SystemConfig() {
           style={{ background: 'rgba(166,0,3,0.04)', border: '1px solid rgba(166,0,3,0.14)' }}>
           <div>
             <p className="text-sm font-semibold" style={{ color: '#A60003', fontFamily: 'Sora, sans-serif' }}>Reset All Settings</p>
-            <p className="text-xs text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>Restore all configurations to factory defaults. This cannot be undone.</p>
+            <p className="text-xs font-semibold text-[#4B5563] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>Restore all configurations to factory defaults. This cannot be undone.</p>
           </div>
           <button className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white"
             style={{ background: '#A60003', fontFamily: 'Lato, sans-serif' }}>
@@ -528,7 +528,7 @@ export default function Settings() {
         <div className="bg-white rounded-xl overflow-hidden sticky top-6"
           style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
           <div className="px-4 py-4" style={{ borderBottom: '1px solid #F4F6F8' }}>
-            <p className="text-[11px] font-medium uppercase tracking-wider text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>Settings</p>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>Settings</p>
           </div>
           <nav className="p-2">
             {NAV.map(({ key, label, icon: Icon }) => {
@@ -542,10 +542,10 @@ export default function Settings() {
                     fontFamily: 'Lato, sans-serif',
                     background: active ? 'rgba(0,35,51,0.07)' : 'transparent',
                     color: active ? '#002333' : '#6B7280',
-                    borderLeft: active ? '3px solid #48D08C' : '3px solid transparent',
+                    borderLeft: active ? '3px solid #0367A0' : '3px solid transparent',
                   }}
                 >
-                  <Icon size={15} strokeWidth={2.5} style={{ color: active ? '#48D08C' : '#6B7280' }} />
+                  <Icon size={15} strokeWidth={2.5} style={{ color: active ? '#0367A0' : '#6B7280' }} />
                   {label}
                 </button>
               )
@@ -556,14 +556,6 @@ export default function Settings() {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="mb-5">
-          <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-            {NAV.find(n => n.key === activeSection)?.label}
-          </h2>
-          <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-            Manage your NEMIS platform configuration
-          </p>
-        </div>
         <PageComponent />
       </div>
     </div>

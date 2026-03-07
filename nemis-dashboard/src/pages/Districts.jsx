@@ -10,7 +10,7 @@ function ComplianceBar({ value }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[11px] text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>Compliance</span>
+        <span className="text-[11px] font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>Compliance</span>
         <span className="text-xs font-bold" style={{ color, fontFamily: 'Sora, sans-serif' }}>{value}%</span>
       </div>
       <div className="h-1.5 rounded-full" style={{ background: '#EEF0F3' }}>
@@ -80,16 +80,6 @@ export default function Districts() {
 
   return (
     <div className="space-y-5 max-w-[1180px]">
-      {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-          Grand Bassa Districts
-        </h2>
-        <p className="text-sm text-[#6B7280] mt-0.5 font-medium" style={{ fontFamily: 'Lato, sans-serif' }}>
-          All 9 education districts in Grand Bassa County — DEOs, schools and compliance overview
-        </p>
-      </div>
-
       {/* Summary Stats */}
       <div className="grid grid-cols-4 gap-4">
         {[
@@ -179,7 +169,7 @@ export default function Districts() {
                       </span>
                     </div>
                   </div>
-                  <span className="text-xl font-bold text-gray-200" style={{ fontFamily: 'Sora, sans-serif' }}>
+                  <span className="text-xl font-bold text-[#D1D5DB]" style={{ fontFamily: 'Sora, sans-serif' }}>
                     #{String(district.id).padStart(2, '0')}
                   </span>
                 </div>
@@ -194,7 +184,7 @@ export default function Districts() {
                 ].map((s) => (
                   <div key={s.label} className="text-center">
                     <p className="text-lg font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
-                    <p className="text-[10px] text-[#6B7280] uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
+                    <p className="text-[10px] font-semibold text-[#6B7280] uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -215,7 +205,7 @@ export default function Districts() {
                     <p className="text-sm font-semibold text-[#002333] truncate" style={{ fontFamily: 'Sora, sans-serif' }}>
                       {district.deo.name}
                     </p>
-                    <p className="text-xs text-[#6B7280] truncate" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    <p className="text-xs font-semibold text-[#6B7280] truncate" style={{ fontFamily: 'Lato, sans-serif' }}>
                       {district.deo.email}
                     </p>
                   </div>
@@ -250,17 +240,17 @@ export default function Districts() {
                       onMouseLeave={(e) => { e.currentTarget.style.background = '' }}>
                       <td className="px-5 py-3.5">
                         <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{district.name}</p>
-                        <p className="text-xs text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.county} County</p>
+                        <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.county} County</p>
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
                           {renderDEOAvatar(district, 32)}
-                          <p className="text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.deo.name}</p>
+                          <p className="text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.deo.name}</p>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-sm font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{district.schools}</td>
-                      <td className="px-5 py-3.5 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{(district.students/1000).toFixed(1)}K</td>
-                      <td className="px-5 py-3.5 text-sm font-medium text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.teachers}</td>
+                      <td className="px-5 py-3.5 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{(district.students/1000).toFixed(1)}K</td>
+                      <td className="px-5 py-3.5 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.teachers}</td>
                       <td className="px-5 py-3.5 min-w-[140px]">
                         <div className="flex items-center gap-2">
                           <div className="flex-1 h-1.5 rounded-full" style={{ background: '#EEF0F3' }}>
@@ -372,8 +362,8 @@ export default function Districts() {
                   {renderDEOAvatar(selectedDistrict, 48)}
                   <div>
                     <p className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{selectedDistrict.deo.name}</p>
-                    <p className="text-xs text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{selectedDistrict.deo.email}</p>
-                    <p className="text-xs text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{selectedDistrict.deo.phone}</p>
+                    <p className="text-xs font-semibold text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{selectedDistrict.deo.email}</p>
+                    <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{selectedDistrict.deo.phone}</p>
                   </div>
                 </div>
                 <button
@@ -436,7 +426,7 @@ export default function Districts() {
                 {announcements.filter(a => a.districtId === selectedDistrict.id).length === 0 ? (
                   <div className="py-6 text-center">
                     <Megaphone size={22} strokeWidth={2.5} className="mx-auto mb-2" style={{ color: '#D1D5DB' }} />
-                    <p className="text-xs text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>No announcements posted yet</p>
+                    <p className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>No announcements posted yet</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -445,7 +435,7 @@ export default function Districts() {
                         <p className="text-[10px] font-semibold text-[#6B7280] uppercase tracking-wide mb-1" style={{ fontFamily: 'Lato, sans-serif' }}>
                           Posted • {ann.date}
                         </p>
-                        <p className="text-sm font-medium text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{ann.message}</p>
+                        <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{ann.message}</p>
                       </div>
                     ))}
                   </div>

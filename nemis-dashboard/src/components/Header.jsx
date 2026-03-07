@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, MessageSquare, Plus, ChevronDown, Search, LogOut, User, Settings } from 'lucide-react'
+import { Bell, MessageSquare, ChevronDown, Search, LogOut, User, Settings } from 'lucide-react'
 import NotificationDropdown from './NotificationDropdown'
 import { notifications, messages } from '../data/mockData'
 
@@ -101,24 +101,14 @@ export default function Header({ title, breadcrumb, setActivePage }) {
         >
           <MessageSquare size={20} strokeWidth={2.5} className="text-[#002333]" />
           {unreadMessages > 0 && (
-            <span className="absolute top-[7px] right-[7px] w-[17px] h-[17px] bg-[#48D08C] rounded-full flex items-center justify-center text-white leading-none"
+            <span className="absolute top-[7px] right-[7px] w-[17px] h-[17px] bg-[#0367A0] rounded-full flex items-center justify-center text-white leading-none"
               style={{ fontSize: 9, fontFamily: 'Lato, sans-serif', fontWeight: 800 }}>
               {unreadMessages}
             </span>
           )}
         </button>
 
-        {/* ── Create User ── */}
-        <button
-          onClick={() => setActivePage('users')}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95"
-          style={{ background: '#48D08C', fontFamily: 'Lato, sans-serif' }}
-        >
-          <Plus size={15} strokeWidth={2.5} />
-          <span className="hidden lg:inline">Create User</span>
-        </button>
-
-        {/* ── CEO Profile ── */}
+{/* ── CEO Profile ── */}
         <div className="relative" ref={profileRef}>
           <button
             onClick={() => { setShowProfile((p) => !p); setShowNotifications(false) }}

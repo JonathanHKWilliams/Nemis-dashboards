@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
   Bell, CheckSquare, FileText, AlertTriangle, Info,
-  CheckCircle, Trash2, BellOff, Filter,
+  CheckCircle, Trash2, BellOff,
 } from 'lucide-react'
 import { notifications as allNotifications } from '../data/mockData'
 
@@ -14,10 +14,10 @@ const TABS = [
 ]
 
 const typeConfig = {
-  approval: { bg: 'rgba(72,208,140,0.1)',  color: '#16A34A', icon: CheckSquare },
-  report:   { bg: 'rgba(0,35,51,0.07)',    color: '#002333', icon: FileText },
-  alert:    { bg: 'rgba(166,0,3,0.10)',    color: '#A60003', icon: AlertTriangle },
-  system:   { bg: 'rgba(59,130,246,0.10)', color: '#2563EB', icon: Info },
+  approval: { bg: '#F4F6F8', color: '#0F172A', icon: CheckSquare },
+  report:   { bg: '#F4F6F8', color: '#0F172A', icon: FileText },
+  alert:    { bg: '#F4F6F8', color: '#0F172A', icon: AlertTriangle },
+  system:   { bg: '#F4F6F8', color: '#0F172A', icon: Info },
 }
 
 export default function NotificationsPage() {
@@ -29,58 +29,24 @@ export default function NotificationsPage() {
   const remove      = (id) => setItems((p) => p.filter((n) => n.id !== id))
 
   const filtered = activeTab === 'all' ? items : items.filter((n) => n.type === activeTab)
-  const unreadCount = items.filter((n) => !n.read).length
   const tabCount = (key) => key === 'all' ? items.filter(n => !n.read).length : items.filter(n => n.type === key && !n.read).length
 
   return (
     <div className="space-y-5 max-w-[900px]">
-      {/* Page Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-            Notification Center
-          </h2>
-          <p className="text-sm text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-            {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={markAllRead}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-            style={{
-              background: 'rgba(0,35,51,0.06)',
-              color: '#002333',
-              fontFamily: 'Lato, sans-serif',
-            }}
-          >
-            <CheckCircle size={14} strokeWidth={2.5} />
-            Mark All Read
-          </button>
-        </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-4">
-        {[
-          { label: 'Total',     value: items.length,                                         color: '#002333', bg: 'rgba(0,35,51,0.07)' },
-          { label: 'Unread',    value: items.filter(n => !n.read).length,                    color: '#A60003', bg: 'rgba(166,0,3,0.08)' },
-          { label: 'Alerts',    value: items.filter(n => n.type === 'alert').length,          color: '#D97706', bg: 'rgba(245,158,11,0.09)' },
-          { label: 'Approvals', value: items.filter(n => n.type === 'approval').length,       color: '#16A34A', bg: 'rgba(72,208,140,0.10)' },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="bg-white rounded-xl p-4"
-            style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
-          >
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-              {s.label}
-            </p>
-            <p className="text-3xl font-bold mt-1" style={{ fontFamily: 'Sora, sans-serif', color: s.color }}>
-              {s.value}
-            </p>
-          </div>
-        ))}
+      {/* Actions */}
+      <div className="flex justify-end">
+        <button
+          onClick={markAllRead}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+          style={{
+            background: 'rgba(0,35,51,0.06)',
+            color: '#002333',
+            fontFamily: 'Lato, sans-serif',
+          }}
+        >
+          <CheckCircle size={14} strokeWidth={2.5} />
+          Mark All Read
+        </button>
       </div>
 
       {/* Tabs + Content */}
@@ -189,12 +155,6 @@ export default function NotificationsPage() {
                     {notif.message}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span
-                      className="text-xs px-2.5 py-[3px] rounded-full font-semibold"
-                      style={{ background: cfg.bg, color: cfg.color, fontFamily: 'Lato, sans-serif' }}
-                    >
-                      {notif.type.charAt(0).toUpperCase() + notif.type.slice(1)}
-                    </span>
                     {!notif.read && (
                       <button
                         onClick={() => markRead(notif.id)}

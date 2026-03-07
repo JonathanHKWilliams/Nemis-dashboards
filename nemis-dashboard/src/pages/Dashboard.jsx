@@ -1,53 +1,19 @@
 import { useState } from 'react'
 import {
-  Clock,
   UserCheck,
-  BookOpen,
-  PieChart,
   CheckCircle,
   XCircle,
   Eye,
+  GraduationCap,
+  FileText,
+  UserCog,
+  Building2,
 } from 'lucide-react'
-import KPICard from '../components/KPICard'
 import WelcomeBanner from '../components/WelcomeBanner'
 import EnrollmentTrendChart from '../components/charts/EnrollmentTrendChart'
 import TopSchoolsChart from '../components/charts/TopSchoolsChart'
 import { schoolApprovals, teacherOversightData, recentActivities } from '../data/mockData'
 
-const kpiCards = [
-  {
-    title: 'Pending School Approvals',
-    value: '14',
-    change: '+3',
-    trend: 'up',
-    accentColor: 'red',
-    icon: Clock,
-  },
-  {
-    title: 'Teacher Oversight Compliance',
-    value: '92%',
-    change: '+2%',
-    trend: 'up',
-    accentColor: 'green',
-    icon: UserCheck,
-  },
-  {
-    title: 'Student Enrollment Rate',
-    value: '87%',
-    change: '+1.5%',
-    trend: 'up',
-    accentColor: 'blue',
-    icon: BookOpen,
-  },
-  {
-    title: 'Budget Utilization',
-    value: '73%',
-    change: '-2%',
-    trend: 'down',
-    accentColor: 'yellow',
-    icon: PieChart,
-  },
-]
 
 const statusStyles = {
   Pending: { bg: 'rgba(245,158,11,0.1)', color: '#D97706' },
@@ -76,13 +42,13 @@ function SectionCard({ title, subtitle, badge, children }) {
       className="bg-white rounded-xl overflow-hidden"
       style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
     >
-      <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #F4F6F8' }}>
+      <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #E2E8F0', background: '#F4F6F8' }}>
         <div>
-          <h3 className="text-[15px] font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
+          <h3 className="text-[15px] font-bold text-[#0F172A]" style={{ fontFamily: 'Sora, sans-serif' }}>
             {title}
           </h3>
           {subtitle && (
-            <p className="text-xs text-gray-400 mt-0.5" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-xs font-semibold text-[#374151] mt-0.5" style={{ fontFamily: 'Roboto, sans-serif' }}>
               {subtitle}
             </p>
           )}
@@ -108,13 +74,6 @@ export default function Dashboard() {
     <div className="space-y-5 max-w-[1180px]">
       {/* Welcome Banner */}
       <WelcomeBanner />
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        {kpiCards.map((card) => (
-          <KPICard key={card.title} {...card} />
-        ))}
-      </div>
 
       {/* Analytics Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -142,11 +101,11 @@ export default function Dashboard() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr style={{ background: '#FAFBFC' }}>
+              <tr style={{ background: '#BFD9F2' }}>
                 {['School Name', 'District', 'Date Submitted', 'Type', 'Status', 'Action'].map((h) => (
                   <th
                     key={h}
-                    className="text-left px-5 py-3 text-[11px] font-medium uppercase tracking-wider text-gray-400"
+                    className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#0F172A]"
                     style={{ fontFamily: 'Roboto, sans-serif' }}
                   >
                     {h}
@@ -155,26 +114,34 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {approvals.map((school) => (
+              {approvals.map((school, idx) => (
                 <tr
                   key={school.id}
                   className="transition-colors"
-                  style={{ borderTop: '1px solid #F4F6F8' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#FAFBFC' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = '' }}
+                  style={{ borderTop: '1px solid #F4F6F8', background: idx % 2 === 0 ? '#fff' : '#F8FAFC' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#EEF4FB' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#F8FAFC' }}
                 >
                   <td className="px-5 py-3.5">
-                    <span
-                      className="text-sm font-semibold text-[#002333]"
-                      style={{ fontFamily: 'Sora, sans-serif' }}
-                    >
-                      {school.name}
-                    </span>
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src={`https://picsum.photos/seed/school${school.id}/32/32`}
+                        alt={school.name}
+                        className="w-8 h-8 rounded-lg flex-shrink-0"
+                        style={{ border: '1px solid #E2E8F0' }}
+                      />
+                      <span
+                        className="text-sm font-semibold text-[#002333]"
+                        style={{ fontFamily: 'Sora, sans-serif' }}
+                      >
+                        {school.name}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                     {school.district}
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                     {school.dateSubmitted}
                   </td>
                   <td className="px-5 py-3.5">
@@ -268,11 +235,11 @@ export default function Dashboard() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr style={{ background: '#FAFBFC' }}>
+              <tr style={{ background: '#BFD9F2' }}>
                 {['Teacher', 'School', 'District', 'Last Report Date', 'Reports', 'Status'].map((h) => (
                   <th
                     key={h}
-                    className="text-left px-5 py-3 text-[11px] font-medium uppercase tracking-wider text-gray-400"
+                    className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#0F172A]"
                     style={{ fontFamily: 'Roboto, sans-serif' }}
                   >
                     {h}
@@ -281,12 +248,9 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {teacherOversightData.map((teacher) => {
-                const initials = teacher.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')
-                  .slice(0, 2)
+              {teacherOversightData.map((teacher, idx) => {
+                const teacherPhotos = { 1: 'men/31', 2: 'men/23', 3: 'women/47' }
+                const photoPath = teacherPhotos[teacher.id]
                 const compliancePct = Math.round(
                   (teacher.reportsSubmitted / teacher.reportsTotal) * 100
                 )
@@ -294,23 +258,18 @@ export default function Dashboard() {
                   <tr
                     key={teacher.id}
                     className="transition-colors"
-                    style={{ borderTop: '1px solid #F4F6F8' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = '#FAFBFC' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = '' }}
+                    style={{ borderTop: '1px solid #F4F6F8', background: idx % 2 === 0 ? '#fff' : '#F8FAFC' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = '#EEF4FB' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#F8FAFC' }}
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2.5">
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ background: 'rgba(0,35,51,0.07)' }}
-                        >
-                          <span
-                            className="text-[11px] font-bold text-[#002333]"
-                            style={{ fontFamily: 'Sora, sans-serif' }}
-                          >
-                            {initials}
-                          </span>
-                        </div>
+                        <img
+                          src={`https://randomuser.me/api/portraits/${photoPath}.jpg`}
+                          alt={teacher.name}
+                          className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
+                          style={{ border: '2px solid #EEF0F3' }}
+                        />
                         <span
                           className="text-sm font-semibold text-[#002333]"
                           style={{ fontFamily: 'Sora, sans-serif' }}
@@ -319,13 +278,13 @@ export default function Dashboard() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                       {teacher.school}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                       {teacher.district}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                    <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                       {teacher.lastReport}
                     </td>
                     <td className="px-5 py-3.5">
@@ -366,11 +325,11 @@ export default function Dashboard() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr style={{ background: '#FAFBFC' }}>
+              <tr style={{ background: '#BFD9F2' }}>
                 {['Date', 'Action', 'Actor', 'School / District', 'Status'].map((h) => (
                   <th
                     key={h}
-                    className="text-left px-5 py-3 text-[11px] font-medium uppercase tracking-wider text-gray-400"
+                    className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#0F172A]"
                     style={{ fontFamily: 'Roboto, sans-serif' }}
                   >
                     {h}
@@ -379,36 +338,50 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {recentActivities.map((activity) => (
+              {recentActivities.map((activity, idx) => {
+                const activityIcons = {
+                  'Updated Teacher Attendance': UserCheck,
+                  'Student Enrollment Edit': GraduationCap,
+                  'School Registration Submitted': Building2,
+                  'Q1 Budget Report Filed': FileText,
+                  'Teacher Oversight Review': Eye,
+                  'System User Created': UserCog,
+                }
+                const ActivityIcon = activityIcons[activity.action] || FileText
+                return (
                 <tr
                   key={activity.id}
                   className="transition-colors"
-                  style={{ borderTop: '1px solid #F4F6F8' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#FAFBFC' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = '' }}
+                  style={{ borderTop: '1px solid #F4F6F8', background: idx % 2 === 0 ? '#fff' : '#F8FAFC' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#EEF4FB' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#F8FAFC' }}
                 >
-                  <td className="px-5 py-3.5 text-sm text-gray-400" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <td className="px-5 py-3.5 text-sm font-semibold text-[#4B5563]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                     {activity.date}
                   </td>
                   <td className="px-5 py-3.5">
-                    <span
-                      className="text-sm font-medium text-[#002333]"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
-                    >
-                      {activity.action}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <ActivityIcon size={15} strokeWidth={3} className="text-[#0F172A] flex-shrink-0" />
+                      <span
+                        className="text-sm font-bold text-[#0F172A]"
+                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                      >
+                        {activity.action}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                     {activity.actor}
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <td className="px-5 py-3.5 text-sm font-semibold text-[#374151]" style={{ fontFamily: 'Roboto, sans-serif' }}>
                     {activity.location}
                   </td>
                   <td className="px-5 py-3.5">
                     <StatusBadge status={activity.status} />
                   </td>
                 </tr>
-              ))}
+              )
+              })}
             </tbody>
           </table>
         </div>
