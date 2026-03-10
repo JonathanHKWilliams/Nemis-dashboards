@@ -20,6 +20,7 @@ import Reports from './pages/Reports'
 import NotificationsPage from './pages/NotificationsPage'
 import Settings from './pages/Settings'
 import Tickets from './pages/Tickets'
+import Enrollment from './pages/Enrollment'
 import PlaceholderPage from './pages/PlaceholderPage'
 
 const PAGE_META = {
@@ -50,6 +51,7 @@ function renderPage(activePage) {
     case 'students':        return <Students />
     case 'teachers':        return <Teachers />
     case 'parents':         return <Parents />
+    case 'enrollment':      return <Enrollment />
     case 'reports':         return <Reports />
     case 'notifications':   return <NotificationsPage />
     case 'tickets':         return <Tickets />
