@@ -1,119 +1,117 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts'
-import { topSchoolsData } from '../../data/mockData'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
+import { schoolsData } from '../../data/mockData'
 
-const BAR_COLORS = ['#48D08C', '#002333', '#004466', '#005580', '#006699']
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        className="px-3.5 py-2.5 rounded-xl text-white"
-        style={{
-          background: '#002333',
-          boxShadow: '0 4px 16px rgba(0,35,51,0.25)',
-          fontFamily: 'Roboto, sans-serif',
-        }}
-      >
-        <p className="text-white/60 text-[11px]">{label}</p>
-        <p className="font-semibold text-sm mt-0.5" style={{ fontFamily: 'Sora, sans-serif' }}>
-          {payload[0].value}%
-        </p>
-        <p className="text-[11px] text-[#48D08C]">compliance score</p>
-      </div>
-    )
-  }
-  return null
+const TYPE_COLORS = {
+  Primary:    '#0367A0',
+  Secondary:  '#002333',
+  Technical:  '#7C3AED',
+  Vocational: '#F59E0B',
 }
 
-// Custom label inside bar
-const CustomBarLabel = ({ x, y, width, value }) => {
-  if (width < 30) return null
+// Aggregate enrollment by school type from schoolsData
+const typeMap = {}
+schoolsData.forEach(s => {
+  typeMap[s.type] = (typeMap[s.type] || 0) + s.enrollment
+})
+const chartData = Object.entries(typeMap).map(([type, value]) => ({ type, value, color: TYPE_COLORS[type] || '#9CA3AF' }))
+const totalEnrolled = chartData.reduce((s, d) => s + d.value, 0)
+
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null
+  const d = payload[0].payload
+  const pct = Math.round((d.value / totalEnrolled) * 100)
   return (
-    <text
-      x={x + width - 8}
-      y={y + 14}
-      fill="#fff"
-      fontSize={11}
-      fontFamily="Roboto, sans-serif"
-      fontWeight={600}
-      textAnchor="end"
-    >
-      {value}%
-    </text>
+    <div className="px-3.5 py-2.5 rounded-xl"
+      style={{ background: '#002333', boxShadow: '0 4px 16px rgba(0,35,51,0.25)', fontFamily: 'Roboto, sans-serif' }}>
+      <p className="text-white/60 text-[11px]">{d.type}</p>
+      <p className="font-black text-sm mt-0.5" style={{ fontFamily: 'Sora, sans-serif', color: d.color }}>
+        {d.value.toLocaleString()} students
+      </p>
+      <p className="text-[11px] text-white/50">{pct}% of total enrollment</p>
+    </div>
   )
 }
 
 export default function TopSchoolsChart() {
   return (
-    <div
-      className="bg-white rounded-xl p-5"
-      style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}
-    >
-      <div className="flex items-start justify-between mb-5">
+    <div className="bg-white rounded-xl p-5"
+      style={{ border: '1px solid #EEF0F3' }}>
+
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
         <div>
-          <h3
-            className="text-[15px] font-semibold text-[#002333]"
-            style={{ fontFamily: 'Sora, sans-serif' }}
-          >
-            Top Performing Districts
+          <h3 className="text-[15px] font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
+            Enrollment by School Type
           </h3>
-          <p className="text-xs text-gray-400 mt-0.5" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            Ranked by compliance &amp; performance score
+          <p className="text-xs font-semibold text-gray-400 mt-0.5" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            Distribution across all registered schools
           </p>
         </div>
-        <span
-          className="text-xs px-3 py-1 rounded-full font-medium"
-          style={{
-            background: 'rgba(0,35,51,0.06)',
-            color: '#002333',
-            fontFamily: 'Roboto, sans-serif',
-          }}
-        >
-          Feb 2026
+        <span className="text-xs px-3 py-1 rounded-full font-bold"
+          style={{ background: 'rgba(0,35,51,0.06)', color: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+          {totalEnrolled.toLocaleString()} total
         </span>
       </div>
 
-      <ResponsiveContainer width="100%" height={210}>
-        <BarChart
-          data={topSchoolsData}
-          layout="vertical"
-          margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
-          barCategoryGap="28%"
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#F0F2F4" horizontal={false} />
-          <XAxis
-            type="number"
-            domain={[0, 100]}
-            tick={{ fill: '#9CA3AF', fontSize: 10, fontFamily: 'Roboto, sans-serif' }}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(v) => `${v}%`}
-          />
-          <YAxis
-            type="category"
-            dataKey="school"
-            tick={{ fill: '#374151', fontSize: 11, fontFamily: 'Roboto, sans-serif' }}
-            axisLine={false}
-            tickLine={false}
-            width={138}
-          />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,35,51,0.03)' }} />
-          <Bar dataKey="compliance" radius={[0, 4, 4, 0]} label={<CustomBarLabel />}>
-            {topSchoolsData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={BAR_COLORS[index] || '#002333'} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="flex items-center gap-4">
+        {/* Donut */}
+        <div className="relative flex-shrink-0" style={{ width: 180, height: 180 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                innerRadius={54}
+                outerRadius={82}
+                paddingAngle={3}
+                dataKey="value"
+                strokeWidth={0}
+              >
+                {chartData.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+          {/* Centre label */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <p className="text-[11px] font-bold text-[#9CA3AF] leading-none" style={{ fontFamily: 'Lato, sans-serif' }}>ENROLLED</p>
+            <p className="text-lg font-black text-[#002333] mt-0.5 leading-none" style={{ fontFamily: 'Sora, sans-serif' }}>
+              {(totalEnrolled / 1000).toFixed(1)}k
+            </p>
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div className="flex-1 space-y-3">
+          {chartData.map(d => {
+            const pct = Math.round((d.value / totalEnrolled) * 100)
+            return (
+              <div key={d.type}>
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: d.color }} />
+                    <span className="text-[12px] font-bold text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>{d.type}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                      {d.value.toLocaleString()}
+                    </span>
+                    <span className="text-[11px] font-black w-9 text-right" style={{ color: d.color, fontFamily: 'Sora, sans-serif' }}>
+                      {pct}%
+                    </span>
+                  </div>
+                </div>
+                <div className="h-1.5 rounded-full" style={{ background: '#EEF0F3' }}>
+                  <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: d.color }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

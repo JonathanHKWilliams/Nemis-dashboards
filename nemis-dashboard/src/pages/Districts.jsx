@@ -156,9 +156,6 @@ export default function Districts() {
                       {district.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs px-2 py-[2px] rounded-full" style={{ background: 'rgba(0,35,51,0.07)', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
-                        {district.county} County
-                      </span>
                       <span className="text-xs px-2 py-[2px] rounded-full font-semibold"
                         style={{
                           background: district.status === 'Active' ? 'rgba(72,208,140,0.1)' : 'rgba(166,0,3,0.1)',
@@ -240,7 +237,6 @@ export default function Districts() {
                       onMouseLeave={(e) => { e.currentTarget.style.background = '' }}>
                       <td className="px-5 py-3.5">
                         <p className="text-sm font-semibold text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{district.name}</p>
-                        <p className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{district.county} County</p>
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
@@ -311,9 +307,6 @@ export default function Districts() {
                   {selectedDistrict.name}
                 </h3>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs px-2 py-[2px] rounded-full" style={{ background: 'rgba(0,35,51,0.07)', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
-                    {selectedDistrict.county} County
-                  </span>
                   <span className="text-xs px-2 py-[2px] rounded-full font-semibold"
                     style={{
                       background: selectedDistrict.status === 'Active' ? 'rgba(72,208,140,0.10)' : 'rgba(166,0,3,0.10)',

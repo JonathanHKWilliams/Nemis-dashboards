@@ -103,7 +103,7 @@ export default function Sidebar({ activePage, setActivePage, onSwitchDashboard }
         </div>
         <div>
           <p className="text-white text-[13px] font-bold leading-tight" style={{ fontFamily: 'Sora, sans-serif' }}>Grand Bassa NEMIS</p>
-          <p className="text-[11px] font-medium" style={{ color: 'rgba(3,103,160,0.85)', fontFamily: 'Lato, sans-serif' }}>County Education Office</p>
+          <p className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.60)', fontFamily: 'Lato, sans-serif' }}>County Education Office</p>
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto py-3 scrollbar-hide">

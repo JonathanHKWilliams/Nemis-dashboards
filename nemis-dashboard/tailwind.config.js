@@ -13,7 +13,7 @@ export default {
       colors: {
         primary: '#002333',
         'primary-dark': '#001822',
-        'nemis-green': '#48D08C',
+        'nemis-green': '#001b5a',
         'nemis-red': '#A60003',
         'light-gray': '#F4F6F8',
       },
