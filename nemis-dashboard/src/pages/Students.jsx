@@ -1,5 +1,36 @@
-import { useState, useMemo } from 'react'
-import { Search, GraduationCap, Users, UserCheck, Calendar, SlidersHorizontal } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { Search, GraduationCap, Users, UserCheck, Calendar, SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react'
+
+const PAGE_SIZE = 8
+
+function Pagination({ page, totalPages, onPage }) {
+  if (totalPages <= 1) return null
+  const range = Array.from({ length: totalPages }, (_, i) => i + 1)
+  return (
+    <div className="flex items-center justify-between pt-4">
+      <p className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Page {page} of {totalPages}</p>
+      <div className="flex items-center gap-1">
+        <button disabled={page === 1} onClick={() => onPage(page - 1)}
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold disabled:opacity-40"
+          style={{ background: '#F4F6F8', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
+          <ChevronLeft size={13} strokeWidth={2.5} /> Prev
+        </button>
+        {range.map(p => (
+          <button key={p} onClick={() => onPage(p)}
+            className="w-8 h-8 rounded-lg text-xs font-bold"
+            style={{ background: page === p ? '#002333' : '#F4F6F8', color: page === p ? '#fff' : '#374151', fontFamily: 'Lato, sans-serif' }}>
+            {p}
+          </button>
+        ))}
+        <button disabled={page === totalPages} onClick={() => onPage(page + 1)}
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold disabled:opacity-40"
+          style={{ background: '#F4F6F8', color: '#002333', fontFamily: 'Lato, sans-serif' }}>
+          Next <ChevronRight size={13} strokeWidth={2.5} />
+        </button>
+      </div>
+    </div>
+  )
+}
 import { studentsData } from '../data/mockData'
 
 const SCHOOL_NAMES   = ['All Schools',   ...Array.from(new Set(studentsData.map((s) => s.school)))]
@@ -57,6 +88,7 @@ export default function Students() {
   const [statusF, setStatusF]     = useState('All')
   const [viewMode, setViewMode]   = useState('cards')
   const [imgErrors, setImgErrors] = useState({})
+  const [page, setPage]           = useState(1)
 
   const onImgError = (id) => setImgErrors((p) => ({ ...p, [id]: true }))
 
@@ -77,6 +109,10 @@ export default function Students() {
     grade !== 'All Grades' || performance !== 'All' || statusF !== 'All'
 
   const clearAll = () => { setSearch(''); setSchool('All Schools'); setDistrict('All Districts'); setGrade('All Grades'); setPerf('All'); setStatusF('All') }
+
+  useEffect(() => { setPage(1) }, [search, school, district, grade, performance, statusF])
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginated  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   return (
     <div className="flex gap-6 max-w-[1200px]">
@@ -221,8 +257,9 @@ export default function Students() {
 
         {/* Card View */}
         {viewMode === 'cards' && (
+          <>
           <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
-            {filtered.map((student) => {
+            {paginated.map((student) => {
               const pc = perfConfig[student.performance] || perfConfig['Average']
               return (
                 <div key={student.id}
@@ -259,6 +296,8 @@ export default function Students() {
               )
             })}
           </div>
+          <Pagination page={page} totalPages={totalPages} onPage={setPage} />
+          </>
         )}
 
         {/* Table View */}
@@ -276,7 +315,7 @@ export default function Students() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((student) => {
+                  {paginated.map((student) => {
                     const pc = perfConfig[student.performance] || perfConfig['Average']
                     return (
                       <tr key={student.id} className="transition-colors" style={{ borderTop: '1px solid #F4F6F8' }}
@@ -317,17 +356,18 @@ export default function Students() {
                   })}
                 </tbody>
               </table>
-              {filtered.length === 0 && (
+              {paginated.length === 0 && (
                 <div className="py-16 text-center">
                   <GraduationCap size={32} strokeWidth={2} className="mx-auto text-gray-300 mb-3" />
                   <p className="text-[#6B7280] text-sm font-semibold" style={{ fontFamily: 'Lato, sans-serif' }}>No students match your filters</p>
                 </div>
               )}
             </div>
+            <div className="px-4 pb-4"><Pagination page={page} totalPages={totalPages} onPage={setPage} /></div>
           </div>
         )}
 
-        {filtered.length === 0 && viewMode === 'cards' && (
+        {paginated.length === 0 && viewMode === 'cards' && (
           <div className="flex flex-col items-center py-20 text-center">
             <GraduationCap size={32} strokeWidth={2} className="text-gray-300 mb-3" />
             <p className="text-[#6B7280] text-sm font-semibold" style={{ fontFamily: 'Lato, sans-serif' }}>No students match your filters</p>

@@ -40,9 +40,9 @@ const PAGE_META = {
   settings:          { title: 'Settings',             breadcrumb: 'Home / Settings' },
 }
 
-function renderPage(activePage) {
+function renderPage(activePage, setActivePage) {
   switch (activePage) {
-    case 'dashboard':       return <Dashboard />
+    case 'dashboard':       return <Dashboard setActivePage={setActivePage} />
     case 'users':           return <UserManagement />
     case 'messages':        return <Messages />
     case 'school-approval': return <SchoolApproval />
@@ -80,7 +80,7 @@ export default function App() {
         <Header title={meta.title} breadcrumb={meta.breadcrumb} setActivePage={setActivePage} />
         <main className="flex-1 overflow-y-auto"
           style={{ padding: activePage === 'messages' ? '20px 24px' : '24px 28px' }}>
-          {renderPage(activePage)}
+          {renderPage(activePage, setActivePage)}
         </main>
       </div>
     </div>

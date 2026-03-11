@@ -64,7 +64,7 @@ function SectionCard({ title, subtitle, badge, children }) {
   )
 }
 
-export default function Dashboard() {
+export default function Dashboard({ setActivePage }) {
   const [approvals, setApprovals] = useState(schoolApprovals)
 
   const handleApprove = (id) =>
@@ -234,10 +234,10 @@ export default function Dashboard() {
 
       <div style={{ height: 3, background: '#E2E8F0', borderRadius: 2 }} />
 
-      {/* ── Teacher Oversight Panel ── */}
+      {/* ── Teacher Activity Summary ── */}
       <SectionCard
-        title="Teacher Oversight Panel"
-        subtitle="Monthly report submission status by teacher"
+        title="Teacher Activity Summary"
+        subtitle="Monthly report submission snapshot · Top 5 teachers"
         badge={
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-400" style={{ fontFamily: 'Roboto, sans-serif' }}>
@@ -253,6 +253,15 @@ export default function Dashboard() {
             >
               92% Compliant
             </span>
+            <button
+              onClick={() => setActivePage('teachers')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
+              style={{ background: '#002333', color: '#fff', fontFamily: 'Roboto, sans-serif' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#003a52' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#002333' }}
+            >
+              View All Teachers →
+            </button>
           </div>
         }
       >
