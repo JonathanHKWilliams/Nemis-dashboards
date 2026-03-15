@@ -13,8 +13,8 @@ export default {
       colors: {
         primary: '#002333',
         'primary-dark': '#001822',
-        'nemis-green': '#001b5a',
-        'nemis-red': '#A60003',
+        'nemis-green': '#011340',
+        'nemis-red': '#7b0b0d',
         'light-gray': '#F4F6F8',
       },
       boxShadow: {

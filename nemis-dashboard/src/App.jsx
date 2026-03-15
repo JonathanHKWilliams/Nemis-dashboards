@@ -5,6 +5,7 @@ import TeacherApp from './pages/teacher/TeacherApp'
 import ParentApp from './pages/parent/ParentApp'
 import DEOApp from './pages/deo/DEOApp'
 import MinisterApp from './pages/minister/MinisterApp'
+import PrincipalApp from './pages/principal/PrincipalApp'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import Dashboard from './pages/Dashboard'
@@ -71,7 +72,8 @@ export default function App() {
   if (dashboardMode === 'teacher')  return <TeacherApp  onSwitch={m => setDashboardMode(m)} />
   if (dashboardMode === 'parent')   return <ParentApp   onSwitch={m => setDashboardMode(m)} />
   if (dashboardMode === 'deo')      return <DEOApp      onSwitch={m => setDashboardMode(m)} />
-  if (dashboardMode === 'minister') return <MinisterApp onSwitch={m => setDashboardMode(m)} />
+  if (dashboardMode === 'minister')  return <MinisterApp  onSwitch={m => setDashboardMode(m)} />
+  if (dashboardMode === 'principal') return <PrincipalApp onSwitch={m => setDashboardMode(m)} />
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#F4F6F8' }}>

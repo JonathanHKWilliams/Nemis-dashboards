@@ -11,7 +11,8 @@ const DASHBOARD_OPTIONS = [
   { mode: 'deo',     label: 'DEO Portal',   icon: Building2,     color: '#0D9488' },
   { mode: 'teacher', label: 'Teacher',       icon: Users,         color: '#60A5FA' },
   { mode: 'student', label: 'Student',       icon: GraduationCap, color: '#F59E0B' },
-  { mode: 'parent',  label: 'Parent',        icon: Users,         color: '#C084FC' },
+  { mode: 'parent',    label: 'Parent',       icon: Users,         color: '#C084FC' },
+  { mode: 'principal', label: 'School Admin', icon: Users,         color: '#0367A0' },
 ]
 
 function DashboardSwitcher({ onSwitch }) {
