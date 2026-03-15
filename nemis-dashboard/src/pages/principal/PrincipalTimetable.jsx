@@ -12,6 +12,10 @@ const DAYS = [
   { key: 'fri', label: 'Friday' },
 ]
 
+const DAY_INDEX_MAP = { 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri' }
+// Weekend → default to Monday so the highlight is always visible
+const todayKey = DAY_INDEX_MAP[new Date().getDay()] || 'mon'
+
 const CLASS_LIST = [
   'Grade 1A','Grade 1B','Grade 2A','Grade 3A','Grade 3B',
   'Grade 4A','Grade 4B','Grade 5A','Grade 5B',
@@ -81,25 +85,39 @@ function TeacherAvatar({ teacher }) {
   )
 }
 
-function PeriodCell({ entry }) {
+function PeriodCell({ entry, isToday }) {
+  const hasTeacher = !!entry?.teacher
+
   if (!entry) return (
     <td style={{ border: '1px solid #E2E8F0', padding: '10px 12px', textAlign: 'center', fontFamily: 'Lato, sans-serif', fontSize: 14, fontWeight: 700, color: '#C4CAD4', background: '#fff' }}>
       —
     </td>
   )
+
+  const bg          = isToday ? (hasTeacher ? '#DCFCE7' : '#FEE2E2') : '#fff'
+  const borderColor = isToday ? (hasTeacher ? '#86EFAC' : '#FECACA') : '#E2E8F0'
+  const subjectColor = isToday ? (hasTeacher ? '#14532D' : '#7F1D1D') : '#002333'
+  const roomColor    = isToday ? (hasTeacher ? '#166534' : '#991B1B') : '#374151'
+
   return (
-    <td style={{ border: '1px solid #E2E8F0', padding: '10px 12px', background: '#fff', verticalAlign: 'top' }}>
-      <p className="text-sm font-black leading-snug text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>
+    <td style={{ border: `1px solid ${borderColor}`, padding: '10px 12px', background: bg, verticalAlign: 'top' }}>
+      <p className="text-sm font-black leading-snug" style={{ fontFamily: 'Lato, sans-serif', color: subjectColor }}>
         {entry.subject}
       </p>
       <div className="flex items-center justify-between gap-2 mt-1.5">
-        <p className="text-[11px] font-bold text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>
+        <p className="text-[11px] font-bold" style={{ fontFamily: 'Lato, sans-serif', color: roomColor }}>
           Rm {entry.room}
         </p>
-        <TeacherAvatar teacher={entry.teacher} />
+        {hasTeacher && <TeacherAvatar teacher={entry.teacher} />}
+        {isToday && !hasTeacher && (
+          <span className="text-[9px] font-black px-1.5 py-0.5 rounded"
+            style={{ background: '#FCA5A5', color: '#7F1D1D', fontFamily: 'Lato, sans-serif' }}>
+            NO TEACHER
+          </span>
+        )}
       </div>
-      <p className="text-[10px] font-bold text-[#6B7280] mt-1" style={{ fontFamily: 'Lato, sans-serif' }}>
-        {entry.teacher?.short}
+      <p className="text-[10px] font-bold mt-1" style={{ fontFamily: 'Lato, sans-serif', color: isToday ? (hasTeacher ? '#166534' : '#991B1B') : '#6B7280' }}>
+        {entry.teacher?.short ?? (isToday ? 'Unassigned' : '—')}
       </p>
     </td>
   )
@@ -168,8 +186,15 @@ export default function PrincipalTimetable() {
                 <th className="text-left px-4 py-3.5 text-xs font-black uppercase tracking-wider text-[#0F172A] w-40"
                   style={{ fontFamily: 'Lato, sans-serif', border: '1px solid #B0CCE8' }}>Period / Time</th>
                 {DAYS.map(d => (
-                  <th key={d.key} className="text-center px-3 py-3.5 text-xs font-black uppercase tracking-wider text-[#0F172A]"
-                    style={{ fontFamily: 'Lato, sans-serif', border: '1px solid #B0CCE8' }}>{d.label}</th>
+                  <th key={d.key} className="text-center px-3 py-3.5 text-xs font-black uppercase tracking-wider"
+                    style={{
+                      fontFamily: 'Lato, sans-serif',
+                      border: d.key === todayKey ? '1px solid #16A34A' : '1px solid #B0CCE8',
+                      background: d.key === todayKey ? '#16A34A' : 'transparent',
+                      color: d.key === todayKey ? '#fff' : '#0F172A',
+                    }}>
+                    {d.label}{d.key === todayKey ? ' · Today' : ''}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -181,13 +206,12 @@ export default function PrincipalTimetable() {
                     <td className="px-4 py-3 w-40 flex-shrink-0"
                       style={{ border: '1px solid #E2E8F0', background: '#F4F6F8', verticalAlign: 'middle' }}>
                       <div className="flex items-center gap-2">
-                        <Clock size={14} strokeWidth={2.5} style={{ color: isBreak ? '#C4CAD4' : ACCENT, flexShrink: 0 }} />
+                        <Clock size={15} strokeWidth={3} style={{ color: '#002333', flexShrink: 0 }} />
                         <div>
-                          <p className="text-sm font-black leading-snug"
-                            style={{ fontFamily: 'Lato, sans-serif', color: isBreak ? '#9CA3AF' : '#002333' }}>
+                          <p style={{ fontFamily: 'Lato, sans-serif', fontWeight: 900, fontSize: 14, color: '#002333', lineHeight: 1.2 }}>
                             {row.period}
                           </p>
-                          <p className="text-[11px] font-bold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                          <p style={{ fontFamily: 'Lato, sans-serif', fontWeight: 800, fontSize: 12, color: '#002333', marginTop: 2 }}>
                             {row.time}
                           </p>
                         </div>
@@ -195,13 +219,13 @@ export default function PrincipalTimetable() {
                     </td>
                     {isBreak
                       ? DAYS.map(d => (
-                          <td key={d.key} style={{ border: '1px solid #E2E8F0', padding: '10px 12px', textAlign: 'center', background: '#FAFBFC' }}>
-                            <span className="text-xs font-black text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                          <td key={d.key} style={{ border: '1px solid #E2E8F0', padding: '10px 12px', textAlign: 'center', background: '#F4F6F8' }}>
+                            <span style={{ fontFamily: 'Lato, sans-serif', fontWeight: 900, fontSize: 13, color: '#002333' }}>
                               {row.period}
                             </span>
                           </td>
                         ))
-                      : DAYS.map(d => <PeriodCell key={d.key} entry={row[d.key]} />)
+                      : DAYS.map(d => <PeriodCell key={d.key} entry={row[d.key]} isToday={d.key === todayKey} />)
                     }
                   </tr>
                 )

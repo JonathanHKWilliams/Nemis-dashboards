@@ -220,17 +220,16 @@ export default function PrincipalDashboard({ setActivePage }) {
             {schoolInfo.code} · {schoolInfo.district} · {schoolInfo.county}
           </p>
         </div>
-        <div className="flex items-center gap-6 flex-shrink-0">
-          {[
-            { label: 'Students', value: schoolKPIs.totalStudents },
-            { label: 'Teachers', value: schoolKPIs.totalTeachers },
-            { label: 'Classes',  value: schoolKPIs.activeClasses },
-          ].map(s => (
-            <div key={s.label} className="text-center">
-              <p className="text-xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
-              <p className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-wide" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
-            </div>
-          ))}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <span className="px-3 py-1.5 rounded-full text-xs font-black text-white" style={{ background: '#0367A0', fontFamily: 'Lato, sans-serif' }}>
+            {schoolInfo.type}
+          </span>
+          <span className="px-3 py-1.5 rounded-full text-xs font-black" style={{ background: '#F0FDF4', color: '#16A34A', border: '1px solid #BBF7D0', fontFamily: 'Lato, sans-serif' }}>
+            {schoolInfo.accreditation}
+          </span>
+          <span className="px-3 py-1.5 rounded-full text-xs font-black" style={{ background: '#F8FAFC', color: '#6B7280', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif' }}>
+            Est. {schoolInfo.established}
+          </span>
         </div>
       </div>
 

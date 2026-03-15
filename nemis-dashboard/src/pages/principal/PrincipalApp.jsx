@@ -16,6 +16,7 @@ import PrincipalTimetable      from './PrincipalTimetable'
 import PrincipalCommunications  from './PrincipalCommunications'
 import PrincipalNotifications  from './PrincipalNotifications'
 import PrincipalReports        from './PrincipalReports'
+import PrincipalParents        from './PrincipalParents'
 import PrincipalSettings       from './PrincipalSettings'
 
 const ACCENT    = '#0367A0'
@@ -24,13 +25,14 @@ const SIDEBAR_BG = '#000E21'
 const NAV_SECTIONS = [
   {
     label: 'Overview',
-    items: [{ id: 'dashboard', label: 'Command Center', icon: LayoutDashboard }],
+    items: [{ id: 'dashboard', label: 'Overview', icon: LayoutDashboard }],
   },
   {
     label: 'Students & Staff',
     items: [
       { id: 'students',  label: 'Students',        icon: GraduationCap },
       { id: 'teachers',  label: 'Teachers & Staff', icon: Users },
+      { id: 'parents',   label: 'Parents & Guardians', icon: UserCog },
       { id: 'attendance',label: 'Attendance',       icon: CalendarCheck },
     ],
   },
@@ -67,9 +69,10 @@ const NAV_SECTIONS = [
 ]
 
 const PAGE_TITLES = {
-  dashboard:      'Command Center',
+  dashboard:      'Overview',
   students:       'Student Directory',
   teachers:       'Teachers & Staff',
+  parents:        'Parents & Guardians',
   attendance:     'Attendance Management',
   grades:         'Academic & Grading',
   timetable:      'School Timetable',
@@ -212,7 +215,7 @@ function PrincipalHeader({ activePage, setActivePage }) {
       style={{ height: 68, background: '#fff', borderBottom: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
       <div>
         <h1 className="text-lg font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-          {PAGE_TITLES[activePage] || 'Command Center'}
+          {PAGE_TITLES[activePage] || 'Overview'}
         </h1>
         <p className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
           {schoolInfo.county} · {schoolInfo.district} · {schoolInfo.name}
@@ -285,6 +288,7 @@ export default function PrincipalApp({ onSwitch }) {
       case 'dashboard':      return <PrincipalDashboard setActivePage={setActivePage} />
       case 'students':       return <PrincipalStudents />
       case 'teachers':       return <PrincipalTeachers />
+      case 'parents':        return <PrincipalParents />
       case 'attendance':     return <PrincipalAttendance />
       case 'grades':         return <PrincipalGrades />
       case 'timetable':      return <PrincipalTimetable />

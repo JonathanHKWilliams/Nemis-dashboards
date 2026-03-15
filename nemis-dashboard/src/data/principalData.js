@@ -149,6 +149,257 @@ export const principalStudents = [
   { id: 50, studentId: 'GB-24050', name: 'Abraham E. Yarkpah',     class: 'Grade 2A', gender: 'Male',   parentPhone: '+231 77 555 1050', attendance: 88, feeStatus: 'Paid',    avgGrade: 'B',  enrolled: 'Sep 2025', photoId: 45, status: 'Active' },
 ]
 
+// ─── Parents / Guardians ───────────────────────────────────────────────────
+
+export const principalParents = [
+  {
+    id: 1, parentId: 'PAR-001', name: 'Mary J. Doe',           relationship: 'Mother',   gender: 'women', photoId: 44,
+    phone: '+231 77 555 2001', email: 'm.doe@gmail.com',         occupation: 'Nurse',      address: '12 Kennedy Ave, Buchanan',
+    lastContact: 'Mar 8, 2026',
+    children: [
+      { studentId: 'GB-24001', name: 'Emmanuel K. Doe',  class: 'Grade 9',  feeStatus: 'Paid',    attendance: 92, avgGrade: 'B+' },
+      { studentId: 'GB-24037', name: 'George T. Doe',    class: 'Grade 4B', feeStatus: 'Paid',    attendance: 81, avgGrade: 'B-' },
+    ],
+  },
+  {
+    id: 2, parentId: 'PAR-002', name: 'Henry B. Flomo',         relationship: 'Father',   gender: 'men',   photoId: 32,
+    phone: '+231 88 622 2002', email: 'h.flomo@yahoo.com',       occupation: 'Farmer',     address: '5 Tubman Street, Buchanan',
+    lastContact: 'Feb 25, 2026',
+    children: [
+      { studentId: 'GB-24002', name: 'Christiana M. Flomo', class: 'Grade 8A', feeStatus: 'Partial', attendance: 88, avgGrade: 'B'  },
+      { studentId: 'GB-24036', name: 'Martha K. Flomo',     class: 'Grade 5B', feeStatus: 'Paid',    attendance: 93, avgGrade: 'B+' },
+    ],
+  },
+  {
+    id: 3, parentId: 'PAR-003', name: 'Samuel A. Weah',         relationship: 'Father',   gender: 'men',   photoId: 48,
+    phone: '+231 77 555 2003', email: 's.weah@gmail.com',         occupation: 'Civil Servant', address: '3 Carey Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24003', name: 'Marcus T. Weah',      class: 'Grade 10', feeStatus: 'Paid',   attendance: 95, avgGrade: 'A'  },
+      { studentId: 'GB-24041', name: 'Christiana J. Weah',  class: 'Grade 11–12 Combined', feeStatus: 'Paid', attendance: 98, avgGrade: 'A+' },
+    ],
+  },
+  {
+    id: 4, parentId: 'PAR-004', name: 'Grace E. Kollie',        relationship: 'Guardian', gender: 'women', photoId: 55,
+    phone: '+231 88 622 2004', email: 'grace.kollie@gmail.com',   occupation: 'Trader',     address: '8 Freeman St, Buchanan',
+    lastContact: 'Jan 15, 2026',
+    children: [
+      { studentId: 'GB-24004', name: 'Patience E. Kollie',  class: 'Grade 7A', feeStatus: 'Unpaid', attendance: 79, avgGrade: 'C+' },
+    ],
+  },
+  {
+    id: 5, parentId: 'PAR-005', name: 'Philip J. Karbo',        relationship: 'Father',   gender: 'men',   photoId: 61,
+    phone: '+231 77 555 2005', email: 'p.karbo@gmail.com',        occupation: 'Teacher',    address: '21 Mechlin Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24005', name: 'Solomon J. Karbo',    class: 'Grade 11–12 Combined', feeStatus: 'Paid', attendance: 97, avgGrade: 'A+' },
+    ],
+  },
+  {
+    id: 6, parentId: 'PAR-006', name: 'Alice B. Sumo',          relationship: 'Mother',   gender: 'women', photoId: 38,
+    phone: '+231 88 622 2006', email: 'a.sumo@gmail.com',         occupation: 'Petty Trader', address: '14 Benson Street, Buchanan',
+    lastContact: 'Mar 5, 2026',
+    children: [
+      { studentId: 'GB-24006', name: 'Hawa B. Sumo',        class: 'Grade 6A', feeStatus: 'Paid',   attendance: 91, avgGrade: 'B'  },
+    ],
+  },
+  {
+    id: 7, parentId: 'PAR-007', name: 'George M. Bestman',      relationship: 'Father',   gender: 'men',   photoId: 37,
+    phone: '+231 77 555 2007', email: 'g.bestman@gmail.com',      occupation: 'Driver',     address: '9 Cotton Tree Road, Buchanan',
+    lastContact: 'Mar 3, 2026',
+    children: [
+      { studentId: 'GB-24007', name: 'Daniel P. Bestman',   class: 'Grade 5A', feeStatus: 'Partial', attendance: 85, avgGrade: 'B-' },
+      { studentId: 'GB-24035', name: 'Emmanuel M. Bestman', class: 'Grade 6B', feeStatus: 'Partial', attendance: 88, avgGrade: 'B'  },
+    ],
+  },
+  {
+    id: 8, parentId: 'PAR-008', name: 'Ruth A. Kerkula',        relationship: 'Mother',   gender: 'women', photoId: 62,
+    phone: '+231 88 622 2008', email: 'r.kerkula@gmail.com',      occupation: 'Nurse',      address: '6 Lynch Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24008', name: 'Rebecca A. Kerkula',  class: 'Grade 4A', feeStatus: 'Paid',   attendance: 98, avgGrade: 'A'  },
+    ],
+  },
+  {
+    id: 9, parentId: 'PAR-009', name: 'Agnes O. Tarr',          relationship: 'Mother',   gender: 'women', photoId: 71,
+    phone: '+231 77 555 2009', email: 'a.tarr@gmail.com',          occupation: 'Seamstress', address: '2 Nelson Street, Buchanan',
+    lastContact: 'Dec 10, 2025',
+    children: [
+      { studentId: 'GB-24009', name: 'James O. Tarr',       class: 'Grade 3A', feeStatus: 'Unpaid', attendance: 76, avgGrade: 'C'  },
+      { studentId: 'GB-24038', name: 'Lorpu A. Tarr',       class: 'Grade 3B', feeStatus: 'Paid',   attendance: 97, avgGrade: 'A'  },
+    ],
+  },
+  {
+    id: 10, parentId: 'PAR-010', name: 'Peter K. Dennis',       relationship: 'Guardian', gender: 'men',   photoId: 22,
+    phone: '+231 88 622 2010', email: 'p.dennis@gmail.com',       occupation: 'Security Guard', address: '17 Broad Street, Buchanan',
+    lastContact: 'Mar 7, 2026',
+    children: [
+      { studentId: 'GB-24010', name: 'Martha K. Dennis',    class: 'Grade 2A', feeStatus: 'Paid',   attendance: 94, avgGrade: 'B+' },
+    ],
+  },
+  {
+    id: 11, parentId: 'PAR-011', name: 'Sarah G. Nyan',         relationship: 'Mother',   gender: 'women', photoId: 52,
+    phone: '+231 77 555 2011', email: 's.nyan@gmail.com',          occupation: 'Market Woman', address: '11 Johnson Street, Buchanan',
+    lastContact: 'Mar 4, 2026',
+    children: [
+      { studentId: 'GB-24011', name: 'Abraham G. Nyan',     class: 'Grade 9',  feeStatus: 'Paid',   attendance: 87, avgGrade: 'B'  },
+    ],
+  },
+  {
+    id: 12, parentId: 'PAR-012', name: 'Mark T. Mulbah',        relationship: 'Father',   gender: 'men',   photoId: 53,
+    phone: '+231 88 622 2012', email: 'm.mulbah@gmail.com',        occupation: 'Police Officer', address: '33 Randall Street, Buchanan',
+    lastContact: 'Mar 9, 2026',
+    children: [
+      { studentId: 'GB-24012', name: 'Lorpu T. Mulbah',     class: 'Grade 8B', feeStatus: 'Partial', attendance: 93, avgGrade: 'B+' },
+    ],
+  },
+  {
+    id: 13, parentId: 'PAR-013', name: 'Hannah C. Wleh',        relationship: 'Mother',   gender: 'women', photoId: 67,
+    phone: '+231 77 555 2013', email: 'h.wleh@gmail.com',          occupation: 'Midwife',    address: '7 Camp Johnson Rd, Buchanan',
+    lastContact: 'Feb 18, 2026',
+    children: [
+      { studentId: 'GB-24013', name: 'George C. Wleh',      class: 'Grade 7B', feeStatus: 'Unpaid', attendance: 80, avgGrade: 'C+' },
+    ],
+  },
+  {
+    id: 14, parentId: 'PAR-014', name: 'Francis A. Kamara',     relationship: 'Father',   gender: 'men',   photoId: 29,
+    phone: '+231 88 622 2014', email: 'f.kamara@gmail.com',        occupation: 'Lawyer',     address: '4 Ashmun Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24014', name: 'Miatta A. Kamara',    class: 'Grade 10', feeStatus: 'Paid',   attendance: 96, avgGrade: 'A-' },
+    ],
+  },
+  {
+    id: 15, parentId: 'PAR-015', name: 'Daniel N. Gbessay',     relationship: 'Father',   gender: 'men',   photoId: 41,
+    phone: '+231 77 555 2015', email: 'd.gbessay@gmail.com',       occupation: 'Mechanic',   address: '29 Clay Street, Buchanan',
+    lastContact: 'Jan 20, 2026',
+    children: [
+      { studentId: 'GB-24015', name: 'Moses D. Gbessay',    class: 'Grade 6B', feeStatus: 'Paid',   attendance: 89, avgGrade: 'B'  },
+      { studentId: 'GB-24034', name: 'Patience T. Gbessay', class: 'Grade 7B', feeStatus: 'Paid',   attendance: 96, avgGrade: 'A-' },
+    ],
+  },
+  {
+    id: 16, parentId: 'PAR-016', name: 'Patricia J. Pewee',     relationship: 'Mother',   gender: 'women', photoId: 41,
+    phone: '+231 88 622 2016', email: 'p.pewee@gmail.com',         occupation: 'Teacher',    address: '18 Gurley Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24016', name: 'Satta J. Pewee',      class: 'Grade 5B', feeStatus: 'Paid',   attendance: 99, avgGrade: 'A'  },
+    ],
+  },
+  {
+    id: 17, parentId: 'PAR-017', name: 'Emmanuel T. Dolo',      relationship: 'Father',   gender: 'men',   photoId: 64,
+    phone: '+231 77 555 2017', email: 'e.dolo@gmail.com',           occupation: 'Driver',     address: '22 Water Street, Buchanan',
+    lastContact: 'Nov 5, 2025',
+    children: [
+      { studentId: 'GB-24017', name: 'Isaac T. Dolo',       class: 'Grade 4B', feeStatus: 'Unpaid', attendance: 72, avgGrade: 'D'  },
+    ],
+  },
+  {
+    id: 18, parentId: 'PAR-018', name: 'Raymond N. Fahnbulleh', relationship: 'Father',   gender: 'men',   photoId: 15,
+    phone: '+231 88 622 2018', email: 'r.fahnbulleh@gmail.com',    occupation: 'Accountant', address: '5 Carey Avenue, Buchanan',
+    lastContact: 'Mar 8, 2026',
+    children: [
+      { studentId: 'GB-24018', name: 'Victoria N. Fahnbulleh', class: 'Grade 3B', feeStatus: 'Paid', attendance: 91, avgGrade: 'B-' },
+    ],
+  },
+  {
+    id: 19, parentId: 'PAR-019', name: 'Kerkula P. Zinnah',     relationship: 'Father',   gender: 'men',   photoId: 57,
+    phone: '+231 77 555 2019', email: 'k.zinnah@gmail.com',         occupation: 'Engineer',   address: '30 Factory Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24019', name: 'Peter K. Zinnah Jr.', class: 'Grade 1A', feeStatus: 'Paid',   attendance: 95, avgGrade: 'A'  },
+    ],
+  },
+  {
+    id: 20, parentId: 'PAR-020', name: 'Helen E. Tokpah',       relationship: 'Mother',   gender: 'women', photoId: 46,
+    phone: '+231 88 622 2020', email: 'h.tokpah@gmail.com',         occupation: 'Market Woman', address: '13 Benson Street, Buchanan',
+    lastContact: 'Mar 6, 2026',
+    children: [
+      { studentId: 'GB-24020', name: 'Naomi E. Tokpah',     class: 'Grade 1B', feeStatus: 'Partial', attendance: 88, avgGrade: 'B'  },
+    ],
+  },
+  {
+    id: 21, parentId: 'PAR-021', name: 'Benjamin A. Nyenpan',   relationship: 'Father',   gender: 'men',   photoId: 19,
+    phone: '+231 77 555 2021', email: 'b.nyenpan@gmail.com',        occupation: 'Contractor', address: '9 Buchanan Road, Buchanan',
+    lastContact: 'Mar 9, 2026',
+    children: [
+      { studentId: 'GB-24021', name: 'Richard A. Nyenpan',  class: 'Grade 11–12 Combined', feeStatus: 'Paid', attendance: 90, avgGrade: 'B+' },
+    ],
+  },
+  {
+    id: 22, parentId: 'PAR-022', name: 'James H. Togba',        relationship: 'Father',   gender: 'men',   photoId: 35,
+    phone: '+231 88 622 2022', email: 'j.togba@gmail.com',          occupation: 'Fisherman',  address: '6 Beach Road, Buchanan',
+    lastContact: 'Mar 7, 2026',
+    children: [
+      { studentId: 'GB-24022', name: 'Florence G. Togba',   class: 'Grade 9',  feeStatus: 'Paid',   attendance: 94, avgGrade: 'A-' },
+    ],
+  },
+  {
+    id: 23, parentId: 'PAR-023', name: 'Rebecca B. Momo',       relationship: 'Mother',   gender: 'women', photoId: 63,
+    phone: '+231 77 555 2023', email: 'r.momo@gmail.com',           occupation: 'Petty Trader', address: '11 Buchanan Highway',
+    lastContact: 'Jan 30, 2026',
+    children: [
+      { studentId: 'GB-24023', name: 'Samuel B. Momo',      class: 'Grade 8A', feeStatus: 'Unpaid', attendance: 83, avgGrade: 'C'  },
+    ],
+  },
+  {
+    id: 24, parentId: 'PAR-024', name: 'Thomas A. Korlor',      relationship: 'Father',   gender: 'men',   photoId: 43,
+    phone: '+231 88 622 2024', email: 't.korlor@gmail.com',         occupation: 'Soldier',    address: '24 Military Road, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24024', name: 'Agnes T. Korlor',     class: 'Grade 7A', feeStatus: 'Paid',   attendance: 97, avgGrade: 'A'  },
+    ],
+  },
+  {
+    id: 25, parentId: 'PAR-025', name: 'Mary J. Freeman',       relationship: 'Mother',   gender: 'women', photoId: 27,
+    phone: '+231 77 555 2025', email: 'm.freeman@gmail.com',        occupation: 'Secretary',  address: '8 Cheeseman Avenue, Buchanan',
+    lastContact: 'Mar 4, 2026',
+    children: [
+      { studentId: 'GB-24025', name: 'Thomas J. Freeman',   class: 'Grade 6A', feeStatus: 'Partial', attendance: 86, avgGrade: 'B-' },
+    ],
+  },
+  {
+    id: 26, parentId: 'PAR-026', name: 'David M. Gaye',         relationship: 'Father',   gender: 'men',   photoId: 66,
+    phone: '+231 88 622 2026', email: 'd.gaye@gmail.com',           occupation: 'Farmer',     address: '3 Cotton Field Road, Buchanan',
+    lastContact: 'Mar 2, 2026',
+    children: [
+      { studentId: 'GB-24026', name: 'Hawa M. Gaye',        class: 'Grade 5A', feeStatus: 'Paid',   attendance: 92, avgGrade: 'B+' },
+    ],
+  },
+  {
+    id: 27, parentId: 'PAR-027', name: 'Sarah T. Karbo',        relationship: 'Guardian', gender: 'women', photoId: 58,
+    phone: '+231 77 555 2027', email: 's.karbo@gmail.com',           occupation: 'Clerk',      address: '16 Water Street, Buchanan',
+    lastContact: 'Nov 12, 2025',
+    children: [
+      { studentId: 'GB-24027', name: 'Patrick E. Karbo',    class: 'Grade 4A', feeStatus: 'Unpaid', attendance: 78, avgGrade: 'C+' },
+    ],
+  },
+  {
+    id: 28, parentId: 'PAR-028', name: 'Peter A. Wiah',         relationship: 'Father',   gender: 'men',   photoId: 73,
+    phone: '+231 88 622 2028', email: 'p.wiah@gmail.com',            occupation: 'Pastor',     address: '20 Church Street, Buchanan',
+    lastContact: 'Mar 10, 2026',
+    children: [
+      { studentId: 'GB-24028', name: 'Cecelia A. Wiah',     class: 'Grade 3A', feeStatus: 'Paid',   attendance: 100, avgGrade: 'A+' },
+    ],
+  },
+  {
+    id: 29, parentId: 'PAR-029', name: 'Korpo A. Brown',        relationship: 'Guardian', gender: 'women', photoId: 52,
+    phone: '+231 77 555 2029', email: 'k.brown@gmail.com',           occupation: 'NGO Worker', address: '7 Independence Avenue, Buchanan',
+    lastContact: 'Mar 1, 2026',
+    children: [
+      { studentId: 'GB-24029', name: 'David N. Nimley',     class: 'Grade 2A', feeStatus: 'Paid',   attendance: 90, avgGrade: 'B'  },
+    ],
+  },
+  {
+    id: 30, parentId: 'PAR-030', name: 'Martha T. Kollie',      relationship: 'Mother',   gender: 'women', photoId: 35,
+    phone: '+231 88 622 2030', email: 'm.kollie@gmail.com',          occupation: 'Nurse Assistant', address: '5 Roberts Street, Buchanan',
+    lastContact: 'Mar 9, 2026',
+    children: [
+      { studentId: 'GB-24030', name: 'Jenneh B. Kollie',    class: 'Grade 1A', feeStatus: 'Partial', attendance: 87, avgGrade: 'B-' },
+    ],
+  },
+]
+
 // ─── Attendance (daily records) ────────────────────────────────────────────
 
 export const attendanceRecords = principalStudents.map((s, i) => ({
@@ -384,39 +635,39 @@ export const classTimetables = {
   'Grade 1A': PERIODS.map((p, i) => !p.isBreak ? { ...p, mon: [cls('Literacy', T.nimley, '101'), cls('Numeracy', T.nimley, '101'), cls('Handwriting', T.nimley, '101'), cls('Phonics', T.nimley, '101'), cls('Arts & Crafts', T.nimley, '101'), cls('Music & Arts', T.mulbah, '101')][i < 2 ? i : i > 2 ? i - 1 : 0], tue: [cls('Numeracy', T.nimley, '101'), cls('Literacy', T.nimley, '101'), cls('Science', T.nimley, '101'), cls('Social Studies', T.nimley, '101'), cls('Music & Arts', T.mulbah, '101'), cls('PE', T.dennis, 'Field')][i < 2 ? i : i > 2 ? i - 1 : 0], wed: [cls('Phonics', T.nimley, '101'), cls('Numeracy', T.nimley, '101'), cls('Literacy', T.nimley, '101'), cls('Arts & Crafts', T.nimley, '101'), cls('Handwriting', T.nimley, '101'), cls('Science', T.nimley, '101')][i < 2 ? i : i > 2 ? i - 1 : 0], thu: [cls('Literacy', T.nimley, '101'), cls('Phonics', T.nimley, '101'), cls('Numeracy', T.nimley, '101'), cls('Music & Arts', T.mulbah, '101'), cls('Social Studies', T.nimley, '101'), cls('Arts & Crafts', T.nimley, '101')][i < 2 ? i : i > 2 ? i - 1 : 0], fri: [cls('Numeracy', T.nimley, '101'), cls('Handwriting', T.nimley, '101'), cls('PE', T.dennis, 'Field'), cls('Literacy', T.nimley, '101'), cls('Arts & Crafts', T.nimley, '101'), cls('Music & Arts', T.mulbah, '101')][i < 2 ? i : i > 2 ? i - 1 : 0] } : p),
   'Grade 7A': [
     { ...PERIODS[0], mon: cls('Mathematics',  T.johnson, '108'), tue: cls('English',      T.cooper,  '201'), wed: cls('Social Studies', T.yarkpah, '202'), thu: cls('Mathematics',  T.johnson, '108'), fri: cls('English',      T.cooper,  '201') },
-    { ...PERIODS[1], mon: cls('History',      T.weah,    '202'), tue: cls('Science',      T.sumo,    '111'), wed: cls('Mathematics',  T.johnson, '108'), thu: cls('French',       T.gbessay, '203'), fri: cls('History',      T.weah,    '202') },
+    { ...PERIODS[1], mon: cls('History',      null,    '202'), tue: cls('Science',      T.sumo,    '111'), wed: cls('Mathematics',  T.johnson, '108'), thu: cls('French',       T.gbessay, '203'), fri: cls('History',      null,    '202') },
     PERIODS[2],
     { ...PERIODS[3], mon: cls('French',       T.gbessay, '203'), tue: cls('Mathematics',  T.johnson, '108'), wed: cls('English',      T.cooper,  '201'), thu: cls('Science',      T.sumo,    '111'), fri: cls('Civic Education', T.momo, '202') },
     { ...PERIODS[4], mon: cls('Science',      T.sumo,    '111'), tue: cls('Civic Education', T.momo, '202'), wed: cls('ICT',          T.toe,     '301'), thu: cls('English',      T.cooper,  '201'), fri: cls('Mathematics',  T.johnson, '108') },
     PERIODS[5],
-    { ...PERIODS[6], mon: cls('ICT',          T.toe,     '301'), tue: cls('Agriculture',  T.nyenpan, 'Garden'), wed: cls('History',    T.weah,    '202'), thu: cls('Social Studies', T.yarkpah, '202'), fri: cls('Civic Education', T.momo, '202') },
+    { ...PERIODS[6], mon: cls('ICT',          T.toe,     '301'), tue: cls('Agriculture',  T.nyenpan, 'Garden'), wed: cls('History',    null,    '202'), thu: cls('Social Studies', T.yarkpah, '202'), fri: cls('Civic Education', T.momo, '202') },
     { ...PERIODS[7], mon: cls('PE',           T.kollie2, 'Field'), tue: cls('French',     T.gbessay, '203'), wed: cls('PE',          T.kollie2, 'Field'), thu: cls('Agriculture',  T.nyenpan, 'Garden'), fri: cls('Science',      T.sumo,    '111') },
   ],
   'Grade 7B': [
     { ...PERIODS[0], mon: cls('English',      T.cooper,  '201'), tue: cls('Mathematics',  T.johnson, '108'), wed: cls('Agriculture',  T.nyenpan, 'Garden'), thu: cls('Science',      T.sumo,    '111'), fri: cls('Social Studies', T.yarkpah, '202') },
-    { ...PERIODS[1], mon: cls('Science',      T.sumo,    '111'), tue: cls('History',      T.weah,    '202'), wed: cls('English',      T.cooper,  '201'), thu: cls('Mathematics',  T.johnson, '108'), fri: cls('French',       T.gbessay, '203') },
+    { ...PERIODS[1], mon: cls('Science',      T.sumo,    '111'), tue: cls('History',      null,    '202'), wed: cls('English',      T.cooper,  '201'), thu: cls('Mathematics',  T.johnson, '108'), fri: cls('French',       T.gbessay, '203') },
     PERIODS[2],
     { ...PERIODS[3], mon: cls('Mathematics',  T.johnson, '108'), tue: cls('Social Studies', T.yarkpah, '202'), wed: cls('Science',    T.sumo,    '111'), thu: cls('English',      T.cooper,  '201'), fri: cls('Mathematics',  T.johnson, '108') },
-    { ...PERIODS[4], mon: cls('ICT',          T.toe,     '301'), tue: cls('English',      T.cooper,  '201'), wed: cls('Civic Education', T.momo, '202'), thu: cls('Agriculture',  T.nyenpan, 'Garden'), fri: cls('History',      T.weah,    '202') },
+    { ...PERIODS[4], mon: cls('ICT',          T.toe,     '301'), tue: cls('English',      T.cooper,  '201'), wed: cls('Civic Education', T.momo, '202'), thu: cls('Agriculture',  T.nyenpan, 'Garden'), fri: cls('History',      null,    '202') },
     PERIODS[5],
     { ...PERIODS[6], mon: cls('Agriculture',  T.nyenpan, 'Garden'), tue: cls('French',    T.gbessay, '203'), wed: cls('Mathematics',  T.johnson, '108'), thu: cls('ICT',          T.toe,     '301'), fri: cls('Civic Education', T.momo, '202') },
     { ...PERIODS[7], mon: cls('Social Studies', T.yarkpah, '202'), tue: cls('PE',         T.kollie2, 'Field'), wed: cls('French',     T.gbessay, '203'), thu: cls('PE',           T.kollie2, 'Field'), fri: cls('ICT',          T.toe,     '301') },
   ],
   'Grade 8A': [
     { ...PERIODS[0], mon: cls('Mathematics',  T.johnson, '108'), tue: cls('English',      T.cooper,  '203'), wed: cls('French',       T.gbessay, '203'), thu: cls('Science',      T.sumo,    '111'), fri: cls('Mathematics',  T.johnson, '108') },
-    { ...PERIODS[1], mon: cls('English',      T.cooper,  '203'), tue: cls('Agriculture',  T.nyenpan, 'Garden'), wed: cls('Mathematics', T.johnson, '108'), thu: cls('History',    T.weah,    '204'), fri: cls('Social Studies', T.yarkpah, '204') },
+    { ...PERIODS[1], mon: cls('English',      T.cooper,  '203'), tue: cls('Agriculture',  T.nyenpan, 'Garden'), wed: cls('Mathematics', T.johnson, '108'), thu: cls('History',    null,    '204'), fri: cls('Social Studies', T.yarkpah, '204') },
     PERIODS[2],
     { ...PERIODS[3], mon: cls('French',       T.gbessay, '203'), tue: cls('Mathematics',  T.johnson, '108'), wed: cls('Social Studies', T.yarkpah, '204'), thu: cls('English',    T.cooper,  '203'), fri: cls('Science',      T.sumo,    '111') },
     { ...PERIODS[4], mon: cls('Science',      T.sumo,    '111'), tue: cls('ICT',          T.toe,     '301'), wed: cls('Agriculture',  T.nyenpan, 'Garden'), thu: cls('Mathematics', T.johnson, '108'), fri: cls('English',      T.cooper,  '203') },
     PERIODS[5],
-    { ...PERIODS[6], mon: cls('History',      T.weah,    '204'), tue: cls('Social Studies', T.yarkpah, '204'), wed: cls('English',    T.cooper,  '203'), thu: cls('French',       T.gbessay, '203'), fri: cls('Social Studies', T.yarkpah, '204') },
+    { ...PERIODS[6], mon: cls('History',      null,    '204'), tue: cls('Social Studies', T.yarkpah, '204'), wed: cls('English',    T.cooper,  '203'), thu: cls('French',       T.gbessay, '203'), fri: cls('Social Studies', T.yarkpah, '204') },
     { ...PERIODS[7], mon: cls('PE',           T.kollie2, 'Field'), tue: cls('Science',    T.sumo,    '111'), wed: cls('PE',          T.kollie2, 'Field'), thu: cls('Agriculture',  T.nyenpan, 'Garden'), fri: cls('ICT',          T.toe,     '301') },
   ],
   'Grade 8B': [
-    { ...PERIODS[0], mon: cls('Social Studies', T.yarkpah, '204'), tue: cls('Mathematics', T.johnson, '108'), wed: cls('English',     T.cooper,  '203'), thu: cls('Science',      T.sumo,    '111'), fri: cls('History',      T.weah,    '204') },
-    { ...PERIODS[1], mon: cls('Mathematics',  T.johnson, '108'), tue: cls('English',      T.cooper,  '203'), wed: cls('History',      T.weah,    '204'), thu: cls('Social Studies', T.yarkpah, '204'), fri: cls('Mathematics',  T.johnson, '108') },
+    { ...PERIODS[0], mon: cls('Social Studies', T.yarkpah, '204'), tue: cls('Mathematics', T.johnson, '108'), wed: cls('English',     T.cooper,  '203'), thu: cls('Science',      T.sumo,    '111'), fri: cls('History',      null,    '204') },
+    { ...PERIODS[1], mon: cls('Mathematics',  T.johnson, '108'), tue: cls('English',      T.cooper,  '203'), wed: cls('History',      null,    '204'), thu: cls('Social Studies', T.yarkpah, '204'), fri: cls('Mathematics',  T.johnson, '108') },
     PERIODS[2],
-    { ...PERIODS[3], mon: cls('Science',      T.sumo,    '111'), tue: cls('History',      T.weah,    '204'), wed: cls('Mathematics',  T.johnson, '108'), thu: cls('Agriculture',  T.nyenpan, 'Garden'), fri: cls('English',      T.cooper,  '203') },
+    { ...PERIODS[3], mon: cls('Science',      T.sumo,    '111'), tue: cls('History',      null,    '204'), wed: cls('Mathematics',  T.johnson, '108'), thu: cls('Agriculture',  T.nyenpan, 'Garden'), fri: cls('English',      T.cooper,  '203') },
     { ...PERIODS[4], mon: cls('English',      T.cooper,  '203'), tue: cls('Social Studies', T.yarkpah, '204'), wed: cls('Science',    T.sumo,    '111'), thu: cls('English',      T.cooper,  '203'), fri: cls('Agriculture',  T.nyenpan, 'Garden') },
     PERIODS[5],
     { ...PERIODS[6], mon: cls('Agriculture',  T.nyenpan, 'Garden'), tue: cls('ICT',       T.toe,     '301'), wed: cls('Social Studies', T.yarkpah, '204'), thu: cls('Mathematics', T.johnson, '108'), fri: cls('Science',      T.sumo,    '111') },
