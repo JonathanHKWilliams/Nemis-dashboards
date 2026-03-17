@@ -40,7 +40,7 @@ const NAV_SECTIONS = [
     label: 'Academic',
     items: [
       { id: 'grades',    label: 'Academic & Grading', icon: BookOpen },
-      { id: 'timetable', label: 'School Timetable',   icon: Clock },
+      { id: 'timetable', label: 'Class Schedule',      icon: Clock },
     ],
   },
   {
@@ -75,7 +75,7 @@ const PAGE_TITLES = {
   parents:        'Parents & Guardians',
   attendance:     'Attendance Management',
   grades:         'Academic & Grading',
-  timetable:      'School Timetable',
+  timetable:      'Class Schedule',
   finance:        'Financial / Fee Portal',
   communications: 'Messages',
   notifications:  'Notifications',
