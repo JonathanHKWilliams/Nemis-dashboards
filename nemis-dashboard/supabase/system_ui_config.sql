@@ -29,7 +29,10 @@ create or replace trigger trg_system_ui_updated_at
   for each row
   execute procedure update_system_ui_timestamp();
 
--- 3. Enable Row Level Security
+-- 3. Enable Realtime (required for live cross-device updates)
+alter publication supabase_realtime add table system_ui_config;
+
+-- 4. Enable Row Level Security
 alter table system_ui_config enable row level security;
 
 -- 4. RLS Policies

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { X, Lock, Unlock, Eye, EyeOff, Cloud, CloudOff, Loader } from 'lucide-react'
+import { X, Lock, Unlock, Eye, EyeOff, Cloud, CloudOff, Loader, Copy, Check } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
 const NAVY          = '#002333'
@@ -231,6 +231,7 @@ function PasswordModal({ onSuccess, onClose }) {
 function ColorSwatch({ color, onUpdate, onRemove, editable }) {
   const [draft,   setDraft]   = useState(color.hex)
   const [hovered, setHovered] = useState(false)
+  const [copied,  setCopied]  = useState(false)
   const pickerRef = useRef(null)
 
   const liveHex  = isValidHex(draft) ? draft : color.hex
@@ -248,13 +249,34 @@ function ColorSwatch({ color, onUpdate, onRemove, editable }) {
     onUpdate('hex', val)
   }
 
+  const handleCopy = (e) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(liveHex.toUpperCase())
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
   return (
     <div
       className="rounded-xl overflow-hidden relative"
       style={{ border: '1px solid #EEF0F3' }}
-      onMouseEnter={() => editable && setHovered(true)}
+      onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+
+      {/* Copy button — always visible */}
+      <button
+        onClick={handleCopy}
+        title="Copy hex code"
+        className="absolute top-2 left-2 w-6 h-6 rounded-full flex items-center justify-center z-10 transition-all"
+        style={{
+          background: copied ? 'rgba(22,163,74,0.85)' : 'rgba(0,0,0,0.45)',
+        }}
+      >
+        {copied
+          ? <Check size={11} color="#fff" strokeWidth={3} />
+          : <Copy  size={12} color="#fff" strokeWidth={3} />}
+      </button>
 
       {/* Delete button — only when editable + hovered */}
       {editable && (
@@ -480,6 +502,25 @@ export default function SystemUI() {
       setSyncStatus('idle')
     }
     load()
+  }, [])
+
+  /* ── Realtime subscription — push changes to all connected devices ── */
+  useEffect(() => {
+    if (!supabase) return
+    const channel = supabase
+      .channel('system_ui_realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'system_ui_config' }, (payload) => {
+        const { key, value } = payload.new
+        if (!value) return
+        // Skip if this device has a pending save for this key (user is mid-edit)
+        if (timers.current[key]) return
+        if (key === 'colors') { setGroups(value);       localStorage.setItem('sui_colors', JSON.stringify(value)) }
+        if (key === 'fonts')  { setFonts(value);        localStorage.setItem('sui_fonts',  JSON.stringify(value)) }
+        if (key === 'status') { setStatusBadges(value); localStorage.setItem('sui_status', JSON.stringify(value)) }
+        if (key === 'roles')  { setRoleBadges(value);   localStorage.setItem('sui_roles',  JSON.stringify(value)) }
+      })
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
   }, [])
 
   /* ── Debounced save to Supabase + localStorage ── */
