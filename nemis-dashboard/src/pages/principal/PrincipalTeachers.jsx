@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   Search, ArrowLeft, Mail, Phone, BookOpen, CalendarCheck,
   ChevronLeft, ChevronRight, UserPlus, Check,
   TrendingUp, AlertCircle, ChevronDown, MoreVertical,
-  Award, FileText, Lightbulb,
+  Award, FileText, Lightbulb, LayoutGrid, List,
+  AlertTriangle, CheckCircle2, Star, Users, Clock,
+  Activity, BarChart2, X,
 } from 'lucide-react'
 import { principalTeachers, principalClasses } from '../../data/principalData'
 
@@ -56,22 +58,6 @@ function StatusBadge({ status }) {
   )
 }
 
-function Stat({ label, value, color, sub }) {
-  return (
-    <div className="rounded-2xl p-5 flex items-start gap-4"
-      style={{ background: '#fff', border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
-      <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ background: `${color}15` }}>
-        <div className="w-3 h-3 rounded-full" style={{ background: color }} />
-      </div>
-      <div>
-        <p className="text-2xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{value}</p>
-        <p className="text-xs font-bold text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</p>
-        {sub && <p className="text-[10px] font-semibold mt-0.5" style={{ color, fontFamily: 'Lato, sans-serif' }}>{sub}</p>}
-      </div>
-    </div>
-  )
-}
 
 // ─── Multi-step Add Teacher — Full-page layout ────────────────────────────────
 
@@ -766,34 +752,149 @@ function StatusMenu({ teacher, onStatusChange }) {
   )
 }
 
-// ─── Teacher Detail ───────────────────────────────────────────────────────────
+// ─── Teacher 360 Detail ───────────────────────────────────────────────────────
 
-const MONTHLY = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar']
+const PERIODS_SEM = ['P1', 'P2', 'Mid-term', 'P3', 'P4', 'Final']
 
-function TeacherDetail({ teacher, onBack }) {
-  const monthly = MONTHLY.map((m, i) => ({
-    month: m,
-    rate: Math.min(100, Math.max(60, teacher.attendance + (i % 3 === 0 ? -4 : i % 3 === 1 ? 2 : -1))),
-  }))
+const STUDENT_NAMES = [
+  'Emmanuel Flomo','Korpo Toe','Moses Weah','Agnes Gaye','Peter Kollie',
+  'Victoria Dennis','David Quaye','Satta Gblo','Thomas Yarkpah','Hawa Cooper',
+  'Samuel Bestman','Miatta Tarr','Isaac Nagbe','Rebecca Togba','George Mulbah',
+  'Lorpu Wleh','Abraham Pewee','Florence Zinnah','Daniel Dolo','Patricia Weah',
+  'John Kollie','Mary Toe','James Freeman','Grace Kerkula','Philip Dokie','Naomi Flomo',
+]
+
+function pseudoRand(seed) {
+  const x = Math.sin(seed + 1) * 10000
+  return x - Math.floor(x)
+}
+function mockScore(tId, cIdx, sIdx, pIdx, sem) {
+  return Math.round(52 + pseudoRand(tId * 31 + cIdx * 17 + sIdx * 7 + pIdx * 3 + sem * 13) * 48)
+}
+function gradeMeta(score) {
+  if (score >= 90) return { letter: 'A', color: '#16A34A', bg: '#DCFCE7' }
+  if (score >= 80) return { letter: 'B', color: '#0367A0', bg: '#DBEAFE' }
+  if (score >= 70) return { letter: 'C', color: '#D97706', bg: '#FEF3C7' }
+  if (score >= 60) return { letter: 'D', color: '#EA580C', bg: '#FFEDD5' }
+  return { letter: 'F', color: '#A60003', bg: '#FEE2E2' }
+}
+function buildClassGrades(teacher, sem) {
+  return teacher.classes.map((cls, cIdx) => {
+    const count = 18 + (cIdx % 3) * 3
+    const students = STUDENT_NAMES.slice(0, count).map((name, sIdx) => {
+      const scores = PERIODS_SEM.map((_, pIdx) => mockScore(teacher.id, cIdx, sIdx, pIdx, sem))
+      const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+      const gender  = sIdx % 3 === 0 ? 'men' : 'women'
+      const photoId = (sIdx * 7 + 15) % 100
+      return { name, scores, avg, gender, photoId, ...gradeMeta(avg) }
+    })
+    const classAvg = Math.round(students.reduce((a, s) => a + s.avg, 0) / students.length)
+    return { cls, students, classAvg }
+  })
+}
+const ACTIVITY_LOG = [
+  { icon: FileText,      color: '#0367A0', text: 'Submitted lesson plan – Week 12',              detail: 'All assigned classes covered',             time: '2 days ago'  },
+  { icon: CalendarCheck, color: '#16A34A', text: 'Marked attendance for all classes',             detail: '100% completion rate this week',           time: '3 days ago'  },
+  { icon: BookOpen,      color: '#002333', text: 'Uploaded mid-term test results',                detail: 'Results visible to students & parents',    time: '1 week ago'  },
+  { icon: Star,          color: '#7C3AED', text: 'Received positive peer evaluation',             detail: 'Score: 4.6 / 5 by senior staff reviewer',  time: '1 week ago'  },
+  { icon: Users,         color: '#0891B2', text: 'Attended Q1 staff review meeting',              detail: 'Full faculty meeting, marked present',     time: '2 weeks ago' },
+  { icon: AlertTriangle, color: '#D97706', text: 'Absence logged – medical leave',                detail: 'Substitute arranged for affected periods', time: '3 weeks ago' },
+  { icon: CheckCircle2,  color: '#16A34A', text: 'Graded & returned assignments',                 detail: 'All scripts returned within 5 days',       time: '3 weeks ago' },
+  { icon: TrendingUp,    color: '#0367A0', text: 'Student performance review submitted',          detail: 'End-of-month summary report filed',        time: 'Last month'  },
+  { icon: Clock,         color: '#6B7280', text: 'Professional development workshop attended',    detail: 'Topic: Inclusive Classroom Strategies',    time: 'Last month'  },
+]
+
+function TeacherDetail({ teacher, onBack, allTeachers }) {
+  const [tab, setTab]           = useState('overview')
+  const [sem, setSem]           = useState(1)
+  const [classIdx, setClassIdx] = useState(0)
+  const [showSubModal, setShowSubModal] = useState(false)
+  const [subChoice, setSubChoice]       = useState('')
+  const [subAssigned, setSubAssigned]   = useState(false)
+
+  const unavailable = teacher.status === 'On Leave' || teacher.status === 'Suspended'
+  const alertColor  = teacher.status === 'Suspended' ? RED : '#D97706'
+  const alertBg     = teacher.status === 'Suspended' ? '#FEF2F2' : '#FFFBEB'
+  const alertBorder = teacher.status === 'Suspended' ? '#FECACA' : '#FDE68A'
+  const alertText   = teacher.status === 'Suspended' ? '#991B1B' : '#92400E'
+
+  const classGrades = useMemo(() => buildClassGrades(teacher, sem), [teacher.id, sem])
+
+
+  // 360 metrics
+  const allScores   = classGrades.flatMap(c => c.students.map(s => s.avg))
+  const studentAvg  = allScores.length ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length) : 0
+  const lessonRate  = Math.round(72 + pseudoRand(teacher.id * 7) * 28)
+  const punctuality = Math.min(100, teacher.attendance + 2)
+
+  // Substitute candidates
+  const subList = (() => {
+    const sameSubject = (allTeachers || []).filter(t => t.id !== teacher.id && t.status === 'Active' && t.subject === teacher.subject)
+    return sameSubject.length > 0
+      ? sameSubject
+      : (allTeachers || []).filter(t => t.id !== teacher.id && t.status === 'Active').slice(0, 6)
+  })()
+
+  const TABS = [
+    { key: 'overview',  label: 'Overview'      },
+    { key: 'grades',    label: 'Class Grades'   },
+    { key: 'activity',  label: '360° Activity'  },
+  ]
+
   return (
-    <div className="max-w-[900px] space-y-5">
+    <div className="max-w-[960px] space-y-5">
+
+      {/* Back */}
       <button onClick={onBack} className="flex items-center gap-2 text-sm font-black transition-opacity hover:opacity-70"
         style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
         <ArrowLeft size={16} strokeWidth={2.5} /> Back to Teachers
       </button>
 
-      {/* Hero card */}
-      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3', boxShadow: '0 2px 16px rgba(0,35,51,0.07)' }}>
-        <div className="h-24" style={{ background: `linear-gradient(120deg, ${NAVY} 0%, ${ACCENT} 100%)` }} />
-        <div className="px-6 pb-6 bg-white" style={{ marginTop: -40 }}>
+      {/* ── Unavailability Alert ── */}
+      {unavailable && (
+        <div className="rounded-2xl p-4 flex items-start gap-4"
+          style={{ background: alertBg, border: `1px solid ${alertBorder}` }}>
+          <AlertTriangle size={20} style={{ color: alertColor, flexShrink: 0, marginTop: 1 }} strokeWidth={2.5} />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-black" style={{ color: alertColor, fontFamily: 'Sora, sans-serif' }}>
+              {teacher.status === 'Suspended' ? 'Teacher Suspended — Action Required' : 'Teacher Currently On Leave'}
+            </p>
+            <p className="text-xs font-semibold mt-1 leading-relaxed" style={{ color: alertText, fontFamily: 'Lato, sans-serif' }}>
+              <strong>{teacher.name}</strong> is {teacher.status.toLowerCase()} and cannot be assigned to active classes.
+              Affected classes: <strong>{teacher.classes.join(', ')}</strong>.
+              {subAssigned
+                ? ' A substitute teacher has been assigned.'
+                : ' Please assign a substitute to cover their periods.'}
+            </p>
+          </div>
+          {!subAssigned
+            ? <button onClick={() => setShowSubModal(true)}
+                className="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-black text-white transition-opacity hover:opacity-90"
+                style={{ background: alertColor, fontFamily: 'Lato, sans-serif' }}>
+                Assign Substitute
+              </button>
+            : <span className="flex items-center gap-1.5 text-xs font-black flex-shrink-0"
+                style={{ color: '#16A34A', fontFamily: 'Lato, sans-serif' }}>
+                <CheckCircle2 size={14} /> Assigned
+              </span>
+          }
+        </div>
+      )}
+
+      {/* ── Hero card ── */}
+      <div className="rounded-2xl overflow-hidden bg-white">
+        <div className="px-6 pt-6 pb-6">
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div className="flex items-end gap-4">
-              <div className="rounded-2xl overflow-hidden flex-shrink-0" style={{ border: '4px solid #fff', boxShadow: '0 4px 16px rgba(0,35,51,0.12)' }}>
-                <Avatar name={teacher.name} gender={teacher.gender} photoId={teacher.photoId} size={80} />
+              <div className="rounded-2xl overflow-hidden flex-shrink-0"
+                style={{ border: '4px solid #fff', boxShadow: '0 4px 16px rgba(0,35,51,0.12)' }}>
+                <Avatar name={teacher.name} gender={teacher.gender} photoId={teacher.photoId} size={76} />
               </div>
               <div className="pb-1">
                 <h2 className="text-xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{teacher.name}</h2>
-                <p className="text-xs font-bold text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{teacher.empId} · {teacher.subject}</p>
+                <p className="text-xs font-bold text-[#6B7280] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
+                  {teacher.empId} · {teacher.subject}
+                </p>
                 <div className="flex items-center gap-2 mt-2">
                   <StatusBadge status={teacher.status} />
                   <span className="text-[10px] font-bold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
@@ -818,20 +919,20 @@ function TeacherDetail({ teacher, onBack }) {
         </div>
       </div>
 
-      {/* KPI row */}
+      {/* ── KPI row ── */}
       <div className="grid grid-cols-4 gap-4">
         {[
           { label: 'Attendance Rate',   value: `${teacher.attendance}%`, color: teacher.attendance >= 90 ? '#16A34A' : '#D97706', icon: CalendarCheck },
-          { label: 'Classes Assigned',  value: teacher.classes.length,  color: ACCENT, icon: BookOpen },
-          { label: 'Last Report',       value: teacher.lastReport,      color: NAVY, icon: FileText },
-          { label: 'Employment Status', value: teacher.status,          color: statusCfg[teacher.status]?.text || '#6B7280', icon: Award },
+          { label: 'Classes Assigned',  value: teacher.classes.length,   color: ACCENT,                                            icon: BookOpen      },
+          { label: 'Last Report',       value: teacher.lastReport,        color: NAVY,                                              icon: FileText      },
+          { label: 'Employment Status', value: teacher.status,            color: statusCfg[teacher.status]?.text || '#6B7280',      icon: Award         },
         ].map(k => {
           const Icon = k.icon
           return (
             <div key={k.label} className="rounded-2xl p-4 flex items-center gap-3"
               style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: `${k.color}15` }}>
+                style={{ background: `${k.color}18` }}>
                 <Icon size={16} style={{ color: k.color }} strokeWidth={2.5} />
               </div>
               <div>
@@ -843,65 +944,354 @@ function TeacherDetail({ teacher, onBack }) {
         })}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
-        {/* Contact */}
-        <div className="bg-white rounded-2xl p-5 space-y-1" style={{ border: '1px solid #EEF0F3' }}>
-          <p className="text-sm font-black text-[#002333] mb-3 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
-            <Phone size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Contact & Personal
-          </p>
-          {[
-            { label: 'Phone',    value: teacher.phone },
-            { label: 'Email',    value: teacher.email },
-            { label: 'Joined',   value: teacher.joined },
-          ].map(r => (
-            <div key={r.label} className="flex items-center justify-between py-2.5"
-              style={{ borderBottom: '1px solid #F4F6F8' }}>
-              <span className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.label}</span>
-              <span className="text-sm font-bold text-[#002333] max-w-[200px] truncate text-right" style={{ fontFamily: 'Lato, sans-serif' }}>{r.value}</span>
-            </div>
-          ))}
-        </div>
+      {/* ── Tab bar ── */}
+      <div className="flex items-center gap-2">
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setTab(t.key)}
+            className="px-5 py-2.5 rounded-xl text-xs font-black transition-all hover:opacity-90"
+            style={tab === t.key
+              ? { background: NAVY, color: '#fff', fontFamily: 'Lato, sans-serif', boxShadow: '0 2px 8px rgba(0,35,51,0.18)' }
+              : { background: '#F4F6F8', color: '#6B7280', border: '1px solid #E2E8F0', fontFamily: 'Lato, sans-serif' }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
 
-        {/* Classes */}
-        <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
-          <p className="text-sm font-black text-[#002333] mb-3 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
-            <BookOpen size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Class Assignments
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {teacher.classes.map(cls => (
-              <div key={cls} className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
-                style={{ background: `${ACCENT}08`, border: `1px solid ${ACCENT}22` }}>
-                <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: ACCENT }} />
-                <span className="text-xs font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{cls}</span>
+      {/* ══════════ TAB: OVERVIEW ══════════ */}
+      {tab === 'overview' && (
+        <div className="space-y-5">
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Contact */}
+            <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
+              <p className="text-sm font-black text-[#002333] mb-3 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
+                <Phone size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Contact & Personal
+              </p>
+              {[
+                { label: 'Phone',  value: teacher.phone  },
+                { label: 'Email',  value: teacher.email  },
+                { label: 'Joined', value: teacher.joined },
+              ].map(r => (
+                <div key={r.label} className="flex items-center justify-between py-2.5"
+                  style={{ borderBottom: '1px solid #F4F6F8' }}>
+                  <span className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.label}</span>
+                  <span className="text-sm font-bold text-[#002333] max-w-[220px] truncate text-right" style={{ fontFamily: 'Lato, sans-serif' }}>{r.value}</span>
+                </div>
+              ))}
+            </div>
+            {/* Classes */}
+            <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
+              <p className="text-sm font-black text-[#002333] mb-3 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
+                <BookOpen size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Class Assignments
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {teacher.classes.map(cls => (
+                  <div key={cls} className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
+                    style={{ background: `${ACCENT}08`, border: `1px solid ${ACCENT}22` }}>
+                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: ACCENT }} />
+                    <span className="text-xs font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{cls}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
+            <p className="text-sm font-black text-[#002333] mb-4 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
+              <TrendingUp size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> This Term at a Glance
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: 'Days Present',      value: Math.round(teacher.attendance * 1.6),  sub: `of 160 school days`,       color: '#16A34A' },
+                { label: 'Days Absent',       value: 160 - Math.round(teacher.attendance * 1.6), sub: 'logged absences',      color: teacher.attendance >= 90 ? '#9CA3AF' : '#D97706' },
+                { label: 'Lessons Delivered', value: Math.round(teacher.classes.length * 18 * pseudoRand(teacher.id * 3 + 1) * 0.25 + teacher.classes.length * 14), sub: 'total this term', color: ACCENT },
+                { label: 'Tests Graded',      value: Math.round(teacher.classes.length * 6 + pseudoRand(teacher.id * 5) * 10), sub: 'assessments returned', color: NAVY },
+                { label: 'Lesson Plans Filed',value: Math.round(12 + pseudoRand(teacher.id * 9) * 4),  sub: 'of 16 weeks',      color: ACCENT },
+                { label: 'Parent Meetings',   value: Math.round(2 + pseudoRand(teacher.id * 11) * 6), sub: 'this semester',     color: '#7C3AED' },
+              ].map(s => (
+                <div key={s.label} className="rounded-xl p-4" style={{ background: '#F8FAFC', border: '1px solid #EEF0F3' }}>
+                  <p className="text-2xl font-black leading-none" style={{ color: s.color, fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
+                  <p className="text-xs font-black mt-1.5 text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
+                  <p className="text-[10px] font-semibold mt-0.5" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{s.sub}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Monthly Attendance */}
-      <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
-        <div className="flex items-center justify-between mb-5">
-          <p className="text-sm font-black text-[#002333] flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
-            <TrendingUp size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Monthly Attendance — 1st Semester 2025–26
-          </p>
-          <span className="text-lg font-black" style={{ color: teacher.attendance >= 90 ? '#16A34A' : '#D97706', fontFamily: 'Sora, sans-serif' }}>
-            {teacher.attendance}% avg
-          </span>
-        </div>
-        <div className="flex items-end gap-2">
-          {monthly.map(m => {
-            const color = m.rate >= 90 ? ACCENT : m.rate >= 75 ? '#D97706' : RED
+      {/* ══════════ TAB: CLASS GRADES ══════════ */}
+      {tab === 'grades' && (
+        <div className="space-y-4">
+          {/* Semester toggle */}
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2">
+              {[1, 2].map(s => (
+                <button key={s} onClick={() => setSem(s)}
+                  className="px-5 py-2 rounded-xl text-sm font-black transition-all"
+                  style={sem === s
+                    ? { background: ACCENT, color: '#fff', fontFamily: 'Lato, sans-serif' }
+                    : { background: '#F4F6F8', color: NAVY, border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif' }}>
+                  Semester {s}
+                </button>
+              ))}
+            </div>
+            {/* Class tabs */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {teacher.classes.map((cls, i) => (
+                <button key={cls} onClick={() => setClassIdx(i)}
+                  className="px-4 py-1.5 rounded-xl text-xs font-black transition-all"
+                  style={classIdx === i
+                    ? { background: NAVY, color: '#fff', fontFamily: 'Lato, sans-serif' }
+                    : { background: '#F4F6F8', color: '#6B7280', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif' }}>
+                  {cls}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Grade table */}
+          {classGrades[classIdx] && (() => {
+            const { cls, students, classAvg } = classGrades[classIdx]
+            const clsMeta = gradeMeta(classAvg)
             return (
-              <div key={m.month} className="flex-1 flex flex-col items-center gap-1.5">
-                <span className="text-[10px] font-black" style={{ color, fontFamily: 'Lato, sans-serif' }}>{m.rate}%</span>
-                <div className="w-full rounded-t-lg" style={{ height: Math.round((m.rate / 100) * 80), background: color, opacity: 0.85, minHeight: 8 }} />
-                <span className="text-[9px] font-bold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{m.month}</span>
+              <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3' }}>
+                {/* Table header */}
+                <div className="flex items-center justify-between px-5 py-4"
+                  style={{ borderBottom: '1px solid #EEF0F3' }}>
+                  <div>
+                    <p className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
+                      {cls} — Semester {sem} Grade Report
+                    </p>
+                    <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>
+                      {students.length} students · 6 assessment periods
+                    </p>
+                  </div>
+                  <span className="text-sm font-black px-3 py-1.5 rounded-xl"
+                    style={{ background: clsMeta.bg, color: clsMeta.color, fontFamily: 'Lato, sans-serif' }}>
+                    Class Avg: {classAvg} ({clsMeta.letter})
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Lato, sans-serif', fontSize: 12 }}>
+                    <thead>
+                      <tr style={{ background: '#F8FAFC' }}>
+                        <th className="text-left px-4 py-3 font-black" style={{ color: NAVY, minWidth: 160, borderBottom: '2px solid #EEF0F3' }}>
+                          Student
+                        </th>
+                        {PERIODS_SEM.map(p => (
+                          <th key={p} className="text-center px-3 py-3 font-black" style={{ color: NAVY, borderBottom: '2px solid #EEF0F3' }}>{p}</th>
+                        ))}
+                        <th className="text-center px-3 py-3 font-black" style={{ color: NAVY, borderBottom: '2px solid #EEF0F3' }}>Avg</th>
+                        <th className="text-center px-3 py-3 font-black" style={{ color: NAVY, borderBottom: '2px solid #EEF0F3' }}>Grade</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {students.map((s, i) => (
+                        <tr key={s.name} style={{ borderBottom: '1px solid #F4F6F8', background: i % 2 === 0 ? '#fff' : '#FAFBFC' }}>
+                          {/* Student name + photo */}
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-2.5">
+                              <img
+                                src={`https://randomuser.me/api/portraits/${s.gender}/${s.photoId}.jpg`}
+                                alt={s.name}
+                                className="rounded-full object-cover flex-shrink-0"
+                                style={{ width: 28, height: 28, border: '1.5px solid #EEF0F3' }}
+                                onError={e => { e.target.style.display = 'none' }}
+                              />
+                              <span className="font-black text-[12px]" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>{s.name}</span>
+                            </div>
+                          </td>
+                          {/* Score cells — gray, red if failing */}
+                          {s.scores.map((score, pi) => {
+                            const fail = score < 60
+                            return (
+                              <td key={pi} className="px-3 py-2 text-center">
+                                <span className="font-black px-2 py-0.5 rounded-lg text-[11px]"
+                                  style={{ background: fail ? '#FEE2E2' : '#F3F4F6', color: fail ? '#A60003' : '#374151' }}>
+                                  {score}
+                                </span>
+                              </td>
+                            )
+                          })}
+                          {/* Avg — bold black, red if failing */}
+                          <td className="px-3 py-2 text-center">
+                            <span className="font-black text-[12px]" style={{ color: s.avg < 60 ? '#A60003' : '#002333' }}>{s.avg}</span>
+                          </td>
+                          {/* Grade letter — gray badge, red if F */}
+                          <td className="px-3 py-2 text-center">
+                            <span className="font-black px-2.5 py-1 rounded-full text-[11px]"
+                              style={{ background: s.letter === 'F' ? '#FEE2E2' : '#F3F4F6', color: s.letter === 'F' ? '#A60003' : '#374151' }}>
+                              {s.letter}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Grade legend */}
+                <div className="flex items-center gap-4 px-5 py-3 flex-wrap" style={{ borderTop: '1px solid #EEF0F3' }}>
+                  {[['A','90+','#16A34A','#DCFCE7'],['B','80–89','#0367A0','#DBEAFE'],['C','70–79','#D97706','#FEF3C7'],['D','60–69','#EA580C','#FFEDD5'],['F','<60','#A60003','#FEE2E2']].map(([l,r,c,b]) => (
+                    <div key={l} className="flex items-center gap-1.5">
+                      <span className="px-2 py-0.5 rounded font-black text-[10px]" style={{ background: b, color: c }}>{l}</span>
+                      <span className="text-[10px] font-semibold" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{r}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )
-          })}
+          })()}
         </div>
-      </div>
+      )}
+
+      {/* ══════════ TAB: 360° ACTIVITY ══════════ */}
+      {tab === 'activity' && (
+        <div className="space-y-5">
+          {/* Metric cards */}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { label: 'Attendance',        value: `${teacher.attendance}%`, icon: CalendarCheck, color: teacher.attendance >= 90 ? '#16A34A' : '#D97706' },
+              { label: 'Punctuality Score', value: `${punctuality}%`,         icon: Clock,         color: punctuality >= 90 ? '#16A34A' : '#D97706'        },
+              { label: 'Lesson Submission', value: `${lessonRate}%`,          icon: FileText,      color: lessonRate >= 85 ? '#16A34A' : '#D97706'          },
+              { label: 'Student Avg Grade', value: `${studentAvg}%`,         icon: BarChart2,     color: gradeMeta(studentAvg).color                       },
+            ].map(k => {
+              const Icon = k.icon
+              return (
+                <div key={k.label} className="rounded-2xl p-4" style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+                      style={{ background: `${k.color}18` }}>
+                      <Icon size={15} style={{ color: k.color }} strokeWidth={2.5} />
+                    </div>
+                    <span className="text-xl font-black" style={{ color: k.color, fontFamily: 'Sora, sans-serif' }}>{k.value}</span>
+                  </div>
+                  <div className="w-full rounded-full overflow-hidden" style={{ height: 5, background: '#EEF0F3' }}>
+                    <div className="h-full rounded-full" style={{ width: k.value, background: k.color, transition: 'width 0.6s' }} />
+                  </div>
+                  <p className="text-[10px] font-bold mt-2" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{k.label}</p>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Per-class student averages */}
+          <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
+            <p className="text-sm font-black text-[#002333] mb-4 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
+              <Users size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Student Performance by Class
+            </p>
+            <div className="space-y-3">
+              {classGrades.map(({ cls, classAvg }) => {
+                const m = gradeMeta(classAvg)
+                return (
+                  <div key={cls} className="flex items-center gap-4">
+                    <span className="text-xs font-bold w-24 flex-shrink-0" style={{ color: NAVY, fontFamily: 'Lato, sans-serif' }}>{cls}</span>
+                    <div className="flex-1 rounded-full overflow-hidden" style={{ height: 8, background: '#EEF0F3' }}>
+                      <div className="h-full rounded-full" style={{ width: `${classAvg}%`, background: m.color }} />
+                    </div>
+                    <span className="text-xs font-black w-16 text-right flex-shrink-0" style={{ color: m.color, fontFamily: 'Lato, sans-serif' }}>
+                      {classAvg}% ({m.letter})
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Activity timeline */}
+          <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
+            <p className="text-sm font-black text-[#002333] mb-4 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
+              <Activity size={14} strokeWidth={2.5} style={{ color: ACCENT }} /> Recent Activity Log
+            </p>
+            <div className="space-y-0">
+              {ACTIVITY_LOG.map((item, i) => {
+                const Icon = item.icon
+                return (
+                  <div key={i} className="flex gap-4 relative">
+                    {/* Connector line */}
+                    {i < ACTIVITY_LOG.length - 1 && (
+                      <div className="absolute left-4 top-8 bottom-0 w-px" style={{ background: '#EEF0F3' }} />
+                    )}
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 z-10"
+                      style={{ background: `${item.color}15`, border: `1px solid ${item.color}30` }}>
+                      <Icon size={14} style={{ color: item.color }} strokeWidth={2.5} />
+                    </div>
+                    <div className="flex-1 pb-5">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-black text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{item.text}</p>
+                        <span className="text-[10px] font-bold flex-shrink-0" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{item.time}</span>
+                      </div>
+                      <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{item.detail}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════ SUBSTITUTE MODAL ══════════ */}
+      {showSubModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,14,33,0.55)' }}
+          onClick={e => { if (e.target === e.currentTarget) setShowSubModal(false) }}>
+          <div className="bg-white rounded-2xl w-full max-w-md" style={{ border: '1px solid #EEF0F3' }}>
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #EEF0F3' }}>
+              <div>
+                <p className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Assign Substitute Teacher</p>
+                <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>
+                  Covering: {teacher.classes.join(', ')}
+                </p>
+              </div>
+              <button onClick={() => setShowSubModal(false)}
+                className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-gray-100">
+                <X size={16} strokeWidth={2.5} style={{ color: '#6B7280' }} />
+              </button>
+            </div>
+
+            {/* Candidate list */}
+            <div className="p-4 space-y-2 max-h-72 overflow-y-auto">
+              {subList.length === 0
+                ? <p className="text-xs text-center py-6" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>No available substitute teachers found.</p>
+                : subList.map(t => (
+                  <label key={t.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors"
+                    style={{ background: subChoice === String(t.id) ? `${ACCENT}10` : '#F8FAFC', border: `1px solid ${subChoice === String(t.id) ? ACCENT : '#EEF0F3'}` }}>
+                    <input type="radio" name="sub" value={t.id} checked={subChoice === String(t.id)}
+                      onChange={() => setSubChoice(String(t.id))} className="accent-blue-600" />
+                    <Avatar name={t.name} gender={t.gender} photoId={t.photoId} size={32} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-black text-[#002333] truncate" style={{ fontFamily: 'Lato, sans-serif' }}>{t.name}</p>
+                      <p className="text-[10px] font-semibold" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{t.subject} · {t.empId}</p>
+                    </div>
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded-full"
+                      style={{ background: '#DCFCE7', color: '#16A34A', fontFamily: 'Lato, sans-serif' }}>Active</span>
+                  </label>
+                ))
+              }
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-3 px-5 py-4" style={{ borderTop: '1px solid #EEF0F3' }}>
+              <button onClick={() => setShowSubModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-black transition-colors hover:bg-gray-100"
+                style={{ color: '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                Cancel
+              </button>
+              <button
+                disabled={!subChoice}
+                onClick={() => { setSubAssigned(true); setShowSubModal(false) }}
+                className="px-5 py-2 rounded-xl text-xs font-black text-white transition-opacity"
+                style={{ background: subChoice ? ACCENT : '#D1D5DB', fontFamily: 'Lato, sans-serif', cursor: subChoice ? 'pointer' : 'not-allowed' }}>
+                Confirm Assignment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -916,11 +1306,12 @@ export default function PrincipalTeachers() {
   const [subjectFilter, setSubject]     = useState('All')
   const [showAddModal, setShowAddModal] = useState(false)
   const [page, setPage]                 = useState(1)
+  const [viewMode, setViewMode]         = useState('table')
 
   useEffect(() => { setPage(1) }, [search, statusFilter, subjectFilter])
 
   const selectedTeacher = selected ? teachers.find(t => t.id === selected) : null
-  if (selectedTeacher) return <TeacherDetail teacher={selectedTeacher} onBack={() => setSelected(null)} />
+  if (selectedTeacher) return <TeacherDetail teacher={selectedTeacher} onBack={() => setSelected(null)} allTeachers={teachers} />
 
   const allSubjects = ['All', ...Array.from(new Set(teachers.map(t => t.subject))).sort()]
 
@@ -949,37 +1340,59 @@ export default function PrincipalTeachers() {
   return (
     <div className="space-y-5 max-w-[1280px]">
 
-      {/* ── Top bar ── */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-base font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Teachers & Staff</h2>
-          <p className="text-xs font-semibold text-[#9CA3AF] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-            {teachers.length} staff members · St. Mark's Demonstration School
-          </p>
+      {/* ── Hero Image ── */}
+      <div className="rounded-2xl overflow-hidden w-full" style={{ height: 100 }}>
+        <img
+          src="/images/school-banner.jpg"
+          alt="School"
+          className="w-full h-full object-cover"
+          onError={e => { e.target.parentElement.style.display = 'none' }}
+        />
+      </div>
+
+      {/* ── Teachers Banner ── */}
+      <div className="rounded-2xl overflow-hidden relative"
+        style={{ background: '#000E21' }}>
+
+
+        <div className="relative px-8 py-4 flex items-center justify-between gap-6">
+
+          {/* KPI stats */}
+          <div className="flex items-stretch gap-0">
+            {[
+              { label: 'Total Staff', value: teachers.length },
+              { label: 'Active',      value: activeCount },
+              { label: 'On Leave',    value: leaveCount + (teachers.length - activeCount - leaveCount) },
+              { label: 'Avg Attend',  value: `${avgAttend}%` },
+            ].map((s, i) => (
+              <div key={s.label} className="flex flex-col items-center justify-center px-7 py-2"
+                style={{ borderLeft: i > 0 ? '2px solid rgba(255,255,255,0.15)' : 'none', minWidth: 88 }}>
+                <p className="text-2xl font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
+                <p className="text-[10px] font-bold mt-1 text-center"
+                  style={{ color: 'rgba(255,255,255,0.50)', fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Add Teacher — right */}
+          <button onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-opacity hover:opacity-90 flex-shrink-0"
+            style={{ background: ACCENT, color: '#fff', fontFamily: 'Lato, sans-serif', boxShadow: '0 4px 12px rgba(3,103,160,0.40)' }}>
+            <UserPlus size={15} strokeWidth={2.5} /> Add Teacher
+          </button>
         </div>
-        <button onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-90"
-          style={{ background: ACCENT, fontFamily: 'Lato, sans-serif', boxShadow: '0 4px 12px rgba(3,103,160,0.30)' }}>
-          <UserPlus size={16} strokeWidth={2.5} /> Add Teacher
-        </button>
       </div>
 
-      {/* ── Summary Cards ── */}
-      <div className="grid grid-cols-4 gap-4">
-        <Stat label="Total Staff"      value={teachers.length}   color={ACCENT}    sub="Registered" />
-        <Stat label="Active"           value={activeCount}        color="#16A34A"   sub="Currently teaching" />
-        <Stat label="On Leave / Suspended" value={leaveCount + (teachers.length - activeCount - leaveCount)} color="#D97706" sub="Not in class" />
-        <Stat label="Avg Attendance"   value={`${avgAttend}%`}   color={avgAttend >= 90 ? '#16A34A' : '#D97706'} sub="This semester" />
-      </div>
+      {/* ── Horizontal Filter Bar ── */}
+      <div className="bg-white rounded-2xl px-5 py-4 flex flex-wrap items-end gap-y-3 gap-x-3"
+        style={{ border: '1px solid #EEF0F3' }}>
 
-      <div className="flex gap-5">
-        {/* ── Filter Sidebar ── */}
-        <div className="w-52 flex-shrink-0">
-          <div className="bg-white rounded-2xl p-4 space-y-4"
-            style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-            <p className="text-xs font-black uppercase tracking-wider text-[#002333]"
-              style={{ fontFamily: 'Lato, sans-serif' }}>Filters</p>
+        {/* Left group */}
+        <div className="flex items-end gap-3 flex-wrap flex-1 min-w-0">
 
+          {/* Search */}
+          <div className="flex flex-col gap-1 flex-shrink-0" style={{ width: 200 }}>
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Search</span>
             <div className="relative">
               <Search size={13} strokeWidth={2.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
               <input type="text" placeholder="Name, subject, ID…"
@@ -987,57 +1400,176 @@ export default function PrincipalTeachers() {
                 className="w-full pl-8 pr-3 py-2 text-xs outline-none rounded-xl"
                 style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', color: '#002333' }} />
             </div>
+          </div>
 
-            <div>
-              <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Status</p>
-              <div className="space-y-0.5">
-                {['All', 'Active', 'On Leave', 'Suspended'].map(s => (
-                  <button key={s} onClick={() => setStatus(s)}
-                    className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                    style={{
-                      background: statusFilter === s ? 'rgba(3,103,160,0.10)' : 'transparent',
-                      color: statusFilter === s ? ACCENT : '#374151',
-                      fontFamily: 'Lato, sans-serif', fontWeight: statusFilter === s ? 800 : 600,
-                    }}>
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
+          <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
 
-            <div>
-              <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Subject</p>
-              <div className="space-y-0.5 max-h-48 overflow-y-auto">
-                {allSubjects.map(s => (
-                  <button key={s} onClick={() => setSubject(s)}
-                    className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                    style={{
-                      background: subjectFilter === s ? 'rgba(3,103,160,0.10)' : 'transparent',
-                      color: subjectFilter === s ? ACCENT : '#374151',
-                      fontFamily: 'Lato, sans-serif', fontWeight: subjectFilter === s ? 800 : 600,
-                    }}>
-                    {s}
-                  </button>
-                ))}
-              </div>
+          {/* Status */}
+          <div className="flex flex-col gap-1 flex-shrink-0">
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Status</span>
+            <div className="flex items-center gap-1">
+              {['All', 'Active', 'On Leave', 'Suspended'].map(s => (
+                <button key={s} onClick={() => setStatus(s)}
+                  className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+                  style={{
+                    background: statusFilter === s ? 'rgba(3,103,160,0.10)' : 'transparent',
+                    color: statusFilter === s ? ACCENT : '#374151',
+                    fontFamily: 'Lato, sans-serif', fontWeight: statusFilter === s ? 800 : 600,
+                    border: statusFilter === s ? `1px solid rgba(3,103,160,0.20)` : '1px solid #EEF0F3',
+                  }}>
+                  {s}
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div className="pt-2" style={{ borderTop: '1px solid #EEF0F3' }}>
-              <p className="text-[11px] font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-                {filtered.length} of {teachers.length} teachers
-              </p>
-            </div>
+          <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+          {/* Subject */}
+          <div className="flex flex-col gap-1 flex-shrink-0">
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Subject</span>
+            <select value={subjectFilter} onChange={e => setSubject(e.target.value)}
+              className="text-xs outline-none rounded-xl px-3 py-2"
+              style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif',
+                color: subjectFilter !== 'All' ? ACCENT : '#374151', fontWeight: 700, minWidth: 140 }}>
+              {allSubjects.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
           </div>
         </div>
 
-        {/* ── Table ── */}
-        <div className="flex-1 min-w-0 space-y-4">
+        {/* Right group: count + view toggle */}
+        <div className="flex items-end gap-3 flex-shrink-0 ml-auto">
+          <p className="text-xs font-bold text-[#9CA3AF] mb-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+            {filtered.length} of {teachers.length}
+          </p>
+          <div className="flex items-center gap-1 rounded-lg p-1 mb-0" style={{ background: '#F4F6F8' }}>
+            {[{ mode: 'table', Icon: List, label: 'Table' }, { mode: 'grid', Icon: LayoutGrid, label: 'Grid' }].map(({ mode, Icon, label }) => (
+              <button key={mode} onClick={() => setViewMode(mode)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-black transition-all"
+                style={{
+                  background: viewMode === mode ? NAVY : 'transparent',
+                  color: viewMode === mode ? '#fff' : '#6B7280',
+                  fontFamily: 'Lato, sans-serif',
+                }}>
+                <Icon size={13} strokeWidth={2.5} />{label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Content area ── */}
+      <div className="space-y-4">
+
+          {/* ── Grid view ── */}
+          {viewMode === 'grid' && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                {paginated.length === 0 && (
+                  <div className="col-span-2 py-16 text-center">
+                    <p className="text-sm font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>No teachers match the filters.</p>
+                  </div>
+                )}
+                {paginated.map(t => {
+                  const cfg = statusCfg[t.status] || statusCfg['Active']
+                  return (
+                    <div key={t.id}
+                      className="bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-200"
+                      style={{ border: '1px solid #EEF0F3' }}
+                      onClick={() => setSelected(t.id)}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)' }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}>
+
+                      {/* Card header */}
+                      <div className="px-5 pt-4 pb-3 flex items-center gap-3" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                        <Avatar name={t.name} gender={t.gender} photoId={t.photoId} size={46} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-black truncate" style={{ color: NAVY, fontFamily: 'Sora, sans-serif' }}>{t.name}</p>
+                          <p className="text-[10px] font-black text-[#9CA3AF] font-mono mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{t.empId}</p>
+                        </div>
+                        <span className="text-[10px] font-black px-2.5 py-1 rounded-full flex-shrink-0"
+                          style={{ background: cfg.pill, color: cfg.text, fontFamily: 'Lato, sans-serif' }}>
+                          {t.status}
+                        </span>
+                      </div>
+
+                      {/* Card body */}
+                      <div className="px-5 py-3 space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-black px-2.5 py-1 rounded-full"
+                            style={{ background: `${ACCENT}12`, color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+                            {t.subject}
+                          </span>
+                          <div className="flex gap-1 flex-wrap justify-end">
+                            {t.classes.slice(0, 2).map(c => (
+                              <span key={c} className="text-[9px] font-black px-1.5 py-0.5 rounded"
+                                style={{ background: '#F4F6F8', color: NAVY, fontFamily: 'Lato, sans-serif' }}>{c}</span>
+                            ))}
+                            {t.classes.length > 2 && (
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded"
+                                style={{ background: `${ACCENT}15`, color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+                                +{t.classes.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Card footer */}
+                      <div className="px-5 py-2.5 flex items-center justify-between" style={{ borderTop: '1px solid #F4F6F8', background: '#F8FAFC' }}>
+                        <span className="text-[10px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                          {t.lastReport}
+                        </span>
+                        <span className="text-xs font-black flex items-center gap-1" style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+                          View Profile <ChevronRight size={12} strokeWidth={2.5} />
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Grid pagination */}
+              <div className="flex items-center justify-between px-1">
+                <p className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
+                  {filtered.length === 0 ? 'No records' : `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, filtered.length)} of ${filtered.length}`}
+                </p>
+                <div className="flex items-center gap-1.5">
+                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: page === 1 ? '#F4F6F8' : '#EEF0F3', color: page === 1 ? '#C4C9D4' : '#374151' }}>
+                    <ChevronLeft size={14} strokeWidth={2.5} />
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                    .reduce((acc, p, idx, arr) => { if (idx > 0 && p - arr[idx - 1] > 1) acc.push('…'); acc.push(p); return acc }, [])
+                    .map((p, i) => typeof p === 'string'
+                      ? <span key={`e${i}`} className="text-xs text-[#9CA3AF] px-1">…</span>
+                      : <button key={p} onClick={() => setPage(p)}
+                          className="w-8 h-8 rounded-lg text-xs font-black"
+                          style={{ background: page === p ? ACCENT : '#F4F6F8', color: page === p ? '#fff' : '#374151', fontFamily: 'Lato, sans-serif' }}>
+                          {p}
+                        </button>
+                    )}
+                  <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: page === totalPages ? '#F4F6F8' : '#EEF0F3', color: page === totalPages ? '#C4C9D4' : '#374151' }}>
+                    <ChevronRight size={14} strokeWidth={2.5} />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── Table view ── */}
+          {viewMode === 'table' && (
           <div className="bg-white rounded-2xl overflow-hidden"
             style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
             <table className="w-full">
               <thead>
                 <tr style={{ background: '#BFD9F2' }}>
-                  {['Teacher', 'ID', 'Subject', 'Classes', 'Attendance', 'Status', 'Last Report', 'Actions'].map(h => (
+                  {['Teacher', 'ID', 'Subject', 'Classes', 'Status', 'Last Report', 'Actions'].map(h => (
                     <th key={h} className="text-left px-4 py-3 text-[10px] font-black uppercase tracking-wider text-[#0F172A]"
                       style={{ fontFamily: 'Lato, sans-serif' }}>{h}</th>
                   ))}
@@ -1048,7 +1580,6 @@ export default function PrincipalTeachers() {
                   <tr><td colSpan={8} className="text-center py-12 text-sm font-semibold text-[#9CA3AF]"
                     style={{ fontFamily: 'Lato, sans-serif' }}>No teachers match the filters.</td></tr>
                 ) : paginated.map((t, i) => {
-                  const attColor = t.attendance >= 90 ? '#16A34A' : t.attendance >= 75 ? '#D97706' : RED
                   return (
                     <tr key={t.id} style={{ borderTop: '1px solid #F4F6F8', background: i % 2 === 0 ? '#fff' : '#F8FAFC' }}>
                       {/* Teacher */}
@@ -1086,17 +1617,6 @@ export default function PrincipalTeachers() {
                               +{t.classes.length - 2}
                             </span>
                           )}
-                        </div>
-                      </td>
-                      {/* Attendance */}
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2 min-w-[80px]">
-                          <div className="flex-1 h-1.5 rounded-full" style={{ background: '#EEF0F3' }}>
-                            <div className="h-full rounded-full" style={{ width: `${t.attendance}%`, background: attColor }} />
-                          </div>
-                          <span className="text-xs font-black w-9 text-right" style={{ color: attColor, fontFamily: 'Lato, sans-serif' }}>
-                            {t.attendance}%
-                          </span>
                         </div>
                       </td>
                       {/* Status — clickable dropdown */}
@@ -1163,8 +1683,8 @@ export default function PrincipalTeachers() {
               </div>
             </div>
           </div>
+          )}
         </div>
-      </div>
 
       {/* Modal */}
       {showAddModal && <AddTeacherModal onClose={() => setShowAddModal(false)} onAdd={handleAdd} />}

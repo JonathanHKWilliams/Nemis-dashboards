@@ -79,93 +79,9 @@ export default function PrincipalAttendance() {
   const lateCount    = attendanceRecords.filter(r => r.status === 'Late').length
 
   return (
-    <div className="flex gap-5 max-w-[1280px]">
+    <div className="space-y-5 max-w-[1280px]">
 
-      {/* ── Filter Sidebar ── */}
-      <div className="w-52 flex-shrink-0 space-y-4">
-        <div className="bg-white rounded-2xl p-4 space-y-4" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-          <p className="text-xs font-black uppercase tracking-wider text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>Filters</p>
-
-          {/* Search */}
-          <div className="relative">
-            <Search size={13} strokeWidth={2.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
-            <input type="text" placeholder="Search student…"
-              value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 text-xs outline-none rounded-xl"
-              style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', color: '#002333' }} />
-          </div>
-
-          {/* Grade */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Grade</p>
-            <div className="space-y-0.5 max-h-52 overflow-y-auto">
-              {GRADES.map(g => (
-                <button key={g} onClick={() => setGradeFilter(g)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                  style={{
-                    background: gradeFilter === g ? `rgba(3,103,160,0.10)` : 'transparent',
-                    color: gradeFilter === g ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: gradeFilter === g ? 800 : 600,
-                  }}>
-                  {g}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Class (sub-filter) */}
-          {classNames.length > 2 && (
-            <div>
-              <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Class</p>
-              <div className="space-y-0.5">
-                {classNames.map(c => (
-                  <button key={c} onClick={() => setClassFilter(c)}
-                    className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                    style={{
-                      background: classFilter === c ? `rgba(3,103,160,0.10)` : 'transparent',
-                      color: classFilter === c ? ACCENT : '#374151',
-                      fontFamily: 'Lato, sans-serif',
-                      fontWeight: classFilter === c ? 800 : 600,
-                    }}>
-                    {c}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Status */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Status</p>
-            <div className="space-y-0.5">
-              {['All', 'Present', 'Absent', 'Late'].map(s => (
-                <button key={s} onClick={() => setStatus(s)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                  style={{
-                    background: statusFilter === s ? `rgba(3,103,160,0.10)` : 'transparent',
-                    color: statusFilter === s ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: statusFilter === s ? 800 : 600,
-                  }}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-2" style={{ borderTop: '1px solid #EEF0F3' }}>
-            <p className="text-[11px] font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-              {filtered.length} records
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main Content ── */}
-      <div className="flex-1 min-w-0 space-y-5">
-
-      {/* Summary Cards */}
+      {/* ── Summary Cards ── */}
       <div className="grid grid-cols-3 gap-4">
         {[
           { label: 'Present Today', value: presentCount, color: ACCENT },
@@ -173,17 +89,85 @@ export default function PrincipalAttendance() {
           { label: 'Late Arrivals', value: lateCount,    color: '#D97706' },
         ].map(c => (
           <div key={c.label} className="rounded-2xl p-5 flex items-center gap-4"
-            style={{ background: '#fff', border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: `${c.color}14` }}>
-              <span className="text-xl font-black" style={{ color: c.color, fontFamily: 'Sora, sans-serif' }}>{c.value}</span>
-            </div>
+            style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
             <div>
               <p className="text-2xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{c.value}</p>
               <p className="text-xs font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{c.label}</p>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* ── Horizontal Filter Bar ── */}
+      <div className="bg-white rounded-2xl px-5 py-4 flex flex-wrap items-end gap-y-3 gap-x-3"
+        style={{ border: '1px solid #EEF0F3' }}>
+
+        {/* Search */}
+        <div className="flex flex-col gap-1 flex-shrink-0" style={{ width: 200 }}>
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Search</span>
+          <div className="relative">
+            <Search size={13} strokeWidth={2.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
+            <input type="text" placeholder="Student name, ID…"
+              value={search} onChange={e => setSearch(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 text-xs outline-none rounded-xl"
+              style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', color: '#002333' }} />
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+        {/* Grade */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Grade</span>
+          <select value={gradeFilter} onChange={e => setGradeFilter(e.target.value)}
+            className="text-xs outline-none rounded-xl px-3 py-2"
+            style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif',
+              color: gradeFilter !== 'All' ? ACCENT : '#374151', fontWeight: 700, minWidth: 130 }}>
+            {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+          </select>
+        </div>
+
+        {classNames.length > 2 && <>
+          <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+          {/* Class */}
+          <div className="flex flex-col gap-1 flex-shrink-0">
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Class</span>
+            <select value={classFilter} onChange={e => setClassFilter(e.target.value)}
+              className="text-xs outline-none rounded-xl px-3 py-2"
+              style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif',
+                color: classFilter !== 'All' ? ACCENT : '#374151', fontWeight: 700, minWidth: 130 }}>
+              {classNames.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+        </>}
+
+        <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+        {/* Status */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Status</span>
+          <div className="flex items-center gap-1">
+            {['All', 'Present', 'Absent', 'Late'].map(s => (
+              <button key={s} onClick={() => setStatus(s)}
+                className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+                style={{
+                  background: statusFilter === s ? 'rgba(3,103,160,0.10)' : 'transparent',
+                  color: statusFilter === s ? ACCENT : '#374151',
+                  fontFamily: 'Lato, sans-serif',
+                  fontWeight: statusFilter === s ? 800 : 600,
+                  border: statusFilter === s ? `1px solid rgba(3,103,160,0.20)` : '1px solid #EEF0F3',
+                }}>
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Record count */}
+        <p className="text-xs font-bold text-[#9CA3AF] ml-auto mb-1 flex-shrink-0" style={{ fontFamily: 'Lato, sans-serif' }}>
+          {filtered.length} of {attendanceRecords.length}
+        </p>
       </div>
 
       {/* Daily Attendance Table */}
@@ -278,7 +262,6 @@ export default function PrincipalAttendance() {
             </button>
           </div>
         </div>
-      </div>
       </div>
     </div>
   )

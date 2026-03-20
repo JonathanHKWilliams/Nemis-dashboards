@@ -1,10 +1,9 @@
-import { GraduationCap, Users, CalendarCheck, DollarSign, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react'
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
+import { GraduationCap, Users, CalendarCheck, DollarSign, TrendingUp, ChevronLeft, ChevronRight, UserPlus, UserMinus, ArrowRightLeft, AlertTriangle, BookOpen } from 'lucide-react'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useState } from 'react'
 import {
   principalProfile, schoolInfo, schoolKPIs,
-  recentActivities, upcomingEvents,
-  attendanceTrendData, performanceTrendData, classAttendanceData,
+  upcomingEvents,
 } from '../../data/principalData'
 
 const today = new Date()
@@ -19,8 +18,8 @@ function KPICard({ icon: Icon, label, value, sub, color, onClick }) {
       className="rounded-2xl p-5 flex items-start gap-4 text-left w-full transition-all hover:shadow-md"
       style={{ background: '#fff', border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
       <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ background: `${color}18` }}>
-        <Icon size={20} style={{ color }} strokeWidth={2.5} />
+        style={{ background: '#F3F4F6' }}>
+        <Icon size={20} style={{ color: '#002333' }} strokeWidth={3} />
       </div>
       <div className="min-w-0">
         <p className="text-2xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{value}</p>
@@ -46,12 +45,6 @@ function SectionCard({ title, subtitle, action, children }) {
   )
 }
 
-const activityStatusCfg = {
-  Completed: { bg: '#0367A014', color: '#0367A0' },
-  Approved:  { bg: '#16A34A14', color: '#16A34A' },
-  Pending:   { bg: '#D9770614', color: '#D97706' },
-}
-
 const eventTypeCfg = {
   Academic:   { bg: 'rgba(3,103,160,0.08)',   color: '#0367A0' },
   Community:  { bg: 'rgba(124,58,237,0.08)',  color: '#7C3AED' },
@@ -64,7 +57,7 @@ const MONTH_NAMES = ['January','February','March','April','May','June','July','A
 const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 const DAY_LABELS  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
-function parseEventDays(events, year, month) {
+function parseEventDays(events, _year, month) {
   const monthName = MONTH_SHORT[month]
   const days = new Set()
   events.forEach(ev => {
@@ -158,7 +151,7 @@ export default function PrincipalDashboard({ setActivePage }) {
 
       {/* ── Welcome Banner ── */}
       <div className="rounded-2xl overflow-hidden relative"
-        style={{ background: '#002333', minHeight: 148 }}>
+        style={{ background: '#000E21', minHeight: 148 }}>
         <div className="relative px-8 py-7 flex items-center gap-6">
           <img
             src={`https://randomuser.me/api/portraits/${principalProfile.gender}/${principalProfile.photoId}.jpg`}
@@ -181,57 +174,18 @@ export default function PrincipalDashboard({ setActivePage }) {
               {today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
-          <div className="flex items-stretch gap-0 flex-shrink-0">
-            {[
-              { label: 'Students',   value: schoolKPIs.totalStudents.toLocaleString() },
-              { label: 'Teachers',   value: schoolKPIs.totalTeachers },
-              { label: 'Attendance', value: `${schoolKPIs.attendanceRate}%` },
-              { label: 'Classes',    value: schoolKPIs.activeClasses },
-            ].map((s, i) => (
-              <div key={s.label} className="flex flex-col items-center justify-center px-6 py-4"
-                style={{ borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.10)' : 'none', minWidth: 88 }}>
-                <p className="text-2xl font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
-                <p className="text-[10px] font-bold mt-1 text-center" style={{ color: 'rgba(255,255,255,0.40)', fontFamily: 'Lato, sans-serif' }}>
-                  {s.label}
-                </p>
-              </div>
-            ))}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <span className="px-4 py-1.5 rounded-full text-xs font-black"
+              style={{ background: 'rgba(3,103,160,0.30)', color: '#fff', fontFamily: 'Lato, sans-serif', letterSpacing: '0.02em' }}>
+              ● School in Session
+            </span>
+            <p className="text-xs font-bold text-right" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Lato, sans-serif' }}>
+              Academic Year {today.getMonth() >= 8 ? today.getFullYear() : today.getFullYear() - 1}–{String((today.getMonth() >= 8 ? today.getFullYear() : today.getFullYear() - 1) + 1).slice(-2)}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* ── School Identity Card ── */}
-      <div className="rounded-2xl p-5 flex items-center gap-5"
-        style={{ background: '#fff', border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
-          style={{ background: ACCENT }}>
-          <span className="text-xl font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>SM</span>
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h3 className="text-lg font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-              {schoolInfo.name}
-            </h3>
-            <span className="px-2.5 py-1 rounded-full text-xs font-black text-white" style={{ background: '#0367A0' }}>
-              Active
-            </span>
-          </div>
-          <p className="text-xs font-semibold text-[#6B7280] mt-1" style={{ fontFamily: 'Lato, sans-serif' }}>
-            {schoolInfo.code} · {schoolInfo.district} · {schoolInfo.county}
-          </p>
-        </div>
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <span className="px-3 py-1.5 rounded-full text-xs font-black text-white" style={{ background: '#0367A0', fontFamily: 'Lato, sans-serif' }}>
-            {schoolInfo.type}
-          </span>
-          <span className="px-3 py-1.5 rounded-full text-xs font-black" style={{ background: '#F0FDF4', color: '#16A34A', border: '1px solid #BBF7D0', fontFamily: 'Lato, sans-serif' }}>
-            {schoolInfo.accreditation}
-          </span>
-          <span className="px-3 py-1.5 rounded-full text-xs font-black" style={{ background: '#F8FAFC', color: '#6B7280', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif' }}>
-            Est. {schoolInfo.established}
-          </span>
-        </div>
-      </div>
 
       {/* ── KPI Cards ── */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -246,37 +200,76 @@ export default function PrincipalDashboard({ setActivePage }) {
       <div style={{ height: 3, background: '#EEF0F3', borderRadius: 2 }} />
 
       {/* ── Charts Row ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-        {/* Performance Trend */}
-        <div className="rounded-2xl p-6" style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
-          <h3 className="text-sm font-black text-[#002333] mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
-            Student Performance Trend
-          </h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <LineChart data={performanceTrendData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-              <XAxis dataKey="term" tick={{ fontSize: 10, fill: '#9CA3AF', fontFamily: 'Lato' }} axisLine={false} tickLine={false} />
-              <YAxis domain={[60, 100]} tick={{ fontSize: 10, fill: '#9CA3AF', fontFamily: 'Lato' }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', fontFamily: 'Lato' }} />
-              <Line type="monotone" dataKey="avg" stroke={ACCENT} strokeWidth={2.5} dot={{ r: 4, fill: ACCENT }} name="Avg %" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Performance Trend — full width, text left + graph right */}
+      <div className="rounded-2xl overflow-hidden" style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
+        <div className="flex items-stretch gap-0">
 
-        {/* Class Attendance */}
-        <div className="rounded-2xl p-6" style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
-          <h3 className="text-sm font-black text-[#002333] mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
-            Attendance by Grade Level
-          </h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={classAttendanceData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-              <XAxis dataKey="class" tick={{ fontSize: 10, fill: '#9CA3AF', fontFamily: 'Lato' }} axisLine={false} tickLine={false} />
-              <YAxis domain={[80, 100]} tick={{ fontSize: 10, fill: '#9CA3AF', fontFamily: 'Lato' }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', fontFamily: 'Lato' }} />
-              <Bar dataKey="pct" fill={ACCENT} radius={[6, 6, 0, 0]} name="Attendance %" />
-            </BarChart>
-          </ResponsiveContainer>
+          {/* Left — text info */}
+          <div className="flex flex-col justify-between p-7 flex-shrink-0" style={{ width: 270, borderRight: '1px solid #EEF0F3' }}>
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-wider mb-1" style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>MOE Grade Performance</p>
+              <h3 className="text-xl font-black text-[#002333] leading-snug" style={{ fontFamily: 'Sora, sans-serif' }}>
+                Current Term Grade Distribution
+              </h3>
+              <p className="text-xs font-semibold mt-2 leading-relaxed" style={{ color: '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                Student grade bands per Liberia Ministry of Education standard. Passing mark is 60%. Includes all classes, 2nd Semester 2025–26.
+              </p>
+            </div>
+
+            {/* Key stats */}
+            <div className="space-y-3 mt-6">
+              {[
+                { label: 'School Pass Rate',    value: '89%',  color: '#16A34A' },
+                { label: 'Term Average Score',  value: '74%',  color: ACCENT    },
+                { label: 'WAEC Candidates',     value: '47 students', color: '#7C3AED' },
+              ].map(s => (
+                <div key={s.label} className="flex items-center justify-between gap-3">
+                  <span className="text-xs font-semibold" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{s.label}</span>
+                  <span className="text-sm font-black flex-shrink-0" style={{ color: s.color, fontFamily: 'Sora, sans-serif' }}>{s.value}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-[10px] font-semibold mt-5" style={{ color: '#C4C9D4', fontFamily: 'Lato, sans-serif' }}>
+              Grading: MOE Liberia Standard · WAEC-aligned
+            </p>
+          </div>
+
+          {/* Right — pie chart */}
+          <div className="flex-1 p-6 flex flex-col justify-center">
+            <p className="text-[11px] font-black uppercase tracking-wider mb-3 text-center" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>
+              % of Students per Grade Band
+            </p>
+            <ResponsiveContainer width="100%" height={210}>
+              <PieChart>
+                <Pie
+                  data={[
+                    { name: 'A — Distinction (90–100)',  value: 12 },
+                    { name: 'B — Very Good  (80–89)',    value: 24 },
+                    { name: 'C — Good       (70–79)',    value: 31 },
+                    { name: 'D — Pass       (60–69)',    value: 22 },
+                    { name: 'F — Fail       (Below 60)', value: 11 },
+                  ]}
+                  cx="50%" cy="50%"
+                  innerRadius={52} outerRadius={82}
+                  paddingAngle={3}
+                  dataKey="value"
+                >
+                  {['#16A34A', '#0367A0', '#D97706', '#7C3AED', '#A60003'].map((color, i) => (
+                    <Cell key={i} fill={color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', fontFamily: 'Lato', fontSize: 12 }}
+                  formatter={v => [`${v}% of students`, '']}
+                />
+                <Legend
+                  iconType="circle" iconSize={8}
+                  wrapperStyle={{ fontSize: 10, fontFamily: 'Lato, sans-serif', color: '#6B7280' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
@@ -285,50 +278,66 @@ export default function PrincipalDashboard({ setActivePage }) {
       {/* ── Activity + Events ── */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
 
-        {/* Recent Activities */}
+        {/* Enrollment & Student Movement */}
         <div className="xl:col-span-2">
-          <SectionCard title="Recent School Activity" subtitle="Latest actions across staff, students & admin"
-            action={
-              <span className="text-[11px] font-bold px-3 py-1 rounded-full"
-                style={{ background: 'rgba(3,103,160,0.08)', color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
-                {recentActivities.length} records
-              </span>
-            }>
-            <table className="w-full">
-              <thead>
-                <tr style={{ background: '#F4F6F8' }}>
-                  {['Date', 'Action', 'By', 'Status'].map(h => (
-                    <th key={h} className="text-left px-5 py-3 text-[10px] font-black uppercase tracking-wider text-[#374151]"
-                      style={{ fontFamily: 'Lato, sans-serif' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {recentActivities.map((a, i) => {
-                  const sc = activityStatusCfg[a.status] || { bg: '#F4F6F8', color: '#6B7280' }
-                  return (
-                    <tr key={a.id} style={{ borderTop: '1px solid #F4F6F8', background: i % 2 === 0 ? '#fff' : '#F8FAFC' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = '#EEF4FB' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = i % 2 === 0 ? '#fff' : '#F8FAFC' }}>
-                      <td className="px-5 py-3 text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{a.date}</td>
-                      <td className="px-5 py-3 text-xs font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{a.action}</td>
-                      <td className="px-5 py-3">
-                        <div>
-                          <p className="text-xs font-bold text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>{a.actor}</p>
-                          <p className="text-[10px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{a.role}</p>
-                        </div>
-                      </td>
-                      <td className="px-5 py-3">
-                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full"
-                          style={{ background: sc.bg, color: sc.color, fontFamily: 'Lato, sans-serif' }}>
-                          {a.status}
-                        </span>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+          <SectionCard
+            title="Enrollment & Student Movement"
+            subtitle="Total enrollment, admissions, withdrawals, transfers & population shifts">
+
+            {/* KPI strip */}
+            <div className="grid grid-cols-5 gap-0" style={{ borderBottom: '1px solid #EEF0F3' }}>
+              {[
+                { icon: BookOpen,        label: 'Total Enrolled',  value: schoolKPIs.totalStudents, color: ACCENT        },
+                { icon: UserPlus,        label: 'New Admissions',  value: 14,                       color: '#16A34A'      },
+                { icon: UserMinus,       label: 'Withdrawals',     value: 3,                        color: '#A60003'      },
+                { icon: ArrowRightLeft,  label: 'Transfers In/Out',value: '5 / 2',                  color: '#7C3AED'      },
+                { icon: AlertTriangle,   label: 'Unusual Shifts',  value: 1,                        color: '#D97706'      },
+              ].map((k, i) => {
+                const Icon = k.icon
+                return (
+                  <div key={k.label} className="flex flex-col items-center justify-center py-5 gap-2"
+                    style={{ borderLeft: i > 0 ? '1px solid #EEF0F3' : 'none' }}>
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                      style={{ background: '#F3F4F6' }}>
+                      <Icon size={16} style={{ color: '#002333' }} strokeWidth={3} />
+                    </div>
+                    <p className="text-2xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{k.value}</p>
+                    <p className="text-[10px] font-bold text-center" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{k.label}</p>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Movement log */}
+            <div className="divide-y divide-[#F4F6F8]">
+              {[
+                { icon: UserPlus,       color: '#16A34A', name: 'Emmanuel K. Togba',   action: 'New admission',           cls: 'Grade 7A',  date: 'Mar 18, 2026' },
+                { icon: UserPlus,       color: '#16A34A', name: 'Satta M. Kollie',     action: 'New admission',           cls: 'Grade 3B',  date: 'Mar 17, 2026' },
+                { icon: ArrowRightLeft, color: '#7C3AED', name: 'Moses D. Flomo',      action: 'Transfer in — Buchanan PS',cls: 'Grade 9',   date: 'Mar 15, 2026' },
+                { icon: UserMinus,      color: '#A60003', name: 'Patricia A. Weah',    action: 'Withdrawal — family reloc.',cls: 'Grade 5A', date: 'Mar 14, 2026' },
+                { icon: ArrowRightLeft, color: '#7C3AED', name: 'Isaac T. Bestman',    action: 'Transfer out — GSS Buchanan',cls:'Grade 11', date: 'Mar 12, 2026' },
+                { icon: AlertTriangle,  color: '#D97706', name: 'Grade 8B',            action: 'Unusual drop — 6 absences in 3 days', cls: 'Grade 8B', date: 'Mar 11, 2026' },
+              ].map((r, i) => {
+                const Icon = r.icon
+                return (
+                  <div key={i} className="px-5 py-3.5 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#F3F4F6' }}>
+                      <Icon size={14} style={{ color: '#002333' }} strokeWidth={3} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-black text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{r.name}</p>
+                      <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#6B7280', fontFamily: 'Lato, sans-serif' }}>{r.action}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full"
+                        style={{ background: '#F4F6F8', color: '#374151', fontFamily: 'Lato, sans-serif' }}>{r.cls}</span>
+                      <p className="text-[10px] font-semibold mt-1" style={{ color: '#9CA3AF', fontFamily: 'Lato, sans-serif' }}>{r.date}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </SectionCard>
         </div>
 

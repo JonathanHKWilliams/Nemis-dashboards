@@ -206,7 +206,19 @@ export default function PrincipalStudents() {
   const paginated  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   return (
-    <div className="flex gap-5 max-w-[1280px]">
+    <div className="space-y-5 max-w-[1280px]">
+
+      {/* ── Hero Image ── */}
+      <div className="rounded-2xl overflow-hidden w-full" style={{ height: 100 }}>
+        <img
+          src="/images/students-banner.jpg"
+          alt="Students"
+          className="w-full h-full object-cover"
+          onError={e => { e.target.style.display = 'none' }}
+        />
+      </div>
+
+      <div className="flex gap-5">
 
       {/* ── Filter Sidebar ── */}
       <div className="w-52 flex-shrink-0 space-y-4">
@@ -334,6 +346,7 @@ export default function PrincipalStudents() {
         <div className="px-5 pb-4">
           <Pagination page={page} totalPages={totalPages} onPage={setPage} />
         </div>
+      </div>
       </div>
       </div>
     </div>

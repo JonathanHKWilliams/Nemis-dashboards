@@ -151,9 +151,16 @@ function PrincipalSidebar({ activePage, setActivePage, onSwitch }) {
       {/* Brand */}
       <div className="px-5 pt-5 pb-4 flex items-center gap-3 flex-shrink-0"
         style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+        <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center"
           style={{ background: ACCENT }}>
-          <span className="text-sm font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>SM</span>
+          <img
+            src="/images/school-logo.png"
+            alt="School Logo"
+            className="w-full h-full object-contain"
+            onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
+          />
+          <span className="text-sm font-black text-white w-full h-full items-center justify-center"
+            style={{ fontFamily: 'Sora, sans-serif', display: 'none' }}>SM</span>
         </div>
         <div className="min-w-0">
           <p className="text-[13px] font-black text-white truncate leading-snug" style={{ fontFamily: 'Sora, sans-serif' }}>

@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Map, School, CheckSquare, GraduationCap,
   Users, BarChart2, UserCog, FileText, MessageSquare, Bell,
   Settings, ChevronUp, ShieldCheck, Building2, Crown,
-  UserRound, Headphones,
+  UserRound, Headphones, Palette,
 } from 'lucide-react'
 
 const SIDEBAR_BG = '#000E21'
@@ -90,7 +90,8 @@ const SECTIONS = [
     { id: 'tickets', label: 'IT Support', icon: Headphones },
   ]},
   { label: 'System', items: [
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'settings',  label: 'Settings',  icon: Settings },
+    { id: 'system-ui', label: 'System UI', icon: Palette  },
   ]},
 ]
 
@@ -99,8 +100,18 @@ export default function Sidebar({ activePage, setActivePage, onSwitchDashboard }
     <aside className="fixed left-0 top-0 h-screen w-[260px] flex flex-col z-50 select-none"
       style={{ background: SIDEBAR_BG, boxShadow: '4px 0 24px rgba(0,0,0,0.35)' }}>
       <div className="px-5 pt-5 pb-4 flex items-center gap-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="w-10 h-10 bg-[#0367A0] rounded-xl flex items-center justify-center flex-shrink-0">
-          <span className="font-black text-base leading-none" style={{ color: SIDEBAR_BG, fontFamily: 'Sora, sans-serif' }}>GB</span>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-[#0367A0]">
+          <img
+            src="/images/school-logo.png"
+            alt="Grand Bassa NEMIS"
+            className="w-full h-full object-contain"
+            onError={e => {
+              e.currentTarget.style.display = 'none'
+              e.currentTarget.nextSibling.style.display = 'flex'
+            }}
+          />
+          <span className="font-black text-base leading-none hidden w-full h-full items-center justify-center"
+            style={{ color: SIDEBAR_BG, fontFamily: 'Sora, sans-serif', display: 'none' }}>GB</span>
         </div>
         <div>
           <p className="text-white text-[13px] font-bold leading-tight" style={{ fontFamily: 'Sora, sans-serif' }}>Grand Bassa NEMIS</p>

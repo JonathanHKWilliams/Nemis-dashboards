@@ -537,15 +537,15 @@ export default function Settings() {
                 <button
                   key={key}
                   onClick={() => setActiveSection(key)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-left transition-all mb-0.5"
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-r-lg text-sm font-black text-left transition-all mb-0.5"
                   style={{
                     fontFamily: 'Lato, sans-serif',
                     background: active ? 'rgba(0,35,51,0.07)' : 'transparent',
-                    color: active ? '#002333' : '#6B7280',
+                    color: '#002333',
                     borderLeft: active ? '3px solid #0367A0' : '3px solid transparent',
                   }}
                 >
-                  <Icon size={15} strokeWidth={2.5} style={{ color: active ? '#0367A0' : '#6B7280' }} />
+                  <Icon size={15} strokeWidth={2.5} style={{ color: active ? '#0367A0' : '#002333' }} />
                   {label}
                 </button>
               )

@@ -30,7 +30,7 @@ function Avatar({ name, gender, photoId, size = 40 }) {
   )
 }
 
-function StudentAvatar({ name, gender, size = 28 }) {
+function StudentAvatar({ name, size = 28 }) {
   const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('')
   return (
     <div className="rounded-full flex items-center justify-center flex-shrink-0 text-white font-black"
@@ -213,138 +213,134 @@ export default function PrincipalParents() {
 
   const totalChildren   = principalParents.reduce((s, p) => s + p.children.length, 0)
   const feeIssueCount   = principalParents.filter(p => p.children.some(c => c.feeStatus !== 'Paid')).length
-  const guardianCount   = principalParents.filter(p => p.relationship === 'Guardian').length
 
   return (
-    <div className="flex gap-5 max-w-[1280px]">
+    <div className="space-y-5 max-w-[1280px]">
 
-      {/* ── Filter Sidebar ── */}
-      <div className="w-52 flex-shrink-0 space-y-4">
-        <div className="bg-white rounded-2xl p-4 space-y-4"
-          style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-          <p className="text-xs font-black uppercase tracking-wider text-[#002333]"
-            style={{ fontFamily: 'Lato, sans-serif' }}>Filters</p>
+      {/* ── Hero Image ── */}
+      <div className="rounded-2xl overflow-hidden w-full" style={{ height: 100 }}>
+        <img
+          src="/images/parents-banner.jpg"
+          alt="Parents"
+          className="w-full h-full object-cover"
+          onError={e => { e.target.style.display = 'none' }}
+        />
+      </div>
 
-          {/* Search */}
+      {/* ── Summary Cards ── */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: 'Total Parents/Guardians', value: principalParents.length, color: ACCENT,    icon: Users },
+          { label: 'Total Children Covered',  value: totalChildren,           color: '#7C3AED',  icon: GraduationCap },
+          { label: 'With Fee Issues',          value: feeIssueCount,           color: '#A60003',  icon: Users },
+        ].map(c => {
+          const Icon = c.icon
+          return (
+            <div key={c.label} className="rounded-2xl p-5 flex items-center gap-4"
+              style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: `${c.color}14` }}>
+                <Icon size={20} style={{ color: c.color }} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="text-2xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{c.value}</p>
+                <p className="text-xs font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{c.label}</p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* ── Horizontal Filter Bar ── */}
+      <div className="bg-white rounded-2xl px-5 py-4 flex flex-wrap items-end gap-y-3 gap-x-3"
+        style={{ border: '1px solid #EEF0F3' }}>
+
+        {/* Search */}
+        <div className="flex flex-col gap-1 flex-shrink-0" style={{ width: 200 }}>
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Search</span>
           <div className="relative">
             <Search size={13} strokeWidth={2.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
-            <input type="text" placeholder="Search parent…"
+            <input type="text" placeholder="Name, ID…"
               value={search} onChange={e => setSearch(e.target.value)}
               className="w-full pl-8 pr-3 py-2 text-xs outline-none rounded-xl"
               style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', color: '#002333' }} />
           </div>
+        </div>
 
-          {/* Relationship */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Relationship</p>
-            <div className="space-y-0.5">
-              {['All', 'Mother', 'Father', 'Guardian'].map(r => (
-                <button key={r} onClick={() => setRelFilter(r)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                  style={{
-                    background: relationshipFilter === r ? 'rgba(3,103,160,0.10)' : 'transparent',
-                    color: relationshipFilter === r ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: relationshipFilter === r ? 800 : 600,
-                  }}>
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
 
-          {/* Class */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Child's Class</p>
-            <div className="space-y-0.5 max-h-48 overflow-y-auto">
-              {allClasses.map(c => (
-                <button key={c} onClick={() => setClassFilter(c)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                  style={{
-                    background: classFilter === c ? 'rgba(3,103,160,0.10)' : 'transparent',
-                    color: classFilter === c ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: classFilter === c ? 800 : 600,
-                  }}>
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Fee Status */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Fee Status</p>
-            <div className="space-y-0.5">
-              {['All', 'Paid', 'Partial', 'Unpaid'].map(f => (
-                <button key={f} onClick={() => setFeeFilter(f)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
-                  style={{
-                    background: feeFilter === f ? 'rgba(3,103,160,0.10)' : 'transparent',
-                    color: feeFilter === f ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: feeFilter === f ? 800 : 600,
-                  }}>
-                  {f}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-2" style={{ borderTop: '1px solid #EEF0F3' }}>
-            <p className="text-[11px] font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-              {filtered.length} records
-            </p>
+        {/* Relationship */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Relationship</span>
+          <div className="flex items-center gap-1">
+            {['All', 'Mother', 'Father', 'Guardian'].map(r => (
+              <button key={r} onClick={() => setRelFilter(r)}
+                className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+                style={{
+                  background: relationshipFilter === r ? 'rgba(3,103,160,0.10)' : 'transparent',
+                  color: relationshipFilter === r ? ACCENT : '#374151',
+                  fontFamily: 'Lato, sans-serif',
+                  fontWeight: relationshipFilter === r ? 800 : 600,
+                  border: relationshipFilter === r ? `1px solid rgba(3,103,160,0.20)` : '1px solid #EEF0F3',
+                }}>
+                {r}
+              </button>
+            ))}
           </div>
         </div>
+
+        <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+        {/* Fee Status */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Fee Status</span>
+          <div className="flex items-center gap-1">
+            {['All', 'Paid', 'Partial', 'Unpaid'].map(f => (
+              <button key={f} onClick={() => setFeeFilter(f)}
+                className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+                style={{
+                  background: feeFilter === f ? 'rgba(3,103,160,0.10)' : 'transparent',
+                  color: feeFilter === f ? ACCENT : '#374151',
+                  fontFamily: 'Lato, sans-serif',
+                  fontWeight: feeFilter === f ? 800 : 600,
+                  border: feeFilter === f ? `1px solid rgba(3,103,160,0.20)` : '1px solid #EEF0F3',
+                }}>
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+        {/* Child's Class */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Child's Class</span>
+          <select value={classFilter} onChange={e => setClassFilter(e.target.value)}
+            className="text-xs outline-none rounded-xl px-3 py-2"
+            style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif',
+              color: classFilter !== 'All' ? ACCENT : '#374151', fontWeight: 700, minWidth: 140 }}>
+            {allClasses.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+
+        {/* Record count */}
+        <p className="text-xs font-bold text-[#9CA3AF] ml-auto flex-shrink-0 mb-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+          {filtered.length} of {principalParents.length}
+        </p>
       </div>
 
-      {/* ── Main Content ── */}
-      <div className="flex-1 min-w-0 space-y-5">
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: 'Total Parents/Guardians', value: principalParents.length, color: ACCENT,    icon: Users },
-            { label: 'Total Children Covered',  value: totalChildren,           color: '#7C3AED',  icon: GraduationCap },
-            { label: 'With Fee Issues',          value: feeIssueCount,           color: '#A60003',  icon: Users },
-          ].map(c => {
-            const Icon = c.icon
-            return (
-              <div key={c.label} className="rounded-2xl p-5 flex items-center gap-4"
-                style={{ background: '#fff', border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${c.color}14` }}>
-                  <Icon size={20} style={{ color: c.color }} strokeWidth={2.5} />
-                </div>
-                <div>
-                  <p className="text-2xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{c.value}</p>
-                  <p className="text-xs font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{c.label}</p>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+      {/* ── Table ── */}
+      <div className="space-y-5">
 
         {/* Table */}
         <div className="bg-white rounded-2xl overflow-hidden"
           style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-          <div className="px-5 py-4 flex items-center justify-between"
-            style={{ borderBottom: '1px solid #EEF0F3', background: '#F8FAFC' }}>
-            <div>
-              <h3 className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
-                Parents & Guardians
-              </h3>
-              <p className="text-[11px] font-semibold text-[#9CA3AF] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-                {principalParents.length} registered · {guardianCount} guardians
-              </p>
-            </div>
-          </div>
 
           <table className="w-full">
             <thead>
               <tr style={{ background: '#BFD9F2' }}>
-                {['Parent / Guardian', 'Relationship', 'Contact', 'Children', 'Fee Status', 'Last Contact'].map(h => (
+                {['Parent / Guardian', 'Relationship', 'Contact', 'Children', 'Fee Status', ''].map(h => (
                   <th key={h} className="text-left px-5 py-3 text-[10px] font-black uppercase tracking-wider text-[#0F172A]"
                     style={{ fontFamily: 'Lato, sans-serif' }}>{h}</th>
                 ))}
@@ -417,9 +413,13 @@ export default function PrincipalParents() {
                       <FeeStatusBadge status={worstFee} />
                     </td>
 
-                    {/* Last Contact */}
-                    <td className="px-5 py-3.5 text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-                      {p.lastContact}
+                    {/* View Profile */}
+                    <td className="px-5 py-3.5">
+                      <button onClick={() => setSelected(p.id)}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-black transition-opacity hover:opacity-80"
+                        style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+                        View Profile →
+                      </button>
                     </td>
                   </tr>
                 )

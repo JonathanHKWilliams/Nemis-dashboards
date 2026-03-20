@@ -23,6 +23,7 @@ import Settings from './pages/Settings'
 import Tickets from './pages/Tickets'
 import Enrollment from './pages/Enrollment'
 import PlaceholderPage from './pages/PlaceholderPage'
+import SystemUI from './pages/SystemUI'
 
 const PAGE_META = {
   dashboard:         { title: 'Dashboard Overview',  breadcrumb: 'Home / Dashboard Overview' },
@@ -39,6 +40,7 @@ const PAGE_META = {
   notifications:     { title: 'Notifications',        breadcrumb: 'Home / Notifications' },
   tickets:           { title: 'IT Support',           breadcrumb: 'Home / IT Support' },
   settings:          { title: 'Settings',             breadcrumb: 'Home / Settings' },
+  'system-ui':       { title: 'System UI',            breadcrumb: 'Home / System UI' },
 }
 
 function renderPage(activePage, setActivePage) {
@@ -57,6 +59,7 @@ function renderPage(activePage, setActivePage) {
     case 'notifications':   return <NotificationsPage />
     case 'tickets':         return <Tickets />
     case 'settings':        return <Settings />
+    case 'system-ui':       return <SystemUI />
     default:                return <PlaceholderPage pageName={activePage} />
   }
 }
