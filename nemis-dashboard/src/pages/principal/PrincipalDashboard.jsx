@@ -1,4 +1,4 @@
-import { GraduationCap, Users, CalendarCheck, DollarSign, TrendingUp, ChevronLeft, ChevronRight, UserPlus, UserMinus, ArrowRightLeft, AlertTriangle, BookOpen } from 'lucide-react'
+import { GraduationCap, Users, CalendarCheck, DollarSign, TrendingUp, ChevronLeft, ChevronRight, UserPlus, UserMinus, ArrowRightLeft, AlertTriangle } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useState } from 'react'
 import {
@@ -188,7 +188,7 @@ export default function PrincipalDashboard({ setActivePage }) {
 
 
       {/* ── KPI Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <KPICard icon={GraduationCap} label="Total Students"    value={schoolKPIs.totalStudents.toLocaleString()} sub="Enrolled"           color={ACCENT}    onClick={() => setActivePage('students')} />
         <KPICard icon={Users}         label="Active Teachers"   value={schoolKPIs.totalTeachers}  sub="On payroll"          color="#7C3AED"   onClick={() => setActivePage('teachers')} />
         <KPICard icon={CalendarCheck} label="Present Today"     value={schoolKPIs.presentToday}   sub={`of ${schoolKPIs.totalStudents} students`} color="#16A34A"  onClick={() => setActivePage('attendance')} />
@@ -287,7 +287,7 @@ export default function PrincipalDashboard({ setActivePage }) {
             {/* KPI strip */}
             <div className="grid grid-cols-5 gap-0" style={{ borderBottom: '1px solid #EEF0F3' }}>
               {[
-                { icon: BookOpen,        label: 'Total Enrolled',  value: schoolKPIs.totalStudents, color: ACCENT        },
+                { icon: Users,           label: 'Male / Female',   value: `${schoolKPIs.maleStudents} / ${schoolKPIs.femaleStudents}`, color: ACCENT },
                 { icon: UserPlus,        label: 'New Admissions',  value: 14,                       color: '#16A34A'      },
                 { icon: UserMinus,       label: 'Withdrawals',     value: 3,                        color: '#A60003'      },
                 { icon: ArrowRightLeft,  label: 'Transfers In/Out',value: '5 / 2',                  color: '#7C3AED'      },

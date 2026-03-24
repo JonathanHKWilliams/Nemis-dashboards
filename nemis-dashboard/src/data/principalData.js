@@ -29,6 +29,8 @@ export const schoolInfo = {
 
 export const schoolKPIs = {
   totalStudents: 642,
+  maleStudents: 340,
+  femaleStudents: 302,
   totalTeachers: 28,
   activeClasses: 18,
   presentToday: 596,

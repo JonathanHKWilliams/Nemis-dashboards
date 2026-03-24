@@ -24,8 +24,8 @@ const SIDEBAR_BG = '#000E21'
 
 const NAV_SECTIONS = [
   {
-    label: 'Overview',
-    items: [{ id: 'dashboard', label: 'Overview', icon: LayoutDashboard }],
+    label: 'Dashboard',
+    items: [{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }],
   },
   {
     label: 'Students & Staff',

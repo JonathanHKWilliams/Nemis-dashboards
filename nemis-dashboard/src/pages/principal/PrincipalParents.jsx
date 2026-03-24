@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Search, ChevronLeft, ChevronRight, X, Phone, Mail, MapPin, Briefcase, Users, GraduationCap } from 'lucide-react'
-import { principalParents } from '../../data/principalData'
+import { principalParents, principalStudents } from '../../data/principalData'
+
+const studentLookup = Object.fromEntries(principalStudents.map(s => [s.studentId, s]))
 
 const ACCENT   = '#0367A0'
 const PAGE_SIZE = 15
@@ -30,15 +32,6 @@ function Avatar({ name, gender, photoId, size = 40 }) {
   )
 }
 
-function StudentAvatar({ name, size = 28 }) {
-  const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('')
-  return (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0 text-white font-black"
-      style={{ width: size, height: size, background: '#002333', fontFamily: 'Sora, sans-serif', fontSize: size * 0.3 }}>
-      {initials}
-    </div>
-  )
-}
 
 function FeeStatusBadge({ status }) {
   const cfg = feeCfg[status] || { bg: '#F4F6F8', color: '#6B7280' }
@@ -51,9 +44,6 @@ function FeeStatusBadge({ status }) {
 }
 
 function ParentDetail({ parent, onClose }) {
-  const worstFee = parent.children.some(c => c.feeStatus === 'Unpaid') ? 'Unpaid'
-    : parent.children.some(c => c.feeStatus === 'Partial') ? 'Partial' : 'Paid'
-
   return (
     <div className="fixed inset-0 z-50 flex" onClick={onClose}>
       <div className="flex-1 bg-black/20" />
@@ -73,9 +63,6 @@ function ParentDetail({ parent, onClose }) {
               <p className="text-xs font-bold mt-0.5"
                 style={{ color: parent.relationship === 'Guardian' ? '#7C3AED' : ACCENT, fontFamily: 'Lato, sans-serif' }}>
                 {parent.relationship}
-              </p>
-              <p className="text-[11px] font-semibold text-[#9CA3AF] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>
-                {parent.parentId}
               </p>
             </div>
           </div>
@@ -113,18 +100,19 @@ function ParentDetail({ parent, onClose }) {
 
           {/* Children */}
           <div>
-            <div className="flex items-center justify-between mb-3">
+            <div className="mb-3">
               <p className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
                 {parent.children.length === 1 ? 'Child at School' : `Children at School (${parent.children.length})`}
               </p>
-              <FeeStatusBadge status={worstFee} />
             </div>
             <div className="space-y-3">
-              {parent.children.map(child => (
+              {parent.children.map(child => {
+              const s = studentLookup[child.studentId]
+              return (
                 <div key={child.studentId} className="rounded-2xl p-4"
                   style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
                   <div className="flex items-center gap-3 mb-3">
-                    <StudentAvatar name={child.name} gender="men" size={36} />
+                    <Avatar name={child.name} gender={s ? (s.gender === 'Female' ? 'women' : 'men') : 'men'} photoId={s ? s.photoId : 10} size={36} />
                     <div className="flex-1">
                       <p className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>
                         {child.name}
@@ -149,7 +137,8 @@ function ParentDetail({ parent, onClose }) {
                     ))}
                   </div>
                 </div>
-              ))}
+              )
+            })}
             </div>
           </div>
 
@@ -370,7 +359,6 @@ export default function PrincipalParents() {
                         <Avatar name={p.name} gender={p.gender} photoId={p.photoId} size={38} />
                         <div>
                           <p className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{p.name}</p>
-                          <p className="text-[11px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{p.parentId}</p>
                         </div>
                       </div>
                     </td>
@@ -395,17 +383,12 @@ export default function PrincipalParents() {
 
                     {/* Children */}
                     <td className="px-5 py-3.5">
-                      <div className="space-y-1">
-                        {p.children.map(c => (
-                          <div key={c.studentId} className="flex items-center gap-2">
-                            <StudentAvatar name={c.name} size={22} />
-                            <div>
-                              <p className="text-xs font-bold text-[#002333] leading-none" style={{ fontFamily: 'Lato, sans-serif' }}>{c.name}</p>
-                              <p className="text-[10px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>{c.class}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      <span className="text-sm font-black" style={{ color: '#002333', fontFamily: 'Sora, sans-serif' }}>
+                        {p.children.length}
+                      </span>
+                      <span className="text-xs font-semibold text-[#9CA3AF] ml-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+                        {p.children.length === 1 ? 'child' : 'children'}
+                      </span>
                     </td>
 
                     {/* Fee Status */}

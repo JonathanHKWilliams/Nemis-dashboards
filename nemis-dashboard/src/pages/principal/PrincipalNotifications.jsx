@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Bell, AlertTriangle, AlertCircle, CheckCircle, Info, Trash2 } from 'lucide-react'
+
+const NAVY = '#002333'
 import { principalNotifications } from '../../data/principalData'
 
 const ACCENT = '#0367A0'
@@ -46,48 +48,39 @@ export default function PrincipalNotifications() {
   return (
     <div className="max-w-[860px] space-y-4">
 
-      {/* Header bar */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `rgba(3,103,160,0.10)` }}>
-            <Bell size={20} style={{ color: ACCENT }} strokeWidth={2.5} />
-          </div>
-          <div>
-            <h2 className="text-base font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Notifications</h2>
-            <p className="text-xs font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
-              {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All caught up'}
-            </p>
+      {/* Toolbar */}
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-black uppercase text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>Filter</span>
+          <div className="flex">
+            {FILTERS.map((f, i) => (
+              <button key={f} onClick={() => setFilter(f)}
+                className="px-3 py-1.5 text-[11px] font-black transition-colors"
+                style={{
+                  background: filter === f ? NAVY : '#F8FAFC',
+                  color: filter === f ? '#fff' : '#6B7280',
+                  border: '1px solid #E2E8F0',
+                  borderLeft: i > 0 ? 'none' : '1px solid #E2E8F0',
+                  fontFamily: 'Lato, sans-serif',
+                }}>
+                {f}
+                {f === 'Unread' && unreadCount > 0 && (
+                  <span className="ml-1.5 text-[9px] px-1.5 py-0.5 font-black"
+                    style={{ background: filter === f ? 'rgba(255,255,255,0.25)' : '#A60003', color: '#fff' }}>
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
         {unreadCount > 0 && (
           <button onClick={markAllRead}
-            className="text-xs font-black px-4 py-2 rounded-xl transition-colors"
-            style={{ background: `rgba(3,103,160,0.08)`, color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+            className="text-[11px] font-black px-4 py-1.5 transition-colors"
+            style={{ background: '#F8FAFC', color: ACCENT, border: '1px solid #E2E8F0', fontFamily: 'Lato, sans-serif' }}>
             Mark all as read
           </button>
         )}
-      </div>
-
-      {/* Filter tabs */}
-      <div className="flex gap-2 flex-wrap">
-        {FILTERS.map(f => (
-          <button key={f} onClick={() => setFilter(f)}
-            className="px-3 py-1.5 rounded-lg text-xs font-black transition-all"
-            style={{
-              background: filter === f ? ACCENT : '#fff',
-              color: filter === f ? '#fff' : '#6B7280',
-              border: `1px solid ${filter === f ? ACCENT : '#EEF0F3'}`,
-              fontFamily: 'Lato, sans-serif',
-            }}>
-            {f}
-            {f === 'Unread' && unreadCount > 0 && (
-              <span className="ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-black"
-                style={{ background: filter === f ? 'rgba(255,255,255,0.25)' : '#A60003', color: '#fff' }}>
-                {unreadCount}
-              </span>
-            )}
-          </button>
-        ))}
       </div>
 
       {/* Notification list */}
@@ -113,8 +106,8 @@ export default function PrincipalNotifications() {
 
                   {/* Icon */}
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
-                    <Icon size={17} style={{ color: cfg.color }} strokeWidth={2.5} />
+                    style={{ background: '#F1F3F5', border: '1px solid #E2E8F0' }}>
+                    <Icon size={18} style={{ color: NAVY }} strokeWidth={3} />
                   </div>
 
                   {/* Content */}
@@ -129,11 +122,7 @@ export default function PrincipalNotifications() {
                         )}
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full"
-                          style={{ background: cfg.bg, color: cfg.color, fontFamily: 'Lato, sans-serif' }}>
-                          {cfg.label}
-                        </span>
-                        <button onClick={e => { e.stopPropagation(); remove(notif.id) }}
+<button onClick={e => { e.stopPropagation(); remove(notif.id) }}
                           className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
                           style={{ color: '#9CA3AF' }}
                           onMouseEnter={e => e.currentTarget.style.color = '#A60003'}
@@ -142,10 +131,10 @@ export default function PrincipalNotifications() {
                         </button>
                       </div>
                     </div>
-                    <p className="text-xs font-semibold text-[#6B7280] mt-1 leading-relaxed" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    <p className="text-xs font-black text-[#374151] mt-1 leading-relaxed" style={{ fontFamily: 'Lato, sans-serif' }}>
                       {notif.message}
                     </p>
-                    <p className="text-[10px] font-semibold text-[#9CA3AF] mt-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+                    <p className="text-[10px] font-black text-[#6B7280] mt-1" style={{ fontFamily: 'Lato, sans-serif' }}>
                       {notif.time}
                     </p>
                   </div>

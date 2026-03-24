@@ -59,8 +59,8 @@ export default function PrincipalFinance() {
     <div className="flex gap-5 max-w-[1280px]">
 
       {/* ── Filter Sidebar ── */}
-      <div className="w-52 flex-shrink-0 space-y-4">
-        <div className="bg-white rounded-2xl p-4 space-y-4" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
+      <div className="w-52 flex-shrink-0 space-y-4 self-start sticky top-0">
+        <div className="bg-white rounded-2xl p-4 space-y-4" style={{ border: '1px solid #EEF0F3' }}>
           <p className="text-xs font-black uppercase tracking-wider text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>Filters</p>
 
           {/* Search */}
@@ -129,7 +129,7 @@ export default function PrincipalFinance() {
             const Icon = c.icon
             return (
               <div key={c.label} className="rounded-2xl p-5 flex items-start gap-4"
-                style={{ background: '#fff', border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.05)' }}>
+                style={{ background: '#fff', border: '1px solid #EEF0F3' }}>
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{ background: `${c.color}14` }}>
                   <Icon size={20} style={{ color: c.color }} strokeWidth={2.5} />
@@ -183,7 +183,7 @@ export default function PrincipalFinance() {
 
         {/* Fee Ledger Table */}
         <div className="bg-white rounded-2xl overflow-hidden"
-          style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
+          style={{ border: '1px solid #EEF0F3' }}>
           <div className="px-5 py-4" style={{ borderBottom: '1px solid #EEF0F3', background: '#F8FAFC' }}>
             <h3 className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Fee Ledger</h3>
           </div>

@@ -66,7 +66,7 @@ export default function PrincipalGrades() {
     <div className="flex gap-5 max-w-[1280px]">
 
       {/* ── Filter Sidebar ── */}
-      <div className="w-52 flex-shrink-0 space-y-4">
+      <div className="w-52 flex-shrink-0 space-y-4 self-start sticky top-0">
         <div className="bg-white rounded-2xl p-4 space-y-4" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
           <p className="text-xs font-black uppercase tracking-wider text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>Filters</p>
 

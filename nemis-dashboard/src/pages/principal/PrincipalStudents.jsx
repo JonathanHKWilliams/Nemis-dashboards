@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Search, ArrowLeft, Phone, Calendar, BookOpen, TrendingUp, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react'
-import { principalStudents, principalClasses } from '../../data/principalData'
+import { Search, ArrowLeft, Phone, BookOpen, TrendingUp, ChevronLeft, ChevronRight, LayoutGrid, List, Mail, Briefcase, UserCheck } from 'lucide-react'
+import { principalStudents } from '../../data/principalData'
 
 const ACCENT = '#0367A0'
+const NAVY   = '#002333'
 const PAGE_SIZE = 12
 
 const feeStatusCfg = {
@@ -16,6 +17,26 @@ const gradeCfg = (g) => {
   if (g.startsWith('B')) return { color: '#16A34A' }
   if (g.startsWith('C')) return { color: '#D97706' }
   return { color: '#A60003' }
+}
+
+const PARENT_NAMES_M = ['James','John','George','Moses','Emmanuel','David','Peter','Thomas','Samuel','Abraham']
+const PARENT_NAMES_F = ['Mary','Korpo','Hawa','Satta','Martha','Rebecca','Christiana','Agnes','Florence','Victoria']
+const OCCUPATIONS    = ['Farmer','Teacher','Trader','Civil Servant','Healthcare Worker','Business Owner','Driver','Nurse','Police Officer','Engineer']
+
+function getParent(student) {
+  const idx      = student.id % 10
+  const isMother = student.id % 2 === 0
+  const lastName = student.name.split(' ').slice(-1)[0].replace('.', '')
+  const first    = isMother ? PARENT_NAMES_F[idx] : PARENT_NAMES_M[idx]
+  return {
+    name:       `${first} ${lastName}`,
+    relation:   isMother ? 'Mother' : 'Father',
+    phone:      student.parentPhone,
+    email:      `${first.toLowerCase()}.${lastName.toLowerCase()}@gmail.com`,
+    occupation: OCCUPATIONS[student.id % OCCUPATIONS.length],
+    gender:     isMother ? 'women' : 'men',
+    photoId:    (student.photoId + 15) % 100,
+  }
 }
 
 function Avatar({ name, gender, photoId, size = 40 }) {
@@ -76,7 +97,8 @@ function Pagination({ page, totalPages, onPage }) {
 }
 
 function StudentDetail({ student, onBack }) {
-  const gc = gradeCfg(student.avgGrade)
+  const gc     = gradeCfg(student.avgGrade)
+  const parent = getParent(student)
   return (
     <div className="max-w-[820px] space-y-5">
       <button onClick={onBack}
@@ -91,7 +113,7 @@ function StudentDetail({ student, onBack }) {
         <Avatar name={student.name} gender={student.gender} photoId={student.photoId} size={80} />
         <div className="flex-1">
           <h2 className="text-xl font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{student.name}</h2>
-          <p className="text-xs font-black font-mono text-[#6B7280] mt-0.5">{student.studentId}</p>
+          <p className="text-sm font-black font-mono mt-1" style={{ color: ACCENT, letterSpacing: '0.06em' }}>{student.studentId}</p>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <span className="px-2.5 py-1 rounded-full text-xs font-black text-white" style={{ background: ACCENT }}>{student.class}</span>
             <span className="px-2.5 py-1 rounded-full text-xs font-black" style={{ background: feeStatusCfg[student.feeStatus].bg, color: feeStatusCfg[student.feeStatus].color }}>{student.feeStatus}</span>
@@ -119,7 +141,10 @@ function StudentDetail({ student, onBack }) {
           ].map(({ label, value }) => (
             <div key={label} className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid #F8FAFC' }}>
               <span className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</span>
-              <span className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{value}</span>
+              {label === 'Student ID'
+                ? <span className="text-sm font-black font-mono" style={{ color: ACCENT, letterSpacing: '0.06em' }}>{value}</span>
+                : <span className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{value}</span>
+              }
             </div>
           ))}
         </div>
@@ -143,36 +168,51 @@ function StudentDetail({ student, onBack }) {
         </div>
       </div>
 
-      {/* Attendance bar */}
-      <div className="bg-white rounded-2xl p-5" style={{ border: '1px solid #EEF0F3' }}>
-        <h3 className="text-sm font-black text-[#002333] mb-4 flex items-center gap-2" style={{ fontFamily: 'Sora, sans-serif' }}>
-          <Calendar size={15} strokeWidth={2.5} style={{ color: ACCENT }} /> Attendance History
-        </h3>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>1st Semester Attendance Rate</span>
-          <span className="text-sm font-black" style={{ color: student.attendance >= 85 ? ACCENT : '#A60003', fontFamily: 'Sora, sans-serif' }}>{student.attendance}%</span>
+      {/* Parent / Guardian */}
+      <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3' }}>
+        <div className="px-5 py-3" style={{ borderBottom: '1px solid #EEF0F3', background: '#F8FAFC' }}>
+          <p className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Parent / Guardian</p>
         </div>
-        <div className="h-3 rounded-full w-full" style={{ background: '#EEF0F3' }}>
-          <div className="h-full rounded-full transition-all" style={{ width: `${student.attendance}%`, background: student.attendance >= 85 ? ACCENT : student.attendance >= 75 ? '#D97706' : '#A60003' }} />
+        <div className="p-5 flex items-center gap-4" style={{ borderBottom: '1px solid #EEF0F3' }}>
+          <div className="relative flex-shrink-0" style={{ width: 56, height: 56 }}>
+            <img
+              src={`https://randomuser.me/api/portraits/${parent.gender}/${parent.photoId}.jpg`}
+              alt={parent.name}
+              className="rounded-full object-cover w-full h-full"
+              style={{ border: '2px solid #EEF0F3' }}
+              onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
+            />
+            <div className="rounded-full w-full h-full items-center justify-center text-white font-black absolute inset-0 text-sm"
+              style={{ background: ACCENT, fontFamily: 'Sora, sans-serif', display: 'none' }}>
+              {parent.name.split(' ').map(n => n[0]).slice(0,2).join('')}
+            </div>
+          </div>
+          <div>
+            <p className="text-base font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>{parent.name}</p>
+            <span className="text-[11px] font-black px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(3,103,160,0.08)', color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+              {parent.relation}
+            </span>
+          </div>
         </div>
-        <div className="flex justify-between mt-2">
-          <span className="text-[10px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>0%</span>
-          <span className="text-[10px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
-            {student.attendance < 85 ? 'Below minimum threshold (85%)' : 'Above minimum threshold'}
-          </span>
-          <span className="text-[10px] font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>100%</span>
-        </div>
-      </div>
-
-      {/* Parent Contact */}
-      <div className="bg-white rounded-2xl p-5 flex items-center gap-4" style={{ border: '1px solid #EEF0F3' }}>
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(3,103,160,0.08)' }}>
-          <Phone size={18} strokeWidth={2.5} style={{ color: ACCENT }} />
-        </div>
-        <div>
-          <p className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Sora, sans-serif' }}>Parent / Guardian Contact</p>
-          <p className="text-sm font-bold text-[#0367A0] mt-0.5" style={{ fontFamily: 'Lato, sans-serif' }}>{student.parentPhone}</p>
+        <div className="divide-y divide-[#F4F6F8]">
+          {[
+            { icon: Phone,     label: 'Phone',      value: parent.phone },
+            { icon: Mail,      label: 'Email',      value: parent.email },
+            { icon: Briefcase, label: 'Occupation', value: parent.occupation },
+            { icon: UserCheck, label: 'Relation',   value: parent.relation },
+          ].map(({ icon: Icon, label, value }) => (
+            <div key={label} className="flex items-center gap-4 px-5 py-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: '#F4F6F8' }}>
+                <Icon size={14} strokeWidth={2.5} style={{ color: NAVY }} />
+              </div>
+              <div className="flex-1 flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{label}</span>
+                <span className="text-sm font-black text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{value}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -185,8 +225,9 @@ export default function PrincipalStudents() {
   const [classFilter, setClassFilter] = useState('All')
   const [feeFilter, setFeeFilter] = useState('All')
   const [page, setPage] = useState(1)
+  const [viewMode, setViewMode] = useState('table')
 
-  useEffect(() => { setPage(1) }, [search, classFilter, feeFilter])
+  useEffect(() => { setPage(1) }, [search, classFilter, feeFilter, viewMode])
 
   const selectedStudent = selected ? principalStudents.find(s => s.id === selected) : null
   if (selectedStudent) return <StudentDetail student={selectedStudent} onBack={() => setSelected(null)} />
@@ -218,137 +259,193 @@ export default function PrincipalStudents() {
         />
       </div>
 
-      <div className="flex gap-5">
+      {/* ── Horizontal Filter Bar ── */}
+      <div className="bg-white rounded-2xl px-5 py-4 flex flex-wrap items-end gap-y-3 gap-x-3"
+        style={{ border: '1px solid #EEF0F3' }}>
 
-      {/* ── Filter Sidebar ── */}
-      <div className="w-52 flex-shrink-0 space-y-4">
-        <div className="bg-white rounded-2xl p-4 space-y-4" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-          <p className="text-xs font-black uppercase tracking-wider text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>Filters</p>
+        {/* Left group */}
+        <div className="flex items-end gap-3 flex-wrap flex-1 min-w-0">
 
           {/* Search */}
-          <div className="relative">
-            <Search size={13} strokeWidth={2.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
-            <input type="text" placeholder="Search name or ID…"
-              value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 text-xs outline-none rounded-xl"
-              style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', color: '#002333' }} />
-          </div>
-
-          {/* Class */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Class</p>
-            <div className="space-y-0.5 max-h-52 overflow-y-auto">
-              {classNames.map(c => (
-                <button key={c} onClick={() => setClassFilter(c)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-colors"
-                  style={{
-                    background: classFilter === c ? `rgba(3,103,160,0.10)` : 'transparent',
-                    color: classFilter === c ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: classFilter === c ? 800 : 600,
-                  }}>
-                  {c}
-                </button>
-              ))}
+          <div className="flex flex-col gap-1 flex-shrink-0" style={{ width: 200 }}>
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Search</span>
+            <div className="relative">
+              <Search size={13} strokeWidth={2.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
+              <input type="text" placeholder="Name or ID…"
+                value={search} onChange={e => setSearch(e.target.value)}
+                className="w-full pl-8 pr-3 py-2 text-xs outline-none rounded-xl"
+                style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif', color: '#002333' }} />
             </div>
           </div>
 
+          <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
+          {/* Class */}
+          <div className="flex flex-col gap-1 flex-shrink-0">
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>Class</span>
+            <select value={classFilter} onChange={e => setClassFilter(e.target.value)}
+              className="text-xs outline-none rounded-xl px-3 py-2"
+              style={{ background: '#F4F6F8', border: '1px solid #EEF0F3', fontFamily: 'Lato, sans-serif',
+                color: classFilter !== 'All' ? ACCENT : '#374151', fontWeight: 700, minWidth: 140 }}>
+              {classNames.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div className="flex-shrink-0 hidden sm:block self-stretch w-px mb-1" style={{ background: '#EEF0F3' }} />
+
           {/* Fee Status */}
-          <div>
-            <p className="text-[10px] font-black uppercase text-[#9CA3AF] mb-2" style={{ fontFamily: 'Lato, sans-serif' }}>Fee Status</p>
-            <div className="space-y-0.5">
+          <div className="flex flex-col gap-1 flex-shrink-0">
+            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#002333', fontFamily: 'Lato, sans-serif' }}>School Fees Status</span>
+            <div className="flex items-center gap-1">
               {['All', 'Paid', 'Partial', 'Unpaid'].map(f => (
                 <button key={f} onClick={() => setFeeFilter(f)}
-                  className="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors"
+                  className="px-3 py-1.5 rounded-lg text-xs transition-colors"
                   style={{
-                    background: feeFilter === f ? `rgba(3,103,160,0.10)` : 'transparent',
+                    background: feeFilter === f ? 'rgba(3,103,160,0.10)' : 'transparent',
                     color: feeFilter === f ? ACCENT : '#374151',
-                    fontFamily: 'Lato, sans-serif',
-                    fontWeight: feeFilter === f ? 800 : 600,
+                    fontFamily: 'Lato, sans-serif', fontWeight: feeFilter === f ? 800 : 600,
+                    border: feeFilter === f ? '1px solid rgba(3,103,160,0.20)' : '1px solid #EEF0F3',
                   }}>
                   {f}
                 </button>
               ))}
             </div>
           </div>
-
-          <div className="pt-2" style={{ borderTop: '1px solid #EEF0F3' }}>
-            <p className="text-[11px] font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>
-              {filtered.length} of 642 students
-            </p>
-          </div>
         </div>
 
-        <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black text-white"
-          style={{ background: ACCENT, fontFamily: 'Lato, sans-serif' }}>
-          + Add Student
-        </button>
+        {/* Right group: count + view toggle */}
+        <div className="flex items-end gap-3 flex-shrink-0 ml-auto">
+          <p className="text-xs font-bold text-[#9CA3AF] mb-1" style={{ fontFamily: 'Lato, sans-serif' }}>
+            {filtered.length} of {principalStudents.length} students
+          </p>
+          <div className="flex items-center gap-1 rounded-lg p-1" style={{ background: '#F4F6F8' }}>
+            {[{ mode: 'table', Icon: List, label: 'Table' }, { mode: 'grid', Icon: LayoutGrid, label: 'Grid' }].map(({ mode, Icon, label }) => (
+              <button key={mode} onClick={() => setViewMode(mode)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-black transition-all"
+                style={{ background: viewMode === mode ? NAVY : 'transparent', color: viewMode === mode ? '#fff' : '#6B7280', fontFamily: 'Lato, sans-serif' }}>
+                <Icon size={13} strokeWidth={2.5} />{label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* ── Main Content ── */}
-      <div className="flex-1 min-w-0 space-y-4">
+      {/* ── Table view ── */}
+      {viewMode === 'table' && (
+        <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3' }}>
+          <table className="w-full">
+            <thead>
+              <tr style={{ background: '#BFD9F2' }}>
+                {['Student', 'ID', 'Class', 'School Fees Status', 'Grade', ''].map(h => (
+                  <th key={h} className="text-left px-4 py-3 text-[10px] font-black uppercase tracking-wider text-[#0F172A]"
+                    style={{ fontFamily: 'Lato, sans-serif' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {paginated.map((s, i) => {
+                const gc = gradeCfg(s.avgGrade)
+                const fs = feeStatusCfg[s.feeStatus]
+                return (
+                  <tr key={s.id}
+                    style={{ borderTop: '1px solid #F4F6F8', background: i % 2 === 0 ? '#fff' : '#F8FAFC', cursor: 'pointer' }}
+                    onClick={() => setSelected(s.id)}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#EEF4FB' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = i % 2 === 0 ? '#fff' : '#F8FAFC' }}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2.5">
+                        <Avatar name={s.name} gender={s.gender} photoId={s.photoId} size={36} />
+                        <span className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-sm font-black font-mono" style={{ color: ACCENT, letterSpacing: '0.06em' }}>{s.studentId}</span>
+                    </td>
+                    <td className="px-4 py-3 text-xs font-bold text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.class}</td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-black px-2.5 py-1 rounded-full" style={{ background: fs.bg, color: fs.color, fontFamily: 'Lato, sans-serif' }}>
+                        {s.feeStatus}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-sm font-black" style={{ color: gc.color, fontFamily: 'Sora, sans-serif' }}>{s.avgGrade}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs font-black" style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>View →</span>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          <div className="px-5 pb-4">
+            <Pagination page={page} totalPages={totalPages} onPage={setPage} />
+          </div>
+        </div>
+      )}
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl overflow-hidden"
-        style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 4px rgba(0,35,51,0.04)' }}>
-        <table className="w-full">
-          <thead>
-            <tr style={{ background: '#BFD9F2' }}>
-              {['Student', 'ID', 'Class', 'Gender', 'Parent Contact', 'Attendance', 'Fee Status', 'Grade', ''].map(h => (
-                <th key={h} className="text-left px-4 py-3 text-[10px] font-black uppercase tracking-wider text-[#0F172A]"
-                  style={{ fontFamily: 'Lato, sans-serif' }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {paginated.map((s, i) => {
+      {/* ── Grid view ── */}
+      {viewMode === 'grid' && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {paginated.length === 0 && (
+              <div className="col-span-4 py-16 text-center">
+                <p className="text-sm font-semibold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>No students match the filters.</p>
+              </div>
+            )}
+            {paginated.map(s => {
               const gc = gradeCfg(s.avgGrade)
               const fs = feeStatusCfg[s.feeStatus]
               return (
-                <tr key={s.id}
-                  style={{ borderTop: '1px solid #F4F6F8', background: i % 2 === 0 ? '#fff' : '#F8FAFC', cursor: 'pointer' }}
+                <div key={s.id}
+                  className="bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-200"
+                  style={{ border: '1px solid #EEF0F3' }}
                   onClick={() => setSelected(s.id)}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#EEF4FB' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = i % 2 === 0 ? '#fff' : '#F8FAFC' }}>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <Avatar name={s.name} gender={s.gender} photoId={s.photoId} size={36} />
-                      <span className="text-sm font-bold text-[#002333]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.name}</span>
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}>
+
+                  {/* Card header */}
+                  <div className="px-4 pt-4 pb-3 flex items-center gap-3" style={{ borderBottom: '1px solid #F4F6F8' }}>
+                    <Avatar name={s.name} gender={s.gender} photoId={s.photoId} size={44} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black truncate" style={{ color: NAVY, fontFamily: 'Sora, sans-serif' }}>{s.name}</p>
+                      <p className="text-xs font-black font-mono mt-0.5" style={{ color: ACCENT, letterSpacing: '0.06em' }}>{s.studentId}</p>
                     </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-black font-mono text-[#6B7280]">{s.studentId}</span>
-                  </td>
-                  <td className="px-4 py-3 text-xs font-bold text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.class}</td>
-                  <td className="px-4 py-3 text-xs font-semibold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.gender}</td>
-                  <td className="px-4 py-3 text-xs font-semibold text-[#374151]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.parentPhone}</td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-black" style={{ color: s.attendance >= 85 ? ACCENT : s.attendance >= 75 ? '#D97706' : '#A60003', fontFamily: 'Lato, sans-serif' }}>
-                      {s.attendance}%
+                    <span className="text-xl font-black flex-shrink-0" style={{ color: gc.color, fontFamily: 'Sora, sans-serif' }}>{s.avgGrade}</span>
+                  </div>
+
+                  {/* Card body */}
+                  <div className="px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-black px-2 py-0.5 rounded-full"
+                        style={{ background: `${ACCENT}12`, color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+                        {s.class}
+                      </span>
+                      <span className="text-[11px] font-black px-2 py-0.5 rounded-full"
+                        style={{ background: fs.bg, color: fs.color, fontFamily: 'Lato, sans-serif' }}>
+                        {s.feeStatus}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card footer */}
+                  <div className="px-4 py-2.5 flex items-center justify-end" style={{ borderTop: '1px solid #F4F6F8', background: '#F8FAFC' }}>
+                    <span className="text-xs font-black flex items-center gap-1" style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>
+                      View <ChevronRight size={12} strokeWidth={2.5} />
                     </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-black px-2.5 py-1 rounded-full" style={{ background: fs.bg, color: fs.color, fontFamily: 'Lato, sans-serif' }}>
-                      {s.feeStatus}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-sm font-black" style={{ color: gc.color, fontFamily: 'Sora, sans-serif' }}>{s.avgGrade}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-black" style={{ color: ACCENT, fontFamily: 'Lato, sans-serif' }}>View →</span>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               )
             })}
-          </tbody>
-        </table>
-        <div className="px-5 pb-4">
-          <Pagination page={page} totalPages={totalPages} onPage={setPage} />
+          </div>
+          <div className="flex items-center justify-between px-1">
+            <p className="text-xs font-bold text-[#9CA3AF]" style={{ fontFamily: 'Lato, sans-serif' }}>
+              {filtered.length === 0 ? 'No records' : `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, filtered.length)} of ${filtered.length}`}
+            </p>
+            <Pagination page={page} totalPages={totalPages} onPage={setPage} />
+          </div>
         </div>
-      </div>
-      </div>
-      </div>
+      )}
     </div>
   )
 }
