@@ -1,0 +1,38 @@
+Grading System Image file
+
+grading-config.jpg
+grading-periods.jpg
+grade-windows.jpg
+grade-entry.jpg
+
+grading-guide.jpg
+
+Teacher Dashboard
+
+Log in as a teacher and design a flow where teachers can:
+
+Create assessments based strictly on the template defined by the School Admin.
+
+If the admin defines (e.g., 2 quizzes, 2 tests), that should be the exact structure available to the teacher.
+
+The teacher should be able to:
+
+Enter student grades at any time (no restriction while working).
+
+Publish grades  to students when ready (this will be done after each quiz, test, or assignment).
+
+Once published to students, the grades should become locked (non-editable).
+
+Grading Window (Admin Side)
+
+Review the Grading Window feature under Academic → Grading.
+
+Ensure that this window:
+
+Applies only to the Period Final Grade submission.
+
+Does NOT restrict teachers from entering assessment scores during the term.
+
+The behavior and UI should clearly communicate this distinction.
+
+Overall, I want the design to feel very clear, structured, and aligned with the real workflow used in Liberian schools. Keep the UI clean and practical—no unnecessary complexity.

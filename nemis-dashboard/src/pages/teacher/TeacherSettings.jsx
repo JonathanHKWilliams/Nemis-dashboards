@@ -87,7 +87,7 @@ function ProfilePanel() {
       </div>
       <div className="pt-2">
         <button className="px-6 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-          style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+          style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
           Save Changes
         </button>
       </div>
@@ -109,7 +109,7 @@ function SecurityPanel() {
         Password must be at least 8 characters and include a number.
       </p>
       <button className="px-6 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-        style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+        style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
         Update Password
       </button>
     </div>

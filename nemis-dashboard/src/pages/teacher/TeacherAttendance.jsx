@@ -116,7 +116,7 @@ export default function TeacherAttendance() {
           </div>
           <button onClick={() => setSaved(false)}
             className="text-xs font-black px-3 py-1.5 rounded-lg transition-colors"
-            style={{ background: '#002333', color: '#fff', fontFamily: 'Roboto, sans-serif' }}>
+            style={{ background: '#000E21', color: '#fff', fontFamily: 'Roboto, sans-serif' }}>
             Edit
           </button>
         </div>
@@ -127,7 +127,7 @@ export default function TeacherAttendance() {
         style={{ border: '2px solid #002333', boxShadow: '0 2px 10px rgba(0,35,51,0.08)' }}>
         <table className="w-full border-collapse">
           <thead>
-            <tr style={{ background: '#002333' }}>
+            <tr style={{ background: '#000E21' }}>
               {['Student', 'Status', 'Quick Mark', 'Note'].map(h => (
                 <th key={h} className="text-left px-6 py-4 text-[11px] font-black uppercase tracking-wider text-white"
                   style={{ fontFamily: 'Roboto, sans-serif' }}>{h}</th>
@@ -203,7 +203,7 @@ export default function TeacherAttendance() {
       {!saved && (
         <button onClick={() => setSaved(true)}
           className="w-full py-3.5 rounded-2xl text-sm font-black text-white flex items-center justify-center gap-2 transition-opacity hover:opacity-90"
-          style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+          style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
           <Save size={16} strokeWidth={3} />
           Save Attendance for {cls?.name}
         </button>

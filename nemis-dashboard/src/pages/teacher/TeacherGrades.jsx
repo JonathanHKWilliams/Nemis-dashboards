@@ -164,7 +164,7 @@ export default function TeacherGrades() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: '#002333' }}>
+              <tr style={{ background: '#000E21' }}>
                 {['Student', 'Assignment /100', 'Test /100', 'Exam /100', 'Average', 'Grade', 'Action'].map(h => (
                   <th key={h} className="text-left px-5 py-4 text-[11px] font-black uppercase tracking-wider text-white"
                     style={{ fontFamily: 'Roboto, sans-serif' }}>{h}</th>

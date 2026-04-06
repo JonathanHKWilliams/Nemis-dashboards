@@ -61,7 +61,7 @@ function AssignmentDetail({ a, onBack }) {
       {/* Header card */}
       <div className="bg-white rounded-2xl overflow-hidden"
         style={{ border: '2px solid #002333', boxShadow: '0 2px 12px rgba(0,35,51,0.10)' }}>
-        <div className="px-7 py-5 flex items-start gap-4" style={{ background: '#002333' }}>
+        <div className="px-7 py-5 flex items-start gap-4" style={{ background: '#000E21' }}>
           <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: 'rgba(255,255,255,0.12)' }}>
             <TypeIcon size={22} color="white" strokeWidth={3} />
@@ -175,7 +175,7 @@ function AssignmentDetail({ a, onBack }) {
                             ) : (
                               <button onClick={() => saveScore(sub)}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black text-white transition-opacity hover:opacity-80"
-                                style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+                                style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
                                 <Check size={11} strokeWidth={3} /> Save
                               </button>
                             )}
@@ -230,7 +230,7 @@ function CreateModal({ onClose }) {
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="bg-white rounded-2xl w-full max-w-[560px] overflow-hidden"
         style={{ boxShadow: '0 20px 60px rgba(0,35,51,0.25)' }}>
-        <div className="px-7 py-5 flex items-center justify-between" style={{ borderBottom: '2px solid #EEF0F3', background: '#002333' }}>
+        <div className="px-7 py-5 flex items-center justify-between" style={{ borderBottom: '2px solid #EEF0F3', background: '#000E21' }}>
           <h3 className="text-lg font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>Create Assignment</h3>
           <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center"
             style={{ background: 'rgba(255,255,255,0.1)' }}>
@@ -321,7 +321,7 @@ function CreateModal({ onClose }) {
             style={{ color: '#6B7280', fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
           <button onClick={onClose}
             className="px-6 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-            style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>Create Assignment</button>
+            style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>Create Assignment</button>
         </div>
       </div>
     </div>
@@ -351,7 +351,7 @@ export default function TeacherAssignments() {
         </div>
         <button onClick={() => setShowCreate(true)}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-          style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+          style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
           <Plus size={16} strokeWidth={3} /> Create Assignment
         </button>
       </div>
@@ -378,7 +378,7 @@ export default function TeacherAssignments() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: '#002333' }}>
+              <tr style={{ background: '#000E21' }}>
                 {['Title', 'Class', 'Type', 'Due Date', 'Submissions', 'Status', 'Action'].map(h => (
                   <th key={h} className="text-left px-6 py-4 text-[11px] font-black uppercase tracking-wider text-white"
                     style={{ fontFamily: 'Roboto, sans-serif' }}>{h}</th>
@@ -429,7 +429,7 @@ export default function TeacherAssignments() {
                     <td className="px-6 py-4">
                       <button onClick={() => setDetail(a)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black text-white transition-opacity hover:opacity-80"
-                        style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+                        style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
                         <Eye size={11} strokeWidth={3} /> View
                       </button>
                     </td>

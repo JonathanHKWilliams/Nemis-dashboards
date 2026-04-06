@@ -37,7 +37,7 @@ function ComposeModal({ onClose }) {
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="bg-white rounded-2xl w-full max-w-[480px] overflow-hidden"
         style={{ boxShadow: '0 20px 60px rgba(0,35,51,0.25)' }}>
-        <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: '2px solid #EEF0F3', background: '#002333' }}>
+        <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: '2px solid #EEF0F3', background: '#000E21' }}>
           <h3 className="text-base font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>New Message</h3>
           <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center"
             style={{ background: 'rgba(255,255,255,0.1)' }}>
@@ -98,7 +98,7 @@ function ComposeModal({ onClose }) {
             style={{ color: '#6B7280', fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
           <button onClick={onClose}
             className="px-6 py-2.5 rounded-xl text-sm font-black text-white hover:opacity-80"
-            style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>Send</button>
+            style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>Send</button>
         </div>
       </div>
     </div>
@@ -172,7 +172,7 @@ export default function TeacherMessages() {
         <div className="p-3" style={{ borderTop: '1px solid #F4F6F8' }}>
           <button onClick={() => setShowCompose(true)}
             className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-            style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+            style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
             <Plus size={14} strokeWidth={3} /> Compose
           </button>
         </div>
@@ -234,7 +234,7 @@ export default function TeacherMessages() {
               onBlur={e => { e.target.style.borderColor = '#EEF0F3' }} />
             <button onClick={sendMessage}
               className="w-11 h-11 rounded-xl flex items-center justify-center transition-opacity hover:opacity-80 flex-shrink-0"
-              style={{ background: '#002333' }}>
+              style={{ background: '#000E21' }}>
               <SendHorizonal size={18} color="white" strokeWidth={3} />
             </button>
           </div>

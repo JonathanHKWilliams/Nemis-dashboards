@@ -38,7 +38,7 @@ export default function TeacherSchool() {
 
       {/* School Banner */}
       <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 6px rgba(0,35,51,0.05)' }}>
-        <div className="h-2 w-full" style={{ background: 'linear-gradient(90deg, #002333 0%, #48D08C 100%)' }} />
+        <div className="h-2 w-full" style={{ background: 'linear-gradient(90deg, #000E21 0%, #0367A0 100%)' }} />
         <div className="px-8 py-6 flex items-center gap-6">
           <img
             src={`https://ui-avatars.com/api/?name=${encodeURIComponent(teacherSchoolInfo.name)}&size=80&background=002333&color=48D08C&bold=true&font-size=0.3`}
@@ -147,7 +147,7 @@ export default function TeacherSchool() {
 
       {/* Upcoming Events */}
       <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 6px rgba(0,35,51,0.05)' }}>
-        <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderBottom: '2px solid #EEF0F3', background: '#002333' }}>
+        <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderBottom: '2px solid #EEF0F3', background: '#000E21' }}>
           <CalendarDays size={16} color="white" strokeWidth={3} />
           <p className="text-sm font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>Upcoming School Events</p>
         </div>
@@ -168,7 +168,7 @@ export default function TeacherSchool() {
 
       {/* Announcements */}
       <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 6px rgba(0,35,51,0.05)' }}>
-        <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderBottom: '2px solid #EEF0F3', background: '#002333' }}>
+        <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderBottom: '2px solid #EEF0F3', background: '#000E21' }}>
           <Megaphone size={16} color="white" strokeWidth={3} />
           <p className="text-sm font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>School Announcements</p>
         </div>
@@ -188,7 +188,7 @@ export default function TeacherSchool() {
 
       {/* Staff Directory */}
       <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid #EEF0F3', boxShadow: '0 1px 6px rgba(0,35,51,0.05)' }}>
-        <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderBottom: '2px solid #EEF0F3', background: '#002333' }}>
+        <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderBottom: '2px solid #EEF0F3', background: '#000E21' }}>
           <UserCheck size={16} color="white" strokeWidth={3} />
           <p className="text-sm font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>Staff Directory</p>
         </div>

@@ -39,7 +39,7 @@ function ClassDetail({ classId, onBack }) {
       {/* Class header */}
       <div className="bg-white rounded-2xl overflow-hidden"
         style={{ border: '2px solid #002333', boxShadow: '0 2px 12px rgba(0,35,51,0.10)' }}>
-        <div className="px-7 py-5" style={{ background: '#002333' }}>
+        <div className="px-7 py-5" style={{ background: '#000E21' }}>
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>{cls?.name}</h2>
@@ -213,7 +213,7 @@ export default function TeacherClasses({ setActivePage }) {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: '#002333' }}>
+              <tr style={{ background: '#000E21' }}>
                 {['Class', 'Subject', 'Students', 'Room', 'Next Class', 'Actions'].map(h => (
                   <th key={h} className="text-left px-6 py-4 text-[11px] font-black uppercase tracking-wider text-white"
                     style={{ fontFamily: 'Roboto, sans-serif' }}>{h}</th>
@@ -253,7 +253,7 @@ export default function TeacherClasses({ setActivePage }) {
                     <div className="flex items-center gap-2">
                       <button onClick={() => setSelectedClass(cls.id)}
                         className="px-3 py-1.5 rounded-lg text-xs font-black text-white transition-opacity hover:opacity-80"
-                        style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+                        style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
                         View Class
                       </button>
                       <button onClick={() => setActivePage && setActivePage('attendance')}

@@ -80,7 +80,7 @@ export default function TeacherSchedule() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: '#002333' }}>
+              <tr style={{ background: '#000E21' }}>
                 <th className="text-left px-5 py-4 text-[11px] font-black uppercase tracking-wider text-white w-36"
                   style={{ fontFamily: 'Roboto, sans-serif' }}>Time</th>
                 {DAYS.map(d => (

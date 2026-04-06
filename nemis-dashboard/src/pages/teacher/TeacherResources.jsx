@@ -19,7 +19,7 @@ function UploadModal({ onClose }) {
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="bg-white rounded-2xl w-full max-w-[520px] overflow-hidden"
         style={{ boxShadow: '0 20px 60px rgba(0,35,51,0.25)' }}>
-        <div className="px-7 py-5 flex items-center justify-between" style={{ borderBottom: '2px solid #EEF0F3', background: '#002333' }}>
+        <div className="px-7 py-5 flex items-center justify-between" style={{ borderBottom: '2px solid #EEF0F3', background: '#000E21' }}>
           <h3 className="text-lg font-black text-white" style={{ fontFamily: 'Sora, sans-serif' }}>Upload Resource</h3>
           <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center"
             style={{ background: 'rgba(255,255,255,0.1)' }}>
@@ -85,7 +85,7 @@ function UploadModal({ onClose }) {
             style={{ color: '#6B7280', fontFamily: 'Roboto, sans-serif' }}>Cancel</button>
           <button onClick={onClose}
             className="px-6 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-            style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>Upload</button>
+            style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>Upload</button>
         </div>
       </div>
     </div>
@@ -115,7 +115,7 @@ export default function TeacherResources() {
         </div>
         <button onClick={() => setShowUpload(true)}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black text-white transition-opacity hover:opacity-80"
-          style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+          style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
           <Plus size={16} strokeWidth={3} /> Upload Resource
         </button>
       </div>
@@ -158,7 +158,7 @@ export default function TeacherResources() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: '#002333' }}>
+              <tr style={{ background: '#000E21' }}>
                 {['Title', 'Class', 'Type', 'Uploaded', 'Views', 'Actions'].map(h => (
                   <th key={h} className="text-left px-6 py-4 text-[11px] font-black uppercase tracking-wider text-white"
                     style={{ fontFamily: 'Roboto, sans-serif' }}>{h}</th>

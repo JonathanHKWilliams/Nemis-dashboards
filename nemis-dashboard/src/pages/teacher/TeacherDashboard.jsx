@@ -1,5 +1,5 @@
-import { teacherProfile, teacherClasses, teacherAssignments, teacherNotifications } from '../../data/teacherData'
-import { Users, ClipboardCheck, Star, ClipboardList, Bell, MessageSquare, BookOpen, AlertCircle, Info, FolderOpen, Upload } from 'lucide-react'
+import { teacherProfile, teacherClasses, teacherAssignments, teacherNotifications, teacherSchoolInfo } from '../../data/teacherData'
+import { Users, ClipboardCheck, Star, ClipboardList, Bell, MessageSquare, BookOpen, AlertCircle, Info, FolderOpen, Upload, GraduationCap } from 'lucide-react'
 
 const today = new Date()
 const greetingHour = today.getHours()
@@ -19,7 +19,7 @@ const notifColors = {
   message:    '#002333',
   resource:   '#7C3AED',
   info:       '#D97706',
-  grade:      '#16A34A',
+  grade:      '#0367A0',
 }
 
 function SectionHeader({ title, subtitle }) {
@@ -32,23 +32,24 @@ function SectionHeader({ title, subtitle }) {
 }
 
 export default function TeacherDashboard({ setActivePage }) {
-  const pendingToGrade = teacherAssignments.filter(a => a.status !== 'Graded' && a.submissions > 0).length
-  const unreadNotifs   = teacherNotifications.filter(n => !n.read).length
+  const pendingToGrade    = teacherAssignments.filter(a => a.status !== 'Graded' && a.submissions > 0).length
+  const totalStudents     = teacherClasses.reduce((sum, c) => sum + c.totalStudents, 0)
+  const pendingAttendance = teacherClasses.length   // one per class not yet marked today
 
   return (
     <div className="space-y-8 max-w-[1000px]">
 
       {/* ── Welcome Banner ── */}
       <div className="rounded-2xl overflow-hidden relative"
-        style={{ background: 'linear-gradient(120deg, #002333 0%, #003d5c 100%)', minHeight: 140 }}>
+        style={{ background: 'linear-gradient(120deg, #000E21 0%, #001A35 100%)', minHeight: 140 }}>
         <div className="absolute right-0 top-0 w-72 h-full opacity-10"
-          style={{ background: 'radial-gradient(circle at 80% 50%, #48D08C 0%, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle at 80% 50%, #0367A0 0%, transparent 70%)' }} />
         <div className="relative px-8 py-7 flex items-center gap-6">
           <img
             src={`https://randomuser.me/api/portraits/${teacherProfile.gender}/${teacherProfile.photoId}.jpg`}
             alt={teacherProfile.name}
             className="rounded-full object-cover flex-shrink-0"
-            style={{ width: 72, height: 72, border: '3px solid rgba(72,208,140,0.5)' }}
+            style={{ width: 72, height: 72, border: '3px solid rgba(3,103,160,0.5)' }}
             onError={e => { e.target.style.display = 'none' }}
           />
           <div className="flex-1 min-w-0">
@@ -57,34 +58,52 @@ export default function TeacherDashboard({ setActivePage }) {
             <p className="text-sm font-semibold mt-1" style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'Roboto, sans-serif' }}>
               {teacherProfile.subject} Teacher · {teacherProfile.school}
             </p>
-            <p className="text-xs font-bold mt-1.5" style={{ color: 'rgba(72,208,140,0.8)', fontFamily: 'Roboto, sans-serif' }}>
+            <p className="text-xs font-bold mt-1.5" style={{ color: 'rgba(255,255,255,0.55)', fontFamily: 'Roboto, sans-serif' }}>
               {today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
-          {/* Action stats */}
-          <div className="flex items-stretch gap-0 flex-shrink-0">
-            {[
-              { label: 'Classes Today', value: 2, icon: BookOpen },
-              { label: 'To Grade',      value: pendingToGrade, icon: ClipboardCheck },
-              { label: 'Attendance',    value: 2, icon: Users },
-              { label: 'Messages',      value: 3, icon: MessageSquare },
-            ].map((s, i) => {
-              const Icon = s.icon
-              return (
-                <div key={s.label} className="flex flex-col items-center justify-center px-6 py-4"
-                  style={{
-                    borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.12)' : 'none',
-                    minWidth: 90,
-                  }}>
-                  <Icon size={16} color="rgba(72,208,140,0.85)" strokeWidth={3} />
-                  <p className="text-2xl font-black text-white mt-1" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
-                  <p className="text-[10px] font-bold text-center uppercase tracking-wide mt-0.5"
-                    style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Roboto, sans-serif' }}>{s.label}</p>
-                </div>
-              )
-            })}
+
+          {/* Session badges */}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1.5 px-3 py-1.5"
+              style={{ background: 'rgba(3,103,160,0.18)', border: '1px solid rgba(3,103,160,0.35)' }}>
+              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#0367A0', flexShrink: 0 }} />
+              <span className="text-xs font-black" style={{ color: '#60A5FA', fontFamily: 'Lato, sans-serif' }}>
+                School in Session
+              </span>
+            </div>
+            <div className="px-3 py-1.5"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <span className="text-xs font-black" style={{ color: 'rgba(255,255,255,0.65)', fontFamily: 'Lato, sans-serif' }}>
+                AY {teacherSchoolInfo.academicYear}
+              </span>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* ── Summary Stats Strip ── */}
+      <div className="flex" style={{ background: '#fff', border: '1px solid #D1D5DB' }}>
+        {[
+          { label: 'My Classes',         value: teacherClasses.length, icon: BookOpen,       iconColor: '#000E21' },
+          { label: 'Total Students',     value: totalStudents,         icon: GraduationCap,  iconColor: '#0367A0' },
+          { label: 'Pending Attendance', value: pendingAttendance,     icon: ClipboardCheck, iconColor: '#D97706' },
+          { label: 'Pending Grades',     value: pendingToGrade,        icon: Star,           iconColor: '#A60003' },
+        ].map((s, i, arr) => {
+          const Icon = s.icon
+          return (
+            <div key={s.label} className="flex items-center flex-1">
+              <div className="flex-1 flex flex-col items-center justify-center py-5 gap-1.5">
+                <div className="w-8 h-8 flex items-center justify-center" style={{ background: '#E5E7EB' }}>
+                  <Icon size={15} strokeWidth={3} style={{ color: s.iconColor }} />
+                </div>
+                <p className="text-2xl font-black text-[#000E21]" style={{ fontFamily: 'Sora, sans-serif' }}>{s.value}</p>
+                <p className="text-[11px] font-bold text-[#6B7280]" style={{ fontFamily: 'Lato, sans-serif' }}>{s.label}</p>
+              </div>
+              {i < arr.length - 1 && <div style={{ width: 2, height: 40, background: '#D1D5DB', flexShrink: 0 }} />}
+            </div>
+          )
+        })}
       </div>
 
       {/* ── Two-column grid ── */}
@@ -105,7 +124,7 @@ export default function TeacherDashboard({ setActivePage }) {
                     </p>
                   </div>
                   <span className="text-[10px] font-black px-2 py-1 rounded-lg"
-                    style={{ background: 'rgba(72,208,140,0.12)', color: '#16A34A', fontFamily: 'Roboto, sans-serif' }}>
+                    style={{ background: 'rgba(3,103,160,0.10)', color: '#0367A0', fontFamily: 'Roboto, sans-serif' }}>
                     {cls.subject}
                   </span>
                 </div>
@@ -125,7 +144,7 @@ export default function TeacherDashboard({ setActivePage }) {
                       <button key={btn.label}
                         onClick={() => setActivePage && setActivePage(btn.page)}
                         className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-black text-white transition-opacity hover:opacity-80"
-                        style={{ background: '#002333', fontFamily: 'Roboto, sans-serif' }}>
+                        style={{ background: '#000E21', fontFamily: 'Roboto, sans-serif' }}>
                         <Icon size={11} strokeWidth={3} />
                         {btn.label}
                       </button>
